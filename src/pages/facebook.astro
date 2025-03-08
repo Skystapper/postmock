@@ -1,0 +1,199 @@
+---
+const {
+  username = "John Doe",
+  verified = true,
+  profilePic = "",
+  text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  privacy = "Public",
+  reactions = "1.2K",
+  comments = "234",
+  shares = "56",
+  date = "3 hours ago",
+  theme = "light"
+} = Astro.props;
+
+const lightTheme = {
+  bg: "#FFFFFF",
+  text: "#050505",
+  textLight: "#65676B",
+  border: "#CED0D4",
+  link: "#216FDB",
+  verified: "#0866FF",
+  buttonBg: "#E4E6EB",
+  reactionBg: "#E4E6EB"
+};
+
+const darkTheme = {
+  bg: "#242526",
+  text: "#E4E6EB",
+  textLight: "#B0B3B8",
+  border: "#3E4042",
+  link: "#4599FF",
+  verified: "#2D88FF",
+  buttonBg: "#3A3B3C",
+  reactionBg: "#3A3B3C"
+};
+
+const themeObj = theme === "dark" ? darkTheme : lightTheme;
+---
+
+<div
+  xmlns="http://www.w3.org/1999/xhtml"
+  style={`
+    background-color: ${themeObj.bg};
+    color: ${themeObj.text};
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    max-width: 680px;
+    border: 1px solid ${themeObj.border};
+    border-radius: 8px;
+    padding: 12px 16px;
+  `}
+>
+  <!-- Header -->
+  <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+    <div style="display: flex; gap: 8px;">
+      <!-- Profile Picture -->
+      <div style={`
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: ${themeObj.verified};
+        overflow: hidden;
+      `}>
+        <svg viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="20" fill="currentColor"/>
+        </svg>
+      </div>
+      
+      <div>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span style="font-weight: 600;">{username}</span>
+          {verified && (
+            <svg width="16" height="16" viewBox="0 0 512 512" fill={themeObj.verified}>
+              <path d="M256 48C141.6 48 48 141.6 48 256s93.6 208 208 208 208-93.6 208-208S370.4 48 256 48zm-42.7 318.9L106.7 260.3l29.9-29.9 76.8 76.8 162.1-162.1 29.9 29.9-192.1 191.9z"/>
+            </svg>
+          )}
+        </div>
+        <div style={`display: flex; gap: 5px; color: ${themeObj.textLight}; font-size: 13px;`}>
+          <span>{date}</span>
+          <span>·</span>
+          <span>{privacy}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- More options -->
+    <svg width="20" height="20" viewBox="0 0 20 20" fill={themeObj.text}>
+      <circle cx="10" cy="10" r="2"/>
+      <circle cx="3" cy="10" r="2"/>
+      <circle cx="17" cy="10" r="2"/>
+    </svg>
+  </div>
+
+  <!-- Post content -->
+  <div style="margin: 12px 0; font-size: 15px;">
+    {text}
+  </div>
+
+  <!-- Engagement stats -->
+  <div style={`
+    padding: 10px 0;
+    border-top: 1px solid ${themeObj.border};
+    border-bottom: 1px solid ${themeObj.border};
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    color: ${themeObj.textLight};
+  `}>
+    <div style="display: flex; align-items: center; gap: 5px;">
+      <div style={`
+        background: ${themeObj.reactionBg};
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      `}>
+        <span style="color: #2078F4;">👍</span>
+      </div>
+      <span>{reactions}</span>
+    </div>
+    <div style="display: flex; gap: 16px;">
+      <span>{comments} Comments</span>
+      <span>{shares} Shares</span>
+    </div>
+  </div>
+
+  <!-- Action buttons -->
+  <div style={`
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    margin-top: 4px;
+  `}>
+    <button style={`
+      flex: 1;
+      background: ${themeObj.buttonBg};
+      border: none;
+      border-radius: 4px;
+      padding: 6px;
+      margin: 0 4px;
+      color: ${themeObj.text};
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    `}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill={themeObj.text}>
+        <path d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12z"/>
+      </svg>
+      Like
+    </button>
+    <button style={`
+      flex: 1;
+      background: ${themeObj.buttonBg};
+      border: none;
+      border-radius: 4px;
+      padding: 6px;
+      margin: 0 4px;
+      color: ${themeObj.text};
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    `}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill={themeObj.text}>
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+      </svg>
+      Comment
+    </button>
+    <button style={`
+      flex: 1;
+      background: ${themeObj.buttonBg};
+      border: none;
+      border-radius: 4px;
+      padding: 6px;
+      margin: 0 4px;
+      color: ${themeObj.text};
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    `}>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill={themeObj.text}>
+        <path d="M17.5 5.5l-10 10-3.5-3.5L2.5 13.5 7.5 18.5 19 7z"/>
+      </svg>
+      Share
+    </button>
+  </div>
+</div> 

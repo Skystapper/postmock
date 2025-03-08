@@ -1,0 +1,44 @@
+---
+import Facebook from "./facebook.astro";
+
+export const partial = true;
+const username = Astro.url.searchParams.get("username") || "John Doe";
+const verified = !(Astro.url.searchParams.get("verified") == "false");
+const text = Astro.url.searchParams.get("text") || "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+const privacy = Astro.url.searchParams.get("privacy") || "Public";
+const reactions = Astro.url.searchParams.get("reactions") || "1.2K";
+const comments = Astro.url.searchParams.get("comments") || "234";
+const shares = Astro.url.searchParams.get("shares") || "56";
+const date = Astro.url.searchParams.get("date") || "3 hours ago";
+const theme = Astro.url.searchParams.get("theme") || "light";
+const width = parseInt(Astro.url.searchParams.get("w")) || 680;
+const height = parseInt(Astro.url.searchParams.get("h")) || 400;
+
+Astro.response.headers.set("Content-Type", "image/svg+xml");
+Astro.response.headers.set(
+  "Cache-Control",
+  "s-maxage=1, stale-while-revalidate"
+);
+---
+
+<svg
+  width={width}
+  height={height}
+  viewBox={`0 0 ${width} ${height}`}
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <foreignObject x="0" y="0" width={width} height={height}>
+    <Facebook
+      username={username}
+      verified={verified}
+      text={text}
+      privacy={privacy}
+      reactions={reactions}
+      comments={comments}
+      shares={shares}
+      date={date}
+      theme={theme}
+    />
+  </foreignObject>
+</svg> 

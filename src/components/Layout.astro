@@ -1,0 +1,30 @@
+---
+const { title } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="p-4 w-100" style="display: flex; flex-direction: column; align-items: center;">
+      <img src="/favicon.svg" alt="" width="100" />
+      <h1 class="my-4 text-center">{title}</h1>
+      
+      <slot />
+
+      <hr />
+      <a href="https://github.com/andreasnicklaus/twitter-post-mockup" class="mt-4">
+        <i class="bi bi-github"></i>
+        View source on Github
+      </a>
+
+      <p class="text-muted mt-2">
+        created by <a href="https://github.com/andreasnicklaus" class="text-secondary">@andreasnicklaus</a>
+      </p>
+    </div>
+  </body>
+</html> 

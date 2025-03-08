@@ -1,0 +1,40 @@
+---
+const { platform, previewSrc } = Astro.props;
+const lowercasePlatform = platform.toLowerCase();
+---
+
+<ul class="nav nav-tabs nav-justified w-100" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button 
+      class="nav-link active" 
+      data-bs-toggle="tab" 
+      data-bs-target={`#${lowercasePlatform}-preview-tab`} 
+      type="button">Preview</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button 
+      class="nav-link" 
+      data-bs-toggle="tab" 
+      data-bs-target={`#${lowercasePlatform}-embed-tab`} 
+      type="button">Embed</button>
+  </li>
+</ul>
+<div class="tab-content w-100 p-2">
+  <div class="tab-pane fade show active" id={`${lowercasePlatform}-preview-tab`}>
+    <img id={`${lowercasePlatform}-preview-img`} src={previewSrc} alt="" style="width: 100%" />
+  </div>
+  <div class="tab-pane fade" id={`${lowercasePlatform}-embed-tab`}>
+    <div class="input-group mb-2">
+      <span class="input-group-text">Link:</span>
+      <code id={`${lowercasePlatform}-text-output`} class="form-control"></code>
+    </div>
+    <div class="input-group mb-2">
+      <span class="input-group-text">Markdown:</span>
+      <code id={`${lowercasePlatform}-markdown-output`} class="form-control"></code>
+    </div>
+    <div class="input-group mb-2">
+      <span class="input-group-text">HTML:</span>
+      <code id={`${lowercasePlatform}-html-output`} class="form-control"></code>
+    </div>
+  </div>
+</div> 

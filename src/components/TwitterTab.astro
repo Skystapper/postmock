@@ -1,0 +1,146 @@
+---
+import PreviewEmbed from "./PreviewEmbed.astro";
+---
+
+<div class="tab-pane fade show active" id="twitter-tab">
+  <div class="row w-100">
+    <div class="col-12 col-md-6">
+      <div class="input-group mb-2">
+        <span class="input-group-text" id="username">Username:</span>
+        <input
+          id="username-input"
+          type="text"
+          class="form-control"
+          placeholder="John Doe"
+          aria-label="Username"
+          aria-describedby="username"
+        />
+      </div>
+
+      <div class="input-group mb-2">
+        <span class="input-group-text" id="handle">User handle:</span>
+        <input
+          id="handle-input"
+          type="text"
+          class="form-control"
+          placeholder="johndoe"
+          aria-label="handle"
+          aria-describedby="handle"
+        />
+      </div>
+
+      <div class="form-check mb-2 ms-1">
+        <input
+          id="verified-input"
+          class="form-check-input"
+          type="checkbox"
+          checked
+        />
+        <label class="form-check-label">Verified</label>
+      </div>
+
+      <div class="input-group mb-2">
+        <span class="input-group-text" id="text">Text:</span>
+        <input
+          id="text-input"
+          type="text"
+          class="form-control"
+          placeholder="Lorem ipsum ..."
+          aria-label="text"
+          aria-describedby="text"
+        />
+      </div>
+
+      <div class="input-group mb-2">
+        <span class="input-group-text" id="hashtags">Hashtags:</span>
+        <input
+          id="hashtags-input"
+          type="text"
+          class="form-control"
+          placeholder="twittermockup,ootd"
+          aria-label="hashtags"
+          aria-describedby="hashtags"
+        />
+      </div>
+
+      <div class="input-group mb-2">
+        <span class="input-group-text" id="date">Date:</span>
+        <input
+          id="date-input"
+          type="text"
+          class="form-control"
+          placeholder="00:00 AM Jan 01, 2022"
+          aria-label="date"
+          aria-describedby="date"
+        />
+      </div>
+
+      <div class="input-group mb-2">
+        <label class="input-group-text" for="os">Operating System:</label>
+        <select
+          id="os-input"
+          class="form-select"
+          aria-label="Operating System"
+        >
+          <option selected value="iPhone">iPhone</option>
+          <option value="Android">Android</option>
+          <option value="Windows">Windows</option>
+          <option value="macOS">macOS</option>
+        </select>
+      </div>
+
+      <div class="input-group mb-2">
+        <span class="input-group-text" id="retweets">Retweets:</span>
+        <input
+          id="retweets-input"
+          type="text"
+          class="form-control"
+          placeholder="100k"
+          aria-label="retweets"
+          aria-describedby="retweets"
+        />
+      </div>
+
+      <div class="input-group mb-2">
+        <span class="input-group-text" id="quotes">Quotes:</span>
+        <input
+          id="quotes-input"
+          type="text"
+          class="form-control"
+          placeholder="50k"
+          aria-label="quotes"
+          aria-describedby="quotes"
+        />
+      </div>
+
+      <div class="input-group mb-2">
+        <span class="input-group-text" id="likes">Likes:</span>
+        <input
+          id="likes-input"
+          type="text"
+          class="form-control"
+          placeholder="300k"
+          aria-label="likes"
+          aria-describedby="likes"
+        />
+      </div>
+
+      <div class="input-group mb-2">
+        <label class="input-group-text" for="theme">Theme:</label>
+        <select
+          id="theme-input"
+          class="form-select"
+          aria-label="Theme"
+        >
+          <option selected value="light">Light</option>
+          <option value="dim">Dim</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col col-md-6">
+      <PreviewEmbed platform="twitter" previewSrc="/api" />
+    </div>
+  </div>
+</div> 

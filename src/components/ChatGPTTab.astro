@@ -1,0 +1,90 @@
+---
+import PreviewEmbed from "./PreviewEmbed.astro";
+---
+
+<div class="tab-pane fade" id="chatgpt-tab">
+  <div class="row w-100">
+    <div class="col-12 col-md-6">
+      <div class="input-group mb-2">
+        <span class="input-group-text">Username:</span>
+        <input 
+          id="chatgpt-username-input" 
+          type="text" 
+          class="form-control" 
+          placeholder="You" 
+        />
+      </div>
+
+      <div class="input-group mb-2">
+        <label class="input-group-text">Model:</label>
+        <select id="chatgpt-model-input" class="form-select">
+          <option value="GPT-4" selected>GPT-4</option>
+          <option value="GPT-3.5">GPT-3.5</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Messages:</label>
+        <div id="chatgpt-messages-container">
+          <div class="input-group mb-2">
+            <select class="form-select" style="max-width: 120px;">
+              <option value="user" selected>User</option>
+              <option value="assistant">Assistant</option>
+            </select>
+            <input type="text" class="form-control message-input" placeholder="Message content">
+            <button class="btn btn-outline-danger" onclick="this.parentElement.remove(); updateChatGPTPreview();">×</button>
+          </div>
+        </div>
+        <button 
+          class="btn btn-outline-primary btn-sm" 
+          onclick="addMessageInput()"
+        >
+          Add Message
+        </button>
+      </div>
+
+      <div class="input-group mb-2">
+        <label class="input-group-text">Theme:</label>
+        <select id="chatgpt-theme-input" class="form-select">
+          <option value="light" selected>Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col col-md-6">
+      <PreviewEmbed platform="chatgpt" previewSrc="/api-chatgpt" />
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function addMessageInput() {
+    const container = document.getElementById('chatgpt-messages-container');
+    const newMessage = document.createElement('div');
+    newMessage.className = 'input-group mb-2';
+    newMessage.innerHTML = `
+      <select class="form-select" style="max-width: 120px;">
+        <option value="user" selected>User</option>
+        <option value="assistant">Assistant</option>
+      </select>
+      <input type="text" class="form-control message-input" placeholder="Message content">
+      <button class="btn btn-outline-danger" onclick="this.parentElement.remove(); updateChatGPTPreview();">×</button>
+    `;
+    container.appendChild(newMessage);
+    
+    // Add event listeners to new inputs
+    const newSelect = newMessage.querySelector('select');
+    const newInput = newMessage.querySelector('input');
+    newSelect.addEventListener('change', updateChatGPTPreview);
+    newInput.addEventListener('input', updateChatGPTPreview);
+    
+    updateChatGPTPreview();
+  }
+
+  // Add event listeners to initial message inputs
+  document.querySelectorAll('#chatgpt-messages-container select, #chatgpt-messages-container input').forEach(element => {
+    element.addEventListener('change', updateChatGPTPreview);
+    element.addEventListener('input', updateChatGPTPreview);
+  });
+</script> 

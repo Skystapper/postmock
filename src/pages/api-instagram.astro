@@ -1,0 +1,40 @@
+---
+import Instagram from "./instagram.astro";
+
+export const partial = true;
+const username = Astro.url.searchParams.get("username") || "johndoe";
+const verified = !(Astro.url.searchParams.get("verified") == "false");
+const caption = Astro.url.searchParams.get("caption") || "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+const location = Astro.url.searchParams.get("location") || "";
+const likes = Astro.url.searchParams.get("likes") || "1,234";
+const date = Astro.url.searchParams.get("date") || "JANUARY 1, 2024";
+const theme = Astro.url.searchParams.get("theme") || "light";
+const width = parseInt(Astro.url.searchParams.get("w")) || 600;
+const height = parseInt(Astro.url.searchParams.get("h")) || 800;
+
+Astro.response.headers.set("Content-Type", "image/svg+xml");
+Astro.response.headers.set(
+  "Cache-Control",
+  "s-maxage=1, stale-while-revalidate"
+);
+---
+
+<svg
+  width={width}
+  height={height}
+  viewBox={`0 0 ${width} ${height}`}
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <foreignObject x="0" y="0" width={width} height={height}>
+    <Instagram
+      username={username}
+      verified={verified}
+      caption={caption}
+      location={location}
+      likes={likes}
+      date={date}
+      theme={theme}
+    />
+  </foreignObject>
+</svg> 
