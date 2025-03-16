@@ -2,31 +2,118 @@
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 import Layout from "../components/Layout.astro";
-import SocialTabs from "../components/SocialTabs.astro";
+import Sidebar from "../components/Sidebar.astro";
 import TwitterTab from "../components/TwitterTab.astro";
 import InstagramTab from "../components/InstagramTab.astro";
 import FacebookTab from "../components/FacebookTab.astro";
 import ChatGPTTab from "../components/ChatGPTTab.astro";
 ---
 
+<Layout title="Social Media Post Mockup Generator">
+  <main class="app-container" data-platform="twitter" data-theme="light">
+    <Sidebar />
+    
+    <div class="content-wrapper">
+      <div class="tab-content">
+        <TwitterTab />
+        <InstagramTab />
+        <FacebookTab />
+        <ChatGPTTab />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  :root {
+    --sidebar-width: 260px;
+  }
+
+  /* Twitter Theme Variables */
+  .app-container[data-platform="twitter"][data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-primary: #0F1419;
+    --text-secondary: #536471;
+    --border-color: #CFD9DE;
+    --hover-bg: rgba(0, 0, 0, 0.03);
+    --focus-bg: rgba(29, 155, 240, 0.1);
+    --accent-color: #1DA1F2;
+    --sidebar-bg: #ffffff;
+  }
+
+  .app-container[data-platform="twitter"][data-theme="dim"] {
+    --bg-primary: #15202B;
+    --bg-secondary: #1e2732;
+    --text-primary: #F7F9F9;
+    --text-secondary: #8B98A5;
+    --border-color: #38444D;
+    --hover-bg: rgba(255, 255, 255, 0.03);
+    --focus-bg: rgba(29, 155, 240, 0.1);
+    --accent-color: #1DA1F2;
+    --sidebar-bg: #15202B;
+  }
+
+  .app-container[data-platform="twitter"][data-theme="dark"] {
+    --bg-primary: #000000;
+    --bg-secondary: #16181c;
+    --text-primary: #E7E9EA;
+    --text-secondary: #71767B;
+    --border-color: #2F3336;
+    --hover-bg: rgba(255, 255, 255, 0.03);
+    --focus-bg: rgba(29, 155, 240, 0.1);
+    --accent-color: #1DA1F2;
+    --sidebar-bg: #000000;
+  }
+
+  .app-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
+
+  .content-wrapper {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    background: var(--bg-primary);
+    transition: all 0.3s ease;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 768px) {
+    .app-container {
+      flex-direction: column;
+    }
+
+    .content-wrapper {
+      margin-left: 0;
+      padding: 1rem;
+    }
+  }
+</style>
+
 <script>
   import "bootstrap/dist/js/bootstrap.js";
-  import { initializePreviews } from "../scripts/updatePreviews.js";
-  
-  document.addEventListener("DOMContentLoaded", initializePreviews);
-</script>
 
-<Layout title="Social Media Post Mockup Generator">
-  <div class="container py-4">
-    <h1 class="mb-4">Social Media Post Mockup Generator</h1>
+  // Handle theme changes
+  document.addEventListener('DOMContentLoaded', () => {
+    const appContainer = document.querySelector('.app-container');
     
-    <SocialTabs />
-    
-    <div class="tab-content">
-      <TwitterTab />
-      <InstagramTab />
-      <FacebookTab />
-      <ChatGPTTab />
-    </div>
-  </div>
-</Layout>
+    // Listen for theme changes
+    document.querySelectorAll('input[name="theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        appContainer.setAttribute('data-theme', e.target.value);
+      });
+    });
+
+    // Listen for platform changes
+    document.querySelectorAll('[data-bs-toggle="pill"]').forEach(tab => {
+      tab.addEventListener('shown.bs.tab', (e) => {
+        const platform = e.target.getAttribute('data-bs-target').replace('#', '').replace('-tab', '');
+        appContainer.setAttribute('data-platform', platform);
+      });
+    });
+  });
+</script>

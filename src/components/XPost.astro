@@ -1,0 +1,371 @@
+---
+interface Props {
+  username: string;
+  handle: string;
+  verified: boolean;
+  text: string;
+  date: string;
+  views: string;
+  replies: string;
+  reposts: string;
+  likes: string;
+  bookmarks: string;
+  profileImage?: string;
+  theme?: 'light' | 'dim' | 'dark';
+}
+
+const {
+  username,
+  handle,
+  verified = false,
+  text,
+  date,
+  views = '0',
+  replies = '0',
+  reposts = '0',
+  likes = '0',
+  bookmarks = '0',
+  profileImage = '/default-avatar.png',
+  theme = 'dark'
+} = Astro.props;
+---
+
+<article class="x-post" data-theme={theme}>
+  <div class="post-container">
+    <!-- Header -->
+    <div class="post-header">
+      <div 
+        class="avatar cursor-pointer" 
+        onclick="uploadProfilePic()"
+        role="button"
+        title="Click to change profile picture"
+      >
+        <img id="x-profile-pic" src={profileImage} alt={username} />
+      </div>
+      <div class="user-info">
+        <div class="name-container">
+          <span 
+            class="name" 
+            contenteditable="true"
+            id="x-live-name"
+            data-input="username-input"
+          >{username}</span>
+          {verified && (
+            <span class="verified-badge" id="x-verified-badge">
+              <svg viewBox="0 0 22 22" aria-label="Verified account" role="img" class="verified-icon" data-testid="icon-verified">
+                <g>
+                  <path 
+                    clip-rule="evenodd" 
+                    d="M12.05 2.056c-.568-.608-1.532-.608-2.1 0l-1.393 1.49c-.284.303-.685.47-1.1.455L5.42 3.932c-.832-.028-1.514.654-1.486 1.486l.069 2.039c.014.415-.152.816-.456 1.1l-1.49 1.392c-.608.568-.608 1.533 0 2.101l1.49 1.393c.304.284.47.684.456 1.1l-.07 2.038c-.027.832.655 1.514 1.487 1.486l2.038-.069c.415-.014.816.152 1.1.455l1.392 1.49c.569.609 1.533.609 2.102 0l1.393-1.49c.283-.303.684-.47 1.099-.455l2.038.069c.832.028 1.515-.654 1.486-1.486L18 14.542c-.015-.415.152-.815.455-1.099l1.49-1.393c.608-.568.608-1.533 0-2.101l-1.49-1.393c-.303-.283-.47-.684-.455-1.1l.068-2.038c.029-.832-.654-1.514-1.486-1.486l-2.038.07c-.415.013-.816-.153-1.1-.456zm-5.817 9.367l3.429 3.428 5.683-6.206-1.347-1.247-4.4 4.795-2.072-2.072z" 
+                    fill="#829aab" 
+                    fill-rule="evenodd"
+                  />
+                </g>
+              </svg>
+            </span>
+          )}
+        </div>
+        <span 
+          class="handle" 
+          contenteditable="true"
+          id="x-live-handle"
+          data-input="handle-input"
+        >@{handle}</span>
+      </div>
+      <div class="more-options">
+        <div class="dropdown">
+          <button class="btn btn-link" data-bs-toggle="dropdown">
+            <svg viewBox="0 0 24 24"><path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+          </button>
+          <ul class="dropdown-menu">
+            <li><button class="dropdown-item" onclick="toggleVerified()">
+              <i class="bi bi-patch-check"></i> Toggle verified
+            </button></li>
+            <li><button class="dropdown-item" onclick="uploadProfilePic()">
+              <i class="bi bi-camera"></i> Change profile picture
+            </button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div 
+      class="post-content" 
+      contenteditable="true"
+      id="x-live-text"
+      data-input="text-input"
+    >
+      <p>{text}</p>
+    </div>
+
+    <!-- Meta -->
+    <div class="post-meta">
+      <span 
+        class="time"
+        contenteditable="true"
+        id="x-live-date"
+        data-input="date-input"
+      >{date}</span>
+      <span class="separator">·</span>
+      <span 
+        class="views"
+        contenteditable="true"
+        id="x-live-views"
+        data-input="views-input"
+      >{views}</span>
+      <span>Views</span>
+    </div>
+
+    <!-- Stats -->
+    <div class="post-stats">
+      <button class="stat-item">
+        <svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6c-3.317 0-6.005 2.69-6.005 6 0 3.37 2.77 6.08 6.138 6.01l.351-.01h1.761v2.3l5.087-2.81c1.951-1.08 3.163-3.13 3.163-5.36 0-3.39-2.744-6.13-6.129-6.13H9.756z"/></svg>
+        <span 
+          contenteditable="true"
+          id="x-live-replies"
+          data-input="replies-input"
+        >{replies}</span>
+      </button>
+      <button class="stat-item">
+        <svg viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/></svg>
+        <span 
+          contenteditable="true"
+          id="x-live-reposts"
+          data-input="reposts-input"
+        >{reposts}</span>
+      </button>
+      <button class="stat-item">
+        <svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></svg>
+        <span 
+          contenteditable="true"
+          id="x-live-likes"
+          data-input="likes-input"
+        >{likes}</span>
+      </button>
+      <button class="stat-item">
+        <svg viewBox="0 0 24 24"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"/></svg>
+        <span 
+          contenteditable="true"
+          id="x-live-bookmarks"
+          data-input="bookmarks-input"
+        >{bookmarks}</span>
+      </button>
+      <button class="stat-item">
+        <svg viewBox="0 0 24 24"><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/></svg>
+      </button>
+    </div>
+  </div>
+</article>
+
+<style>
+  .x-post {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 16px;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    border-radius: 16px;
+    box-shadow: var(--post-shadow);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .x-post[data-theme="light"] {
+    --bg-primary: #FFFFFF;
+    --text-primary: #0F1419;
+    --text-secondary: #536471;
+    --border-color: #EFF3F4;
+    --verified-color: #000000;
+    --hover-bg: rgba(15, 20, 25, 0.1);
+    --hover-secondary: #E7E7E8;
+    --post-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .x-post[data-theme="dim"] {
+    --bg-primary: #15202B;
+    --text-primary: #F7F9F9;
+    --text-secondary: #8B98A5;
+    --border-color: #38444D;
+    --verified-color: #FFFFFF;
+    --hover-bg: rgba(247, 249, 249, 0.1);
+    --hover-secondary: #1C2732;
+    --post-shadow: 0 2px 12px rgba(136, 153, 166, 0.2),
+                   0 0 20px rgba(29, 155, 240, 0.1);
+  }
+
+  .x-post[data-theme="dark"] {
+    --bg-primary: #000000;
+    --text-primary: #E7E9EA;
+    --text-secondary: #71767B;
+    --border-color: #2F3336;
+    --verified-color: #FFFFFF;
+    --hover-bg: rgba(231, 233, 234, 0.1);
+    --hover-secondary: #181818;
+    --post-shadow: 0 2px 12px rgba(255, 255, 255, 0.08),
+                   0 0 20px rgba(29, 155, 240, 0.15);
+  }
+
+  .post-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .post-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .user-info {
+    flex-grow: 1;
+  }
+
+  .name-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .name {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .verified-badge {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+  }
+
+  .verified-badge .verified-icon {
+    width: 100%;
+    height: 100%;
+  }
+
+  .verified-badge svg path {
+    fill: var(--verified-color);
+  }
+
+  .handle {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+  }
+
+  .more-options button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .more-options svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--text-secondary);
+  }
+
+  .post-content {
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    line-height: 1.5;
+  }
+
+  .post-meta {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .separator {
+    margin: 0 4px;
+  }
+
+  .post-stats {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .stat-item {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+  }
+
+  .stat-item svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .stat-item:hover {
+    color: var(--text-primary);
+  }
+
+  [contenteditable] {
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  [contenteditable]:hover {
+    background: var(--hover-bg);
+  }
+
+  [contenteditable]:focus {
+    background: var(--hover-bg);
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .avatar {
+    transition: opacity 0.2s ease;
+  }
+
+  .avatar:hover {
+    opacity: 0.8;
+  }
+
+  /* Add hover effect for stats */
+  .stat-item:hover {
+    background: var(--hover-bg);
+    border-radius: 9999px;
+  }
+
+  /* Update more options button hover */
+  .more-options button:hover {
+    background: var(--hover-bg);
+  }
+
+  /* Add hover effect for the entire post */
+  .x-post:hover {
+    box-shadow: var(--post-shadow),
+                0 0 30px rgba(29, 155, 240, 0.1);
+  }
+</style> 

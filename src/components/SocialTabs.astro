@@ -1,42 +1,63 @@
-<ul class="nav nav-pills mb-4" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button 
-      class="nav-link active" 
-      data-bs-toggle="tab" 
-      data-bs-target="#twitter-tab" 
-      type="button"
-    >
-      Twitter
-    </button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button 
-      class="nav-link" 
-      data-bs-toggle="tab" 
-      data-bs-target="#instagram-tab" 
-      type="button"
-    >
-      Instagram
-    </button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button 
-      class="nav-link" 
-      data-bs-toggle="tab" 
-      data-bs-target="#facebook-tab" 
-      type="button"
-    >
-      Facebook
-    </button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button 
-      class="nav-link" 
-      data-bs-toggle="tab" 
-      data-bs-target="#chatgpt-tab" 
-      type="button"
-    >
-      ChatGPT
-    </button>
-  </li>
-</ul> 
+---
+const platforms = [
+  { id: "twitter", name: "Twitter", icon: "bi-twitter" },
+  { id: "instagram", name: "Instagram", icon: "bi-instagram" },
+  { id: "facebook", name: "Facebook", icon: "bi-facebook" },
+  { id: "chatgpt", name: "ChatGPT", icon: "bi-chat-square-text" }
+];
+---
+
+<nav class="platform-tabs">
+  <div class="nav flex-column" role="tablist">
+    {platforms.map((platform, index) => (
+      <button
+        class={`platform-tab ${index === 0 ? 'active' : ''}`}
+        data-bs-toggle="pill"
+        data-bs-target={`#${platform.id}-tab`}
+        type="button"
+        role="tab"
+      >
+        <i class={`bi ${platform.icon}`}></i>
+        <span>{platform.name}</span>
+      </button>
+    ))}
+  </div>
+</nav>
+
+<style>
+  .platform-tabs {
+    padding: 1rem;
+    flex: 1;
+  }
+
+  .platform-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+
+  .platform-tab:hover {
+    background-color: var(--hover-bg);
+    color: var(--accent-color);
+  }
+
+  .platform-tab.active {
+    background-color: var(--hover-bg);
+    color: var(--accent-color);
+    font-weight: 600;
+  }
+
+  .platform-tab i {
+    font-size: 1.25rem;
+  }
+</style> 

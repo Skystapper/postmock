@@ -3,98 +3,248 @@ import PreviewEmbed from "./PreviewEmbed.astro";
 ---
 
 <div class="tab-pane fade" id="facebook-tab">
-  <div class="row w-100">
-    <div class="col-12 col-md-6">
-      <div class="input-group mb-2">
-        <span class="input-group-text">Username:</span>
-        <input 
-          id="fb-username-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="John Doe" 
-        />
+  <div class="toolbar mb-3">
+    <!-- Theme Selection -->
+    <div class="theme-options mb-3">
+      <label class="form-label">Theme</label>
+      <div class="btn-group" role="group">
+        <input type="radio" class="btn-check" name="fb-theme" id="fb-theme-light" value="light" checked>
+        <label class="btn btn-outline-secondary" for="fb-theme-light">Light</label>
+        
+        <input type="radio" class="btn-check" name="fb-theme" id="fb-theme-dark" value="dark">
+        <label class="btn btn-outline-secondary" for="fb-theme-dark">Dark</label>
       </div>
-
-      <div class="form-check mb-2 ms-1">
-        <input 
-          id="fb-verified-input" 
-          class="form-check-input" 
-          type="checkbox" 
-          checked 
-        />
-        <label class="form-check-label">Verified</label>
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Text:</span>
-        <input 
-          id="fb-text-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="Write something..." 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <label class="input-group-text">Privacy:</label>
-        <select id="fb-privacy-input" class="form-select">
-          <option value="Public" selected>Public</option>
-          <option value="Friends">Friends</option>
-          <option value="Only me">Only me</option>
-        </select>
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Reactions:</span>
-        <input 
-          id="fb-reactions-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="1.2K" 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Comments:</span>
-        <input 
-          id="fb-comments-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="234" 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Shares:</span>
-        <input 
-          id="fb-shares-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="56" 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Date:</span>
-        <input 
-          id="fb-date-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="3 hours ago" 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <label class="input-group-text">Theme:</label>
-        <select id="fb-theme-input" class="form-select">
-          <option value="light" selected>Light</option>
-          <option value="dark">Dark</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="col col-md-6">
-      <PreviewEmbed platform="facebook" previewSrc="/api-facebook" />
     </div>
   </div>
-</div> 
+
+  <!-- Interactive Facebook Preview -->
+  <div class="facebook-container" id="facebook-preview">
+    <!-- Header -->
+    <div class="fb-header d-flex justify-content-between align-items-start">
+      <div class="d-flex gap-2">
+        <div class="profile-pic rounded-circle bg-primary" style="width: 40px; height: 40px;">
+          <img id="fb-profile-pic" src="/default-avatar.png" alt="" class="w-100 h-100 rounded-circle">
+        </div>
+        
+        <div>
+          <div class="d-flex align-items-center gap-1">
+            <span 
+              class="username fw-bold" 
+              contenteditable="true" 
+              id="live-fb-username"
+              data-input="fb-username-input">John Doe</span>
+            <span class="verified-badge" id="fb-verified-badge">
+              <svg width="16" height="16" viewBox="0 0 512 512" fill="#2D88FF">
+                <path d="M256 48C141.6 48 48 141.6 48 256s93.6 208 208 208 208-93.6 208-208S370.4 48 256 48zm-42.7 318.9L106.7 260.3l29.9-29.9 76.8 76.8 162.1-162.1 29.9 29.9-192.1 191.9z"/>
+              </svg>
+            </span>
+          </div>
+          <div class="meta-info d-flex gap-1 text-secondary small">
+            <span 
+              contenteditable="true" 
+              id="live-fb-date"
+              data-input="fb-date-input">3 hours ago</span>
+            <span>·</span>
+            <span 
+              contenteditable="true" 
+              id="live-fb-privacy"
+              data-input="fb-privacy-input">Public</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-link text-secondary p-0" data-bs-toggle="dropdown">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" onclick="toggleFacebookVerified()">
+            <i class="fas fa-badge-check"></i> Toggle verified
+          </button></li>
+          <li><button class="dropdown-item" onclick="uploadFacebookImage()">
+            <i class="fas fa-camera"></i> Change profile picture
+          </button></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Post Content -->
+    <div 
+      class="fb-content my-3" 
+      contenteditable="true" 
+      id="live-fb-text"
+      data-input="fb-text-input">Write something...</div>
+
+    <!-- Engagement Stats -->
+    <div class="engagement-stats border-top border-bottom py-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-1">
+          <span class="reaction-icon">👍</span>
+          <span 
+            contenteditable="true" 
+            id="live-fb-reactions"
+            data-input="fb-reactions-input">1.2K</span>
+        </div>
+        <div class="d-flex gap-3 text-secondary">
+          <span>
+            <span 
+              contenteditable="true" 
+              id="live-fb-comments"
+              data-input="fb-comments-input">234</span> Comments
+          </span>
+          <span>
+            <span 
+              contenteditable="true" 
+              id="live-fb-shares"
+              data-input="fb-shares-input">56</span> Shares
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons d-flex justify-content-between py-1">
+      <button class="btn btn-light flex-grow-1 mx-1">
+        <i class="far fa-thumbs-up"></i> Like
+      </button>
+      <button class="btn btn-light flex-grow-1 mx-1">
+        <i class="far fa-comment"></i> Comment
+      </button>
+      <button class="btn btn-light flex-grow-1 mx-1">
+        <i class="far fa-share-square"></i> Share
+      </button>
+    </div>
+  </div>
+
+  <div class="col col-md-6 mt-4">
+    <PreviewEmbed platform="facebook" previewSrc="/api-facebook" />
+  </div>
+</div>
+
+<script is:inline>
+  // Handle contenteditable sync with inputs
+  document.querySelectorAll('[contenteditable]').forEach(element => {
+    element.addEventListener('input', (e) => {
+      const inputId = e.target.dataset.input;
+      if (inputId) {
+        const input = document.getElementById(inputId);
+        if (input) {
+          input.value = e.target.textContent;
+          input.dispatchEvent(new Event('input'));
+        }
+      }
+    });
+  });
+
+  // Toggle verified badge
+  function toggleFacebookVerified() {
+    const verifiedInput = document.getElementById('fb-verified-input');
+    const verifiedBadge = document.getElementById('fb-verified-badge');
+    verifiedInput.checked = !verifiedInput.checked;
+    verifiedBadge.style.display = verifiedInput.checked ? 'inline' : 'none';
+    verifiedInput.dispatchEvent(new Event('input'));
+  }
+
+  // Profile picture upload
+  function uploadFacebookImage() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('fb-profile-pic').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    // Sync initial values
+    document.querySelectorAll('[contenteditable]').forEach(element => {
+      const inputId = element.dataset.input;
+      if (inputId) {
+        const input = document.getElementById(inputId);
+        if (input) {
+          element.textContent = input.value;
+        }
+      }
+    });
+
+    // Update privacy when select changes
+    document.getElementById('fb-privacy-input').addEventListener('change', (e) => {
+      document.getElementById('live-fb-privacy').textContent = e.target.value;
+    });
+  });
+</script>
+
+<style>
+  .facebook-container {
+    background: white;
+    border: 1px solid #dddfe2;
+    border-radius: 8px;
+    padding: 12px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  [contenteditable] {
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  [contenteditable]:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  [contenteditable]:focus {
+    background: rgba(24, 119, 242, 0.1);
+  }
+
+  .btn-light {
+    background: #e4e6eb;
+    border: none;
+    color: #050505;
+    font-weight: 600;
+  }
+
+  .btn-light:hover {
+    background: #dadde1;
+  }
+
+  .reaction-icon {
+    background: #e4e6eb;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  /* Dark theme styles */
+  [data-theme="dark"] {
+    background: #242526;
+    color: #e4e6eb;
+  }
+
+  [data-theme="dark"] .btn-light {
+    background: #3a3b3c;
+    color: #e4e6eb;
+  }
+
+  [data-theme="dark"] .btn-light:hover {
+    background: #4e4f50;
+  }
+
+  [data-theme="dark"] .reaction-icon {
+    background: #3a3b3c;
+  }
+</style> 

@@ -3,88 +3,310 @@ import PreviewEmbed from "./PreviewEmbed.astro";
 ---
 
 <div class="tab-pane fade" id="chatgpt-tab">
-  <div class="row w-100">
-    <div class="col-12 col-md-6">
-      <div class="input-group mb-2">
-        <span class="input-group-text">Username:</span>
-        <input 
-          id="chatgpt-username-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="You" 
-        />
+  <div class="toolbar mb-3">
+    <!-- Theme Selection -->
+    <div class="theme-options mb-3">
+      <label class="form-label">Theme</label>
+      <div class="btn-group" role="group">
+        <input type="radio" class="btn-check" name="chatgpt-theme" id="chatgpt-theme-light" value="light">
+        <label class="btn btn-outline-secondary" for="chatgpt-theme-light">Light</label>
+        
+        <input type="radio" class="btn-check" name="chatgpt-theme" id="chatgpt-theme-dark" value="dark" checked>
+        <label class="btn btn-outline-secondary" for="chatgpt-theme-dark">Dark</label>
       </div>
+    </div>
+  </div>
 
-      <div class="input-group mb-2">
-        <label class="input-group-text">Model:</label>
-        <select id="chatgpt-model-input" class="form-select">
-          <option value="GPT-4" selected>GPT-4</option>
-          <option value="GPT-3.5">GPT-3.5</option>
-        </select>
+  <!-- Interactive ChatGPT Preview -->
+  <div class="chatgpt-container" id="chatgpt-preview">
+    <!-- Header -->
+    <div class="chat-header d-flex justify-content-between align-items-center p-3 border-bottom">
+      <div class="d-flex align-items-center gap-2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+        </svg>
+        <span 
+          class="model-name" 
+          contenteditable="true" 
+          id="live-chatgpt-model"
+          data-input="chatgpt-model-input">ChatGPT</span>
       </div>
+      <button class="btn btn-link text-reset p-0">
+        <i class="fas fa-share-square"></i>
+      </button>
+    </div>
 
-      <div class="mb-3">
-        <label class="form-label">Messages:</label>
-        <div id="chatgpt-messages-container">
-          <div class="input-group mb-2">
-            <select class="form-select" style="max-width: 120px;">
-              <option value="user" selected>User</option>
-              <option value="assistant">Assistant</option>
-            </select>
-            <input type="text" class="form-control message-input" placeholder="Message content">
-            <button class="btn btn-outline-danger" onclick="this.parentElement.remove(); updateChatGPTPreview();">×</button>
-          </div>
-        </div>
-        <button 
-          class="btn btn-outline-primary btn-sm" 
-          onclick="addMessageInput()"
-        >
-          Add Message
+    <!-- Chat Messages -->
+    <div class="chat-messages" id="chat-messages-container">
+      <!-- Messages will be dynamically added here -->
+    </div>
+
+    <!-- Message Input -->
+    <div class="chat-input p-3">
+      <div class="input-group">
+        <input type="text" class="form-control new-message" placeholder="Add a message...">
+        <button class="btn btn-success add-message-btn">
+          <i class="fas fa-plus"></i> Add Message
         </button>
       </div>
-
-      <div class="input-group mb-2">
-        <label class="input-group-text">Theme:</label>
-        <select id="chatgpt-theme-input" class="form-select">
-          <option value="light" selected>Light</option>
-          <option value="dark">Dark</option>
+      <div class="message-controls mt-2">
+        <select class="form-select message-role" style="width: auto;">
+          <option value="user">User</option>
+          <option value="assistant">Assistant</option>
         </select>
       </div>
     </div>
+  </div>
 
-    <div class="col col-md-6">
-      <PreviewEmbed platform="chatgpt" previewSrc="/api-chatgpt" />
+  <div class="col col-md-6 mt-4">
+    <ul class="nav nav-tabs nav-justified w-100" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button 
+          class="nav-link active" 
+          data-bs-toggle="tab" 
+          data-bs-target="#chatgpt-preview-tab" 
+          type="button" 
+          role="tab" 
+          aria-selected="true">Preview</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button 
+          class="nav-link" 
+          data-bs-toggle="tab" 
+          data-bs-target="#chatgpt-embed-tab" 
+          type="button" 
+          role="tab" 
+          aria-selected="false" 
+          tabindex="-1">Embed</button>
+      </li>
+    </ul>
+
+    <div class="tab-content w-100 p-2">
+      <!-- Preview Tab -->
+      <div 
+        class="tab-pane fade active show" 
+        id="chatgpt-preview-tab" 
+        role="tabpanel">
+        <img 
+          id="chatgpt-preview-img" 
+          src="/api-chatgpt" 
+          alt="" 
+          style="width: 100%">
+      </div>
+
+      <!-- Embed Tab -->
+      <div 
+        class="tab-pane fade" 
+        id="chatgpt-embed-tab" 
+        role="tabpanel">
+        <div class="input-group mb-2">
+          <span class="input-group-text">Link:</span>
+          <code id="chatgpt-text-output" class="form-control"></code>
+        </div>
+        <div class="input-group mb-2">
+          <span class="input-group-text">Markdown:</span>
+          <code id="chatgpt-markdown-output" class="form-control"></code>
+        </div>
+        <div class="input-group mb-2">
+          <span class="input-group-text">HTML:</span>
+          <code id="chatgpt-html-output" class="form-control"></code>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script is:inline>
-  function addMessageInput() {
-    const container = document.getElementById('chatgpt-messages-container');
-    const newMessage = document.createElement('div');
-    newMessage.className = 'input-group mb-2';
-    newMessage.innerHTML = `
-      <select class="form-select" style="max-width: 120px;">
-        <option value="user" selected>User</option>
-        <option value="assistant">Assistant</option>
-      </select>
-      <input type="text" class="form-control message-input" placeholder="Message content">
-      <button class="btn btn-outline-danger" onclick="this.parentElement.remove(); updateChatGPTPreview();">×</button>
+  let messages = [
+    { role: "user", content: "hi" },
+    { role: "assistant", content: "Hey! How's it going?" }
+  ];
+
+  function createMessageElement(message, index) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${message.role} p-4 d-flex gap-3 border-bottom`;
+    messageDiv.innerHTML = `
+      <div class="avatar ${message.role}-avatar rounded-circle d-flex align-items-center justify-content-center">
+        ${message.role === 'assistant' 
+          ? '<svg width="16" height="16" viewBox="0 0 41 41" fill="currentColor"><path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707Z"/></svg>'
+          : 'U'
+        }
+      </div>
+      <div class="message-content flex-grow-1">
+        <div class="message-text" contenteditable="true">${message.content}</div>
+        <button class="btn btn-sm btn-outline-danger remove-message" onclick="removeMessage(${index})">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
     `;
-    container.appendChild(newMessage);
-    
-    // Add event listeners to new inputs
-    const newSelect = newMessage.querySelector('select');
-    const newInput = newMessage.querySelector('input');
-    newSelect.addEventListener('change', updateChatGPTPreview);
-    newInput.addEventListener('input', updateChatGPTPreview);
-    
-    updateChatGPTPreview();
+
+    // Add event listener for message content changes
+    const messageText = messageDiv.querySelector('.message-text');
+    messageText.addEventListener('input', () => {
+      messages[index].content = messageText.textContent;
+      updatePreview();
+    });
+
+    return messageDiv;
   }
 
-  // Add event listeners to initial message inputs
-  document.querySelectorAll('#chatgpt-messages-container select, #chatgpt-messages-container input').forEach(element => {
-    element.addEventListener('change', updateChatGPTPreview);
-    element.addEventListener('input', updateChatGPTPreview);
+  function renderMessages() {
+    const container = document.getElementById('chat-messages-container');
+    container.innerHTML = '';
+    messages.forEach((message, index) => {
+      container.appendChild(createMessageElement(message, index));
+    });
+  }
+
+  function addMessage() {
+    const input = document.querySelector('.new-message');
+    const role = document.querySelector('.message-role').value;
+    if (input.value.trim()) {
+      messages.push({
+        role: role,
+        content: input.value.trim()
+      });
+      renderMessages();
+      updatePreview();
+      input.value = '';
+    }
+  }
+
+  function removeMessage(index) {
+    messages.splice(index, 1);
+    renderMessages();
+    updatePreview();
+  }
+
+  function updatePreview() {
+    const values = {
+      messages: JSON.stringify(messages),
+      model: document.getElementById('live-chatgpt-model').textContent,
+      theme: document.querySelector('input[name="chatgpt-theme"]:checked').value
+    };
+
+    const params = new URLSearchParams(values);
+    const url = `${window.location.origin}/api-chatgpt?${params.toString()}`;
+
+    // Update preview image and embed codes
+    document.getElementById('chatgpt-preview-img').src = url;
+    document.getElementById('chatgpt-text-output').textContent = url;
+    document.getElementById('chatgpt-markdown-output').textContent = `![](${url})`;
+    document.getElementById('chatgpt-html-output').textContent = `<img src="${url}" alt="">`;
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    renderMessages();
+
+    // Add message button
+    document.querySelector('.add-message-btn').addEventListener('click', addMessage);
+
+    // Enter key in input
+    document.querySelector('.new-message').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        addMessage();
+      }
+    });
+
+    // Theme change
+    document.querySelectorAll('input[name="chatgpt-theme"]').forEach(radio => {
+      radio.addEventListener('change', updatePreview);
+    });
+
+    // Model name change
+    document.getElementById('live-chatgpt-model').addEventListener('input', updatePreview);
+
+    // Initial preview
+    updatePreview();
   });
-</script> 
+</script>
+
+<style>
+  .chatgpt-container {
+    background: var(--chat-bg, #343541);
+    color: var(--chat-text, #ECECF1);
+    border: 1px solid var(--chat-border, #4B5563);
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .chat-message {
+    background: var(--message-bg, transparent);
+  }
+
+  .chat-message.assistant {
+    background: var(--assistant-bg, #444654);
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    color: white;
+    font-weight: bold;
+  }
+
+  .user-avatar {
+    background: #5436DA;
+  }
+
+  .assistant-avatar {
+    background: #10A37F;
+  }
+
+  .message-content {
+    position: relative;
+  }
+
+  .remove-message {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: none;
+  }
+
+  .message-content:hover .remove-message {
+    display: block;
+  }
+
+  [contenteditable] {
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  [contenteditable]:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  [contenteditable]:focus {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Light theme */
+  [data-theme="light"] {
+    --chat-bg: #FFFFFF;
+    --chat-text: #374151;
+    --chat-border: #E5E7EB;
+    --message-bg: #F7F7F8;
+    --assistant-bg: #F7F7F8;
+  }
+
+  /* Dark theme */
+  [data-theme="dark"] {
+    --chat-bg: #343541;
+    --chat-text: #ECECF1;
+    --chat-border: #4B5563;
+    --message-bg: transparent;
+    --assistant-bg: #444654;
+  }
+</style> 

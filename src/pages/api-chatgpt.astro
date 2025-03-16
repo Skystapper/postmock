@@ -4,11 +4,11 @@ import ChatGPT from "./chatgpt.astro";
 export const partial = true;
 const username = Astro.url.searchParams.get("username") || "You";
 const messages = JSON.parse(Astro.url.searchParams.get("messages") || JSON.stringify([
-  { role: "user", content: "Hello, ChatGPT!" },
-  { role: "assistant", content: "Hello! How can I help you today?" }
+  { role: "user", content: "hi" },
+  { role: "assistant", content: "Hey! How's it going?" }
 ]));
 const model = Astro.url.searchParams.get("model") || "GPT-4";
-const theme = Astro.url.searchParams.get("theme") || "light";
+const theme = Astro.url.searchParams.get("theme") || "dark";
 const width = parseInt(Astro.url.searchParams.get("w")) || 800;
 const height = parseInt(Astro.url.searchParams.get("h")) || 600;
 
@@ -22,8 +22,7 @@ Astro.response.headers.set(
 <svg
   width={width}
   height={height}
-  viewBox={`0 0 ${width} ${height}`}
-  fill="none"
+  viewBox="0 0 {width} {height}"
   xmlns="http://www.w3.org/2000/svg"
 >
   <foreignObject x="0" y="0" width={width} height={height}>

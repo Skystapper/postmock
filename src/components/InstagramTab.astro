@@ -3,79 +3,580 @@ import PreviewEmbed from "./PreviewEmbed.astro";
 ---
 
 <div class="tab-pane fade" id="instagram-tab">
-  <div class="row w-100">
-    <div class="col-12 col-md-6">
-      <div class="input-group mb-2">
-        <span class="input-group-text">Username:</span>
-        <input 
-          id="ig-username-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="johndoe" 
-        />
-      </div>
-
-      <div class="form-check mb-2 ms-1">
-        <input 
-          id="ig-verified-input" 
-          class="form-check-input" 
-          type="checkbox" 
-          checked 
-        />
-        <label class="form-check-label">Verified</label>
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Location:</span>
-        <input 
-          id="ig-location-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="New York, NY" 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Caption:</span>
-        <input 
-          id="ig-caption-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="Write a caption..." 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Likes:</span>
-        <input 
-          id="ig-likes-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="1,234" 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text">Date:</span>
-        <input 
-          id="ig-date-input" 
-          type="text" 
-          class="form-control" 
-          placeholder="JANUARY 1, 2024" 
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <label class="input-group-text">Theme:</label>
-        <select id="ig-theme-input" class="form-select">
-          <option value="light" selected>Light</option>
-          <option value="dark">Dark</option>
-        </select>
+  <div class="toolbar mb-3">
+    <!-- Theme Selection -->
+    <div class="theme-options mb-3">
+      <label class="form-label">Theme</label>
+      <div class="btn-group" role="group">
+        <input type="radio" class="btn-check" name="ig-theme" id="ig-theme-light" value="light" checked>
+        <label class="btn btn-outline-secondary" for="ig-theme-light">Light</label>
+        
+        <input type="radio" class="btn-check" name="ig-theme" id="ig-theme-dark" value="dark">
+        <label class="btn btn-outline-secondary" for="ig-theme-dark">Dark</label>
       </div>
     </div>
 
-    <div class="col col-md-6">
-      <PreviewEmbed platform="instagram" previewSrc="/api-instagram" />
+    <!-- Add Aspect Ratio Selection -->
+    <div class="aspect-options mb-3">
+      <label class="form-label">Post Aspect Ratio</label>
+      <div class="btn-group" role="group">
+        <input type="radio" class="btn-check" name="ig-aspect" id="aspect-square" value="square" checked>
+        <label class="btn btn-outline-secondary" for="aspect-square">1:1</label>
+        
+        <input type="radio" class="btn-check" name="ig-aspect" id="aspect-portrait" value="portrait">
+        <label class="btn btn-outline-secondary" for="aspect-portrait">4:5</label>
+        
+        <input type="radio" class="btn-check" name="ig-aspect" id="aspect-landscape" value="landscape">
+        <label class="btn btn-outline-secondary" for="aspect-landscape">1.91:1</label>
+      </div>
     </div>
   </div>
-</div> 
+
+  <!-- Interactive Instagram Preview -->
+  <div class="instagram-container" id="instagram-preview" data-theme="light">
+    <!-- Header -->
+    <div class="ig-header">
+      <div class="profile-section">
+        <div 
+          class="profile-pic cursor-pointer" 
+          onclick="uploadInstagramProfilePic()"
+          role="button"
+          title="Click to change profile picture"
+        >
+          <img id="ig-profile-pic" src="/default-avatar.png" alt="">
+        </div>
+        
+        <div class="user-info">
+          <div class="username-container">
+            <span 
+              class="username" 
+              contenteditable="true" 
+              id="live-ig-username"
+              data-input="ig-username-input">johndoe</span>
+            <span class="verified-badge" id="ig-verified-badge">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.7 14.5L6.8 13l1.4-1.4 2.1 2.1L15.7 8l1.4 1.4-6.8 7.1z"/></svg>
+            </span>
+          </div>
+          <div 
+            class="location" 
+            contenteditable="true" 
+            id="live-ig-location"
+            data-input="ig-location-input">New York, NY</div>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-link" data-bs-toggle="dropdown">
+          <svg viewBox="0 0 48 48"><circle cx="8" cy="24" r="4.5"/><circle cx="24" cy="24" r="4.5"/><circle cx="40" cy="24" r="4.5"/></svg>
+        </button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" onclick="toggleInstagramVerified()">
+            <i class="bi bi-patch-check"></i> Toggle verified
+          </button></li>
+          <li><button class="dropdown-item" onclick="uploadInstagramProfilePic()">
+            <i class="bi bi-camera"></i> Change profile picture
+          </button></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Image Container -->
+    <div 
+      class="post-image"
+      data-aspect="square"
+      onclick="uploadInstagramPost()"
+      role="button"
+      title="Click to add photo"
+    >
+      <div class="upload-prompt">
+        <i class="bi bi-camera"></i>
+        <span>Add Photo</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="ig-actions d-flex justify-content-between px-3 py-2">
+      <div class="d-flex gap-3">
+        <button class="btn btn-link p-0">
+          <svg aria-label="Like" class="x1lliihq x1n2onr6" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
+            <path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path>
+          </svg>
+        </button>
+        <button class="btn btn-link p-0">
+          <svg aria-label="Comment" class="x1lliihq x1n2onr6" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
+            <path d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></path>
+          </svg>
+        </button>
+        <button class="btn btn-link p-0">
+          <svg aria-label="Share Post" class="x1lliihq x1n2onr6" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
+            <line fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2" x1="22" x2="9.218" y1="3" y2="10.083"></line>
+            <polygon fill="none" points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334" stroke="currentColor" stroke-linejoin="round" stroke-width="2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <button class="btn btn-link p-0">
+        <svg aria-label="Save" class="x1lliihq x1n2onr6" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
+          <polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Likes -->
+    <div class="px-3 py-1">
+      <a href="/p/CN_0l9IM4Di/liked_by/" class="text-decoration-none text-dark">
+        <span class="fw-bold" id="live-ig-likes" data-input="ig-likes-input">1,234</span> likes
+      </a>
+    </div>
+
+    <!-- Caption -->
+    <div class="px-3 py-1">
+      <span class="fw-bold" id="caption-username">johndoe</span>
+      <span class="caption" contenteditable="true" id="live-ig-caption" data-input="ig-caption-input">
+        Write a caption...
+        <a href="/explore/tags/martingarrix/" class="text-primary text-decoration-none">#MartinGarrix</a>
+        <a href="/explore/tags/garrixnews/" class="text-primary text-decoration-none">#garrixnews</a>
+      </span>
+    </div>
+
+    <!-- Comments -->
+    <div class="px-3">
+      <div class="text-secondary small">View all 24 comments</div>
+      <div class="comment mt-2">
+        <span class="fw-bold">username</span>
+        <span class="ms-2">Comment text here</span>
+      </div>
+      <div class="comment mt-2 ms-3">
+        <span class="fw-bold">reply_user</span>
+        <span class="ms-2">Reply text here</span>
+      </div>
+    </div>
+
+    <!-- Date -->
+    <div class="px-3 py-2">
+      <span class="text-secondary small text-uppercase" 
+            contenteditable="true" 
+            id="live-ig-date"
+            data-input="ig-date-input">JANUARY 1, 2024</span>
+    </div>
+
+    <!-- Comment Input -->
+    <div class="border-top p-3 d-flex align-items-center gap-2">
+      <svg aria-label="Emoji" class="x1lliihq x1n2onr6" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24">
+        <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
+      </svg>
+      <input type="text" class="form-control border-0 bg-transparent" placeholder="Add a comment...">
+      <button class="btn btn-link text-primary p-0 text-decoration-none">Post</button>
+    </div>
+  </div>
+
+  <div class="col col-md-6 mt-4">
+    <PreviewEmbed platform="instagram" previewSrc="/api-instagram" />
+  </div>
+</div>
+
+<script is:inline>
+  // Handle contenteditable sync with inputs
+  document.querySelectorAll('[contenteditable]').forEach(element => {
+    element.addEventListener('input', (e) => {
+      const inputId = e.target.dataset.input;
+      if (inputId) {
+        const input = document.getElementById(inputId);
+        if (input) {
+          input.value = e.target.textContent;
+          input.dispatchEvent(new Event('input'));
+        }
+      }
+    });
+  });
+
+  // Toggle verified badge
+  function toggleInstagramVerified() {
+    const verifiedInput = document.getElementById('ig-verified-input');
+    const verifiedBadge = document.getElementById('ig-verified-badge');
+    verifiedInput.checked = !verifiedInput.checked;
+    verifiedBadge.style.display = verifiedInput.checked ? 'inline' : 'none';
+    verifiedInput.dispatchEvent(new Event('input'));
+  }
+
+  // Update profile picture upload function
+  function uploadInstagramProfilePic() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          initCropper(e.target.result, {
+            type: 'profile'
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  }
+
+  // Add aspect ratio handling
+  function updateAspectRatio(ratio) {
+    const postImage = document.querySelector('.post-image');
+    postImage.setAttribute('data-aspect', ratio);
+    
+    // Update cropper if it exists
+    if (window.cropper) {
+      const aspectRatios = {
+        square: 1/1,
+        portrait: 4/5,
+        landscape: 1.91/1
+      };
+      window.cropper.setAspectRatio(aspectRatios[ratio]);
+    }
+  }
+
+  // Update post image upload function
+  function uploadInstagramPost() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const currentAspect = document.querySelector('input[name="ig-aspect"]:checked').value;
+          initCropper(e.target.result, {
+            type: 'post',
+            aspectRatio: currentAspect
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  }
+
+  // Add this function to handle theme changes
+  function updateInstagramTheme(theme) {
+    const container = document.getElementById('instagram-preview');
+    container.setAttribute('data-theme', theme);
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    // Sync initial values
+    document.querySelectorAll('[contenteditable]').forEach(element => {
+      const inputId = element.dataset.input;
+      if (inputId) {
+        const input = document.getElementById(inputId);
+        if (input) {
+          element.textContent = input.value;
+        }
+      }
+    });
+
+    // Add dropdown menu for verified toggle
+    const header = document.querySelector('.ig-header');
+    const moreButton = header.querySelector('.btn-link');
+    moreButton.setAttribute('data-bs-toggle', 'dropdown');
+    
+    const dropdown = document.createElement('ul');
+    dropdown.className = 'dropdown-menu';
+    dropdown.innerHTML = `
+      <li><button class="dropdown-item" onclick="toggleInstagramVerified()">
+        <i class="fas fa-badge-check"></i> Toggle verified
+      </button></li>
+      <li><button class="dropdown-item" onclick="uploadInstagramProfilePic()">
+        <i class="fas fa-camera"></i> Change profile picture
+      </button></li>
+    `;
+    moreButton.after(dropdown);
+
+    // Add theme change handlers
+    document.querySelectorAll('input[name="ig-theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        updateInstagramTheme(e.target.value);
+      });
+    });
+
+    // Set initial theme
+    updateInstagramTheme('light');
+
+    // Add aspect ratio change handlers
+    document.querySelectorAll('input[name="ig-aspect"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        updateAspectRatio(e.target.value);
+      });
+    });
+
+    // Set initial aspect ratio
+    updateAspectRatio('square');
+  });
+
+  async function cropAndUpload() {
+    if (!cropper) return;
+
+    const cropButton = document.getElementById('cropButton');
+    const spinner = cropButton.querySelector('.spinner-border');
+    
+    try {
+      cropButton.disabled = true;
+      spinner.classList.remove('d-none');
+
+      const aspectType = document.querySelector('input[name="ig-aspect"]:checked').value;
+      const outputSizes = {
+        square: { width: 1080, height: 1080 },
+        portrait: { width: 1080, height: 1350 },
+        landscape: { width: 1080, height: 565 }
+      };
+      
+      const outputSize = outputSizes[aspectType];
+      
+      let croppedCanvas = cropper.getCroppedCanvas({
+        width: outputSize.width,
+        height: outputSize.height,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high',
+      });
+
+      const postImage = document.querySelector('.post-image');
+      postImage.style.backgroundImage = `url(${croppedCanvas.toDataURL()})`;
+      document.querySelector('.upload-prompt').style.display = 'none';
+
+      closeCropperModal();
+    } catch (error) {
+      console.error('Error cropping image:', error);
+      alert('Failed to crop image. Please try again.');
+    } finally {
+      cropButton.disabled = false;
+      spinner.classList.add('d-none');
+    }
+  }
+</script>
+
+<style>
+  .instagram-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--post-shadow);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .instagram-container[data-theme="light"] {
+    --bg-primary: #FFFFFF;
+    --text-primary: #262626;
+    --text-secondary: #8E8E8E;
+    --border-color: #DBDBDB;
+    --verified-color: #3897F0;
+    --hover-bg: rgba(0, 0, 0, 0.05);
+    --post-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --post-aspect-ratio: 1/1;
+  }
+
+  .instagram-container[data-theme="dark"] {
+    --bg-primary: #000000;
+    --text-primary: #F5F5F5;
+    --text-secondary: #A8A8A8;
+    --border-color: #262626;
+    --verified-color: #3897F0;
+    --hover-bg: rgba(255, 255, 255, 0.1);
+    --post-shadow: 0 2px 12px rgba(255, 255, 255, 0.08),
+                   0 0 20px rgba(56, 151, 240, 0.15);
+    --post-aspect-ratio: 1/1;
+  }
+
+  .instagram-container:hover {
+    box-shadow: var(--post-shadow),
+                0 0 30px rgba(56, 151, 240, 0.1);
+  }
+
+  .ig-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .profile-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .profile-pic {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .profile-pic:hover {
+    opacity: 0.8;
+  }
+
+  .profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .username-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .username {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .location {
+    font-size: 12px;
+    color: var(--text-primary);
+  }
+
+  .verified-badge {
+    display: inline-flex;
+    width: 14px;
+    height: 14px;
+  }
+
+  .verified-badge svg {
+    fill: var(--verified-color);
+  }
+
+  .post-image {
+    width: 100%;
+    background-color: var(--border-color);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  /* Define aspect ratios */
+  .post-image[data-aspect="square"] {
+    aspect-ratio: 1/1;
+  }
+
+  .post-image[data-aspect="portrait"] {
+    aspect-ratio: 4/5;
+  }
+
+  .post-image[data-aspect="landscape"] {
+    aspect-ratio: 1.91/1;
+  }
+
+  /* Add responsive container widths */
+  @media (min-width: 768px) {
+    .post-image[data-aspect="portrait"] {
+      width: 100%;
+      margin: 0;
+    }
+    
+    .post-image[data-aspect="landscape"] {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  /* Update background image handling */
+  .post-image[style*="background-image"] {
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* Add aspect ratio indicator */
+  .post-image::after {
+    content: attr(data-aspect);
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-transform: capitalize;
+    opacity: 0.8;
+  }
+
+  .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .post-image .upload-prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .upload-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+  }
+
+  .upload-prompt i {
+    font-size: 24px;
+  }
+
+  [contenteditable] {
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  [contenteditable]:hover {
+    background: var(--hover-bg);
+  }
+
+  [contenteditable]:focus {
+    background: var(--hover-bg);
+    box-shadow: 0 0 0 2px rgba(56, 151, 240, 0.3);
+  }
+
+  .ig-actions {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .comment {
+    font-size: 0.875rem;
+    line-height: 1.25;
+  }
+
+  .comment-input {
+    background: transparent;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  [contenteditable][placeholder]:empty:before {
+    content: attr(placeholder);
+    color: var(--text-secondary);
+    cursor: text;
+  }
+</style> 

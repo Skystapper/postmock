@@ -1,146 +1,1259 @@
 ---
-import PreviewEmbed from "./PreviewEmbed.astro";
+import ImageCropper from "./ImageCropper.astro";
+import XPost from './XPost.astro';
 ---
 
 <div class="tab-pane fade show active" id="twitter-tab">
-  <div class="row w-100">
-    <div class="col-12 col-md-6">
-      <div class="input-group mb-2">
-        <span class="input-group-text" id="username">Username:</span>
-        <input
-          id="username-input"
-          type="text"
-          class="form-control"
-          placeholder="John Doe"
-          aria-label="Username"
-          aria-describedby="username"
-        />
+  <div class="mockup-header">
+    <h2>Twitter Post</h2>
+    <p>Create a realistic Twitter post mockup by editing the content below.</p>
+  </div>
+
+  <!-- Controls Section -->
+  <div class="controls-section">
+    <div class="controls-row">
+      <!-- Theme Selector -->
+      <div class="theme-selector">
+        <div class="theme-toggle-group">
+          <input type="radio" class="theme-toggle" name="theme" id="theme-light" value="light" checked>
+          <label class="theme-toggle-btn" for="theme-light">
+            <i class="bi bi-sun"></i>
+          </label>
+          
+          <input type="radio" class="theme-toggle" name="theme" id="theme-dim" value="dim">
+          <label class="theme-toggle-btn" for="theme-dim">
+            <i class="bi bi-moon-stars"></i>
+          </label>
+          
+          <input type="radio" class="theme-toggle" name="theme" id="theme-dark" value="dark">
+          <label class="theme-toggle-btn" for="theme-dark">
+            <i class="bi bi-moon"></i>
+          </label>
+        </div>
       </div>
 
-      <div class="input-group mb-2">
-        <span class="input-group-text" id="handle">User handle:</span>
-        <input
-          id="handle-input"
-          type="text"
-          class="form-control"
-          placeholder="johndoe"
-          aria-label="handle"
-          aria-describedby="handle"
-        />
+      <!-- Platform Toggle -->
+      <div class="platform-toggle">
+        <label class="modern-switch">
+          <input 
+            type="checkbox" 
+            id="platform-switch"
+            onchange="togglePlatformStyle(this.checked)"
+          >
+          <span class="switch-slider">
+            <svg class="twitter-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/>
+            </svg>
+            <svg class="x-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </span>
+        </label>
       </div>
 
-      <div class="form-check mb-2 ms-1">
-        <input
-          id="verified-input"
-          class="form-check-input"
-          type="checkbox"
-          checked
-        />
-        <label class="form-check-label">Verified</label>
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text" id="text">Text:</span>
-        <input
-          id="text-input"
-          type="text"
-          class="form-control"
-          placeholder="Lorem ipsum ..."
-          aria-label="text"
-          aria-describedby="text"
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text" id="hashtags">Hashtags:</span>
-        <input
-          id="hashtags-input"
-          type="text"
-          class="form-control"
-          placeholder="twittermockup,ootd"
-          aria-label="hashtags"
-          aria-describedby="hashtags"
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text" id="date">Date:</span>
-        <input
-          id="date-input"
-          type="text"
-          class="form-control"
-          placeholder="00:00 AM Jan 01, 2022"
-          aria-label="date"
-          aria-describedby="date"
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <label class="input-group-text" for="os">Operating System:</label>
-        <select
-          id="os-input"
-          class="form-select"
-          aria-label="Operating System"
-        >
-          <option selected value="iPhone">iPhone</option>
-          <option value="Android">Android</option>
-          <option value="Windows">Windows</option>
-          <option value="macOS">macOS</option>
-        </select>
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text" id="retweets">Retweets:</span>
-        <input
-          id="retweets-input"
-          type="text"
-          class="form-control"
-          placeholder="100k"
-          aria-label="retweets"
-          aria-describedby="retweets"
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text" id="quotes">Quotes:</span>
-        <input
-          id="quotes-input"
-          type="text"
-          class="form-control"
-          placeholder="50k"
-          aria-label="quotes"
-          aria-describedby="quotes"
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <span class="input-group-text" id="likes">Likes:</span>
-        <input
-          id="likes-input"
-          type="text"
-          class="form-control"
-          placeholder="300k"
-          aria-label="likes"
-          aria-describedby="likes"
-        />
-      </div>
-
-      <div class="input-group mb-2">
-        <label class="input-group-text" for="theme">Theme:</label>
-        <select
-          id="theme-input"
-          class="form-select"
-          aria-label="Theme"
-        >
-          <option selected value="light">Light</option>
-          <option value="dim">Dim</option>
-          <option value="dark">Dark</option>
-        </select>
-      </div>
+      <button class="modern-btn compact" onclick="randomizeStats()">
+        <i class="bi bi-shuffle"></i>
+      </button>
     </div>
 
-    <div class="col col-md-6">
-      <PreviewEmbed platform="twitter" previewSrc="/api" />
+    <div class="controls-row">
+      <div class="size-input-group">
+        <div class="modern-input-wrapper">
+          <input 
+            type="number" 
+            id="image-width" 
+            class="modern-input" 
+            value="1200" 
+            min="300" 
+            max="4096"
+          >
+          <span class="dimension-label">W</span>
+        </div>
+        <span class="dimension-separator">×</span>
+        <div class="modern-input-wrapper">
+          <input 
+            type="number" 
+            id="image-height" 
+            class="modern-input" 
+            value="675" 
+            min="300" 
+            max="4096"
+          >
+          <span class="dimension-label">H</span>
+        </div>
+        <button class="modern-btn icon-btn" onclick="useCurrentSize()" title="Use current size">
+          <i class="bi bi-arrows-fullscreen"></i>
+        </button>
+        <button class="modern-btn icon-btn" onclick="resetSize()" title="Reset size">
+          <i class="bi bi-aspect-ratio"></i>
+        </button>
+      </div>
     </div>
   </div>
-</div> 
+
+  <!-- Tweet Container -->
+  <div class="tweet-container" id="tweet-preview" data-theme="light">
+    <div class="tweet-header d-flex align-items-center gap-3 mb-2">
+      <div 
+        class="profile-pic rounded-circle bg-primary cursor-pointer" 
+        style="width: 48px; height: 48px;"
+        onclick="uploadProfilePic()"
+        role="button"
+        title="Click to change profile picture"
+      >
+        <img 
+          id="profile-pic" 
+          src="/default-avatar.png" 
+          alt="" 
+          class="w-100 h-100 rounded-circle"
+        >
+      </div>
+      
+      <div class="user-info flex-grow-1">
+        <div class="d-flex align-items-center gap-1">
+          <span 
+            class="name fw-bold" 
+            contenteditable="true" 
+            id="live-name"
+            data-input="username-input">John Doe</span>
+          <span class="verified-badge" id="verified-badge">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path></svg>
+          </span>
+        </div>
+        <div 
+          class="handle text-secondary" 
+          contenteditable="true" 
+          id="live-handle"
+          data-input="handle-input">@johndoe</div>
+      </div>
+
+      <div class="dropdown">
+        <button class="btn btn-link text-secondary" data-bs-toggle="dropdown">
+          <i class="bi bi-three-dots"></i>
+        </button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" onclick="toggleVerified()">
+            <i class="bi bi-patch-check"></i> Toggle verified
+          </button></li>
+          <li><button class="dropdown-item" onclick="uploadProfilePic()">
+            <i class="bi bi-camera"></i> Change profile picture
+          </button></li>
+        </ul>
+      </div>
+    </div>
+
+    <div 
+      class="tweet-content mb-3" 
+      contenteditable="true" 
+      id="live-text"
+      data-input="text-input">Your tweet here!</div>
+
+    <div class="tweet-meta text-secondary small">
+      <span 
+        class="tweet-time" 
+        contenteditable="true" 
+        id="live-date"
+        data-input="date-input">12:00 PM · Jan 1, 2023</span>
+      <span>· Twitter for iPhone</span>
+    </div>
+
+    <hr class="my-3">
+
+    <div class="tweet-stats d-flex gap-3 text-secondary">
+      <div class="stat">
+        <span 
+          class="stat-number" 
+          contenteditable="true" 
+          id="live-retweets"
+          data-input="retweets-input">0</span>
+        <span class="stat-label">Retweets</span>
+      </div>
+      <div class="stat">
+        <span 
+          class="stat-number" 
+          contenteditable="true" 
+          id="live-quotes"
+          data-input="quotes-input">0</span>
+        <span class="stat-label">Quote Tweets</span>
+      </div>
+      <div class="stat">
+        <span 
+          class="stat-number" 
+          contenteditable="true" 
+          id="live-likes"
+          data-input="likes-input">0</span>
+        <span class="stat-label">Likes</span>
+      </div>
+    </div>
+  </div>
+
+    <!-- New X Design (initially hidden) -->
+    <div class="x-container" id="x-preview" style="display: none;">
+      <XPost
+        username="John Doe"
+        handle="johndoe"
+        verified={true}
+        text="Your tweet content here!"
+        date="8:21 PM · Mar 12, 2024"
+        views="2.7M"
+        replies="1K"
+        reposts="6K"
+        likes="34K"
+        bookmarks="143"
+        theme="dark"
+      />
+    </div>
+  </div>
+
+  <!-- Add this right before the action buttons -->
+  <div class="preview-modal modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Preview Image</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="preview-container">
+            <div class="preview-size-info mb-2">
+              Output size: <span id="preview-dimensions">1200×675</span> px
+            </div>
+            <div class="preview-scroll">
+              <img id="preview-image" src="" alt="Preview">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="downloadFromPreview()">
+            <i class="bi bi-download"></i> Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update the action buttons -->
+  <div class="action-buttons">
+    <button class="btn btn-secondary" onclick="showPreview()">
+      <i class="bi bi-eye"></i> Preview
+    </button>
+    <button class="btn btn-primary" onclick="downloadImage()">
+      <i class="bi bi-download"></i> Download
+    </button>
+  </div>
+</div>
+
+<ImageCropper />
+
+<style>
+  .mockup-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .mockup-header h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .mockup-header p {
+    color: #6c757d;
+    margin-bottom: 0;
+  }
+
+  .controls-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    margin-bottom: 2rem;
+  }
+
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .tweet-wrapper {
+    margin: 0 auto 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .tweet-container {
+    width: 600px;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 0 auto;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    box-shadow: var(--post-shadow);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  /* Theme variables */
+  .tweet-container[data-theme="light"] {
+    --bg-color: #FFFFFF;
+    --text-color: #0F1419;
+    --text-secondary: #536471;
+    --border-color: #CFD9DE;
+    --hover-bg: rgba(0, 0, 0, 0.03);
+    --focus-bg: rgba(29, 155, 240, 0.1);
+    --post-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .tweet-container[data-theme="dim"] {
+    --bg-color: #15202B;
+    --text-color: #F7F9F9;
+    --text-secondary: #8B98A5;
+    --border-color: #38444D;
+    --hover-bg: rgba(255, 255, 255, 0.03);
+    --focus-bg: rgba(29, 155, 240, 0.1);
+    --post-shadow: 0 2px 12px rgba(136, 153, 166, 0.2),
+                   0 0 20px rgba(29, 155, 240, 0.1);
+  }
+
+  .tweet-container[data-theme="dark"] {
+    --bg-color: #000000;
+    --text-color: #E7E9EA;
+    --text-secondary: #71767B;
+    --border-color: #2F3336;
+    --hover-bg: rgba(255, 255, 255, 0.03);
+    --focus-bg: rgba(29, 155, 240, 0.1);
+    --post-shadow: 0 2px 12px rgba(255, 255, 255, 0.08),
+                   0 0 20px rgba(29, 155, 240, 0.15);
+  }
+
+  [contenteditable] {
+    outline: none;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  [contenteditable]:hover {
+    background: var(--hover-bg);
+  }
+
+  [contenteditable]:focus {
+    background: var(--focus-bg);
+    box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.3);
+  }
+
+  .tweet-content {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  .verified-badge {
+    display: inline-flex;
+  }
+
+  .stat {
+    display: flex;
+    gap: 4px;
+  }
+
+  .stat-number {
+    font-weight: bold;
+    color: var(--text-color);
+  }
+
+  .text-secondary {
+    color: var(--text-secondary) !important;
+  }
+
+  .btn-link.text-secondary {
+    color: var(--text-secondary) !important;
+  }
+
+  hr {
+    margin: 0.75rem 0;
+    border-color: var(--border-color);
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .profile-pic {
+    transition: opacity 0.2s ease;
+  }
+
+  .profile-pic:hover {
+    opacity: 0.8;
+  }
+
+  /* Add a subtle overlay on hover */
+  .profile-pic {
+    position: relative;
+  }
+
+  .profile-pic::after {
+    content: "Change";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .profile-pic:hover::after {
+    opacity: 1;
+  }
+
+  /* Add these styles */
+  .preview-container {
+    background: transparent;
+    padding: 0;
+    border-radius: 8px;
+  }
+
+  .preview-scroll {
+    overflow: auto;
+    max-height: 70vh;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .preview-scroll img {
+    display: block;
+    max-width: none;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .preview-size-info {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  /* Update modal styles */
+  .modal-dialog.modal-lg {
+    max-width: 90vw;
+  }
+
+  .modal-content {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+
+  .modal-header {
+    border-bottom-color: var(--border-color);
+  }
+
+  .modal-footer {
+    border-top-color: var(--border-color);
+  }
+
+  /* Add these styles */
+  .size-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+
+  .modern-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .modern-input {
+    width: 80px;
+    padding: 8px 24px 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+  }
+
+  .modern-input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.2);
+  }
+
+  .dimension-label {
+    position: absolute;
+    right: 8px;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    pointer-events: none;
+  }
+
+  .dimension-separator {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    padding: 0 2px;
+  }
+
+  /* Modern Switch */
+  .modern-switch {
+    position: relative;
+    display: inline-block;
+    width: 72px;
+    height: 36px;
+  }
+
+  .modern-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 9999px;
+    transition: 0.4s;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+  }
+
+  .switch-slider:before {
+    content: "";
+    position: absolute;
+    height: 28px;
+    width: 32px;
+    left: 4px;
+    bottom: 3px;
+    background: var(--accent-color);
+    opacity: 0.1;
+    border-radius: 9999px;
+    transition: 0.4s;
+  }
+
+  .modern-switch input:checked + .switch-slider:before {
+    transform: translateX(32px);
+  }
+
+  .twitter-icon,
+  .x-icon {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    transition: 0.4s;
+  }
+
+  .twitter-icon {
+    left: 8px;
+    color: var(--accent-color);
+  }
+
+  .x-icon {
+    right: 8px;
+    color: var(--text-primary);
+  }
+
+  .modern-switch input:checked ~ .switch-slider .twitter-icon {
+    color: var(--text-secondary);
+  }
+
+  .modern-switch input:checked ~ .switch-slider .x-icon {
+    color: var(--text-primary);
+  }
+
+  /* Add these new styles to handle dark/light modes */
+  [data-theme="light"] .x-icon {
+    color: #000000;
+  }
+
+  [data-theme="dim"] .x-icon,
+  [data-theme="dark"] .x-icon {
+    color: #FFFFFF;
+  }
+
+  /* Modern Button */
+  .modern-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 8px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .modern-btn:hover {
+    background: var(--hover-bg);
+  }
+
+  .modern-btn.compact {
+    padding: 8px;
+    width: 36px;
+  }
+
+  .icon-btn {
+    padding: 8px;
+    width: 36px;
+  }
+
+  /* Platform Toggle */
+  .modern-switch {
+    position: relative;
+    display: inline-block;
+    width: 72px;
+    height: 36px;
+  }
+
+  .switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 9999px;
+    transition: 0.4s;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+  }
+
+  .modern-switch input:checked + .switch-slider:before {
+    transform: translateX(32px);
+  }
+
+  .modern-switch input:checked ~ .switch-slider .twitter-icon {
+    color: var(--text-secondary);
+  }
+
+  .modern-switch input:checked ~ .switch-slider .x-icon {
+    color: var(--text-primary);
+  }
+
+  /* X-specific styles */
+  .tweet-container[data-platform="x"] {
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  .tweet-container[data-platform="x"] .verified-badge svg {
+    fill: #000000;
+  }
+
+  .tweet-container[data-platform="x"][data-theme="dim"] .verified-badge svg,
+  .tweet-container[data-platform="x"][data-theme="dark"] .verified-badge svg {
+    fill: #FFFFFF;
+  }
+
+  /* Update header text based on platform */
+  .mockup-header[data-platform="x"] h2 {
+    font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  /* Add styles for X container */
+  .x-container {
+    width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Add hover effect for the entire container */
+  .tweet-container:hover {
+    box-shadow: var(--post-shadow),
+                0 0 30px rgba(29, 155, 240, 0.1);
+  }
+
+  /* Modern Controls Styling */
+  .controls-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    margin-bottom: 2rem;
+  }
+
+  .control-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  /* Theme Toggle Group */
+  .theme-toggle-group {
+    display: inline-flex;
+    background: var(--bg-primary);
+    padding: 4px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+  }
+
+  .theme-toggle {
+    display: none;
+  }
+
+  .theme-toggle-btn {
+    padding: 8px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+  }
+
+  .theme-toggle:checked + .theme-toggle-btn {
+    background: var(--accent-color);
+    color: white;
+  }
+
+  /* Platform Toggle */
+  .modern-switch {
+    position: relative;
+    display: inline-block;
+    width: 72px;
+    height: 36px;
+  }
+
+  .switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 9999px;
+    transition: 0.4s;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+  }
+
+  .modern-switch input:checked + .switch-slider:before {
+    transform: translateX(32px);
+  }
+
+  .modern-switch input:checked ~ .switch-slider .twitter-icon {
+    color: var(--text-secondary);
+  }
+
+  .modern-switch input:checked ~ .switch-slider .x-icon {
+    color: var(--text-primary);
+  }
+
+  /* Modern Button */
+  .modern-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 8px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .modern-btn:hover {
+    background: var(--hover-bg);
+  }
+
+  .modern-btn.compact {
+    padding: 8px;
+    width: 36px;
+  }
+
+  .icon-btn {
+    padding: 8px;
+    width: 36px;
+  }
+
+  /* Size Input Group */
+  .size-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+  }
+
+  .modern-input {
+    width: 80px;
+    padding: 8px 24px 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+  }
+
+  .dimension-label {
+    position: absolute;
+    right: 8px;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    pointer-events: none;
+  }
+
+  .dimension-separator {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    padding: 0 2px;
+  }
+</style>
+
+<script is:inline>
+  // Handle contenteditable sync with inputs
+  document.querySelectorAll('[contenteditable]').forEach(element => {
+    element.addEventListener('input', (e) => {
+      const inputId = e.target.dataset.input;
+      if (inputId) {
+        const input = document.getElementById(inputId);
+        if (input) {
+          input.value = e.target.textContent;
+          input.dispatchEvent(new Event('input'));
+        }
+      }
+    });
+  });
+
+  // Toggle verified badge
+  function toggleVerified() {
+    const verifiedInput = document.getElementById('verified-input');
+    const twitterBadge = document.getElementById('verified-badge');
+    const xBadge = document.getElementById('x-verified-badge');
+    const isX = document.getElementById('platform-switch').checked;
+    
+    verifiedInput.checked = !verifiedInput.checked;
+    
+    // Toggle both badges
+    twitterBadge.style.display = verifiedInput.checked ? 'inline' : 'none';
+    if (xBadge) {
+      xBadge.style.display = verifiedInput.checked ? 'inline' : 'none';
+    }
+    
+    verifiedInput.dispatchEvent(new Event('input'));
+  }
+
+  // Updated Profile picture upload function
+  function uploadProfilePic() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          initCropper(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  }
+
+  // Randomize stats
+  function randomizeStats() {
+    const formatNumber = (num) => {
+      if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num/1000).toFixed(1) + 'K';
+      return num;
+    };
+
+    // Add views to the stats being randomized
+    ['retweets', 'quotes', 'likes', 'views'].forEach(stat => {
+      const randomNum = formatNumber(Math.floor(Math.random() * 1000000));
+      const liveElement = document.getElementById(`live-${stat}`);
+      const xLiveElement = document.getElementById(`x-live-${stat}`);
+      const input = document.getElementById(`${stat}-input`);
+      
+      if (liveElement) liveElement.textContent = randomNum;
+      if (xLiveElement) xLiveElement.textContent = randomNum;
+      if (input) {
+        input.value = randomNum;
+        input.dispatchEvent(new Event('input'));
+      }
+    });
+  }
+
+  // Add this function to handle theme changes
+  function updateTheme(theme) {
+    const container = document.getElementById('tweet-preview');
+    const xContainer = document.getElementById('x-preview');
+    
+    // Update Twitter container theme
+    container.setAttribute('data-theme', theme);
+    
+    // Update X container theme
+    if (xContainer) {
+      const xPost = xContainer.querySelector('.x-post');
+      if (xPost) {
+        xPost.setAttribute('data-theme', theme);
+      }
+    }
+    
+    // Update the hidden input for the API
+    const themeInput = document.getElementById('theme-input');
+    themeInput.value = theme;
+    themeInput.dispatchEvent(new Event('input'));
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    // Sync initial values
+    document.querySelectorAll('[contenteditable]').forEach(element => {
+      const inputId = element.dataset.input;
+      if (inputId) {
+        const input = document.getElementById(inputId);
+        if (input) {
+          element.textContent = input.value;
+        }
+      }
+    });
+
+    // Add theme change handlers
+    document.querySelectorAll('input[name="theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        updateTheme(e.target.value);
+      });
+    });
+
+    // Set initial theme
+    updateTheme('light');
+
+    const widthInput = document.getElementById('image-width');
+    const heightInput = document.getElementById('image-height');
+
+    [widthInput, heightInput].forEach(input => {
+      input.addEventListener('change', (e) => {
+        const value = parseInt(e.target.value);
+        if (value < 300) e.target.value = 300;
+        if (value > 4096) e.target.value = 4096;
+        updateEditBoxSize();
+        updatePreviewDimensions();
+      });
+
+      // Add input event for real-time updates
+      input.addEventListener('input', () => {
+        const width = widthInput.value;
+        const height = heightInput.value;
+        document.getElementById('preview-dimensions').textContent = `${width}×${height}`;
+        updateEditBoxSize();
+      });
+    });
+
+    // Set initial size
+    updateEditBoxSize();
+
+    // Add tooltip for the Use Current Size button
+    const useCurrentSizeBtn = document.querySelector('.size-controls button');
+    if (useCurrentSizeBtn) {
+      useCurrentSizeBtn.title = 'Use the current tweet box dimensions';
+    }
+
+    // Initialize platform style
+    const platformSwitch = document.getElementById('platform-switch');
+    togglePlatformStyle(platformSwitch.checked);
+    
+    // Set initial platform attribute
+    document.getElementById('tweet-preview').setAttribute('data-platform', 'twitter');
+  });
+
+  // Add these new functions
+  let previewCanvas = null;
+
+  async function generatePreview() {
+    const isX = document.getElementById('platform-switch').checked;
+    const container = isX ? document.getElementById('x-preview') : document.getElementById('tweet-preview');
+    const theme = container.getAttribute('data-theme');
+    const backgroundColor = theme === 'light' ? '#FFFFFF' : 
+                           theme === 'dim' ? '#15202B' : '#000000';
+
+    const width = parseInt(document.getElementById('image-width').value);
+    const height = parseInt(document.getElementById('image-height').value);
+
+    // Create wrapper with exact dimensions
+    const wrapper = document.createElement('div');
+    wrapper.style.backgroundColor = backgroundColor;
+    wrapper.style.display = 'inline-block';
+    wrapper.style.width = `${width}px`;
+    wrapper.style.height = `${height}px`;
+    
+    const clone = container.cloneNode(true);
+    clone.style.margin = '0';
+    clone.style.width = '100%';
+    clone.style.height = '100%';
+    clone.style.boxShadow = 'none';
+    clone.setAttribute('data-platform', isX ? 'x' : 'twitter');
+    
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
+
+    try {
+      const canvas = await html2canvas(wrapper, {
+        scale: 2,
+        backgroundColor: backgroundColor,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        width: width,
+        height: height
+      });
+
+      document.body.removeChild(wrapper);
+      return canvas;
+    } catch (error) {
+      document.body.removeChild(wrapper);
+      throw error;
+    }
+  }
+
+  async function showPreview() {
+    try {
+      const previewBtn = document.querySelector('.action-buttons .btn-secondary');
+      const originalText = previewBtn.innerHTML;
+      previewBtn.innerHTML = '<i class="bi bi-hourglass"></i> Generating...';
+      previewBtn.disabled = true;
+
+      previewCanvas = await generatePreview();
+      const previewImage = document.getElementById('preview-image');
+      previewImage.src = previewCanvas.toDataURL('image/png');
+      
+      // Set exact dimensions
+      const width = document.getElementById('image-width').value;
+      const height = document.getElementById('image-height').value;
+      previewImage.style.width = `${width}px`;
+      previewImage.style.height = `${height}px`;
+
+      // Show the modal
+      const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+      modal.show();
+
+      // Restore button state
+      previewBtn.innerHTML = originalText;
+      previewBtn.disabled = false;
+    } catch (error) {
+      console.error('Error generating preview:', error);
+      alert('Failed to generate preview. Please try again.');
+    }
+  }
+
+  function downloadFromPreview() {
+    if (previewCanvas) {
+      const link = document.createElement('a');
+      link.download = `tweet-${Date.now()}.png`;
+      link.href = previewCanvas.toDataURL('image/png');
+      link.click();
+    }
+  }
+
+  // Update the original downloadImage function to use the preview generator
+  async function downloadImage() {
+    try {
+      const downloadBtn = document.querySelector('.action-buttons .btn-primary');
+      const originalText = downloadBtn.innerHTML;
+      downloadBtn.innerHTML = '<i class="bi bi-hourglass"></i> Generating...';
+      downloadBtn.disabled = true;
+
+      const canvas = await generatePreview();
+      const link = document.createElement('a');
+      link.download = `tweet-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      downloadBtn.innerHTML = originalText;
+      downloadBtn.disabled = false;
+    } catch (error) {
+      console.error('Error downloading image:', error);
+      alert('Failed to download image. Please try again.');
+    }
+  }
+
+  // Add these new functions
+  function resetSize() {
+    document.getElementById('image-width').value = '1200';
+    document.getElementById('image-height').value = '675';
+    updateEditBoxSize();
+  }
+
+  // Update the preview modal to show current dimensions
+  function updatePreviewDimensions() {
+    const width = document.getElementById('image-width').value;
+    const height = document.getElementById('image-height').value;
+    const previewImage = document.getElementById('preview-image');
+    
+    // Update preview container style to maintain aspect ratio
+    const container = document.querySelector('.preview-container');
+    container.style.aspectRatio = `${width} / ${height}`;
+  }
+
+  // Update the useCurrentSize function to get exact dimensions
+  function useCurrentSize() {
+    const tweetContainer = document.getElementById('tweet-preview');
+    const rect = tweetContainer.getBoundingClientRect();
+    
+    const width = Math.round(rect.width);
+    const height = Math.round(rect.height);
+    
+    document.getElementById('image-width').value = width;
+    document.getElementById('image-height').value = height;
+    
+    const dimensionsDisplay = document.getElementById('preview-dimensions');
+    if (dimensionsDisplay) {
+      dimensionsDisplay.textContent = `${width}×${height}`;
+    }
+  }
+
+  // Add this new function to handle size updates
+  function updateEditBoxSize() {
+    const width = parseInt(document.getElementById('image-width').value);
+    const height = parseInt(document.getElementById('image-height').value);
+    
+    const wrapper = document.getElementById('tweet-wrapper');
+    const container = document.getElementById('tweet-preview');
+    
+    // Update wrapper size
+    wrapper.style.width = `${width}px`;
+    wrapper.style.margin = '0 auto';
+    
+    // Update container size
+    container.style.width = '100%';
+    container.style.height = `${height}px`;
+    
+    // Center the wrapper if it's smaller than its parent
+    const parentWidth = wrapper.parentElement.offsetWidth;
+    if (width < parentWidth) {
+      wrapper.style.margin = '0 auto';
+    }
+  }
+
+  // Update the togglePlatformStyle function
+  function togglePlatformStyle(isX) {
+    const twitterContainer = document.getElementById('tweet-preview');
+    const xContainer = document.getElementById('x-preview');
+    const mockupHeader = document.querySelector('.mockup-header');
+    const headerTitle = mockupHeader.querySelector('h2');
+    const headerDesc = mockupHeader.querySelector('p');
+    
+    // Toggle visibility
+    twitterContainer.style.display = isX ? 'none' : 'block';
+    xContainer.style.display = isX ? 'block' : 'none';
+    
+    // Update header text
+    headerTitle.textContent = isX ? 'X Post' : 'Twitter Post';
+    headerDesc.textContent = `Create a realistic ${isX ? 'X' : 'Twitter'} post mockup by editing the content below.`;
+    
+    // Update container attributes
+    twitterContainer.setAttribute('data-platform', isX ? 'x' : 'twitter');
+    
+    // Update stats labels only in Twitter container
+    if (!isX) {
+      const statsLabels = {
+        retweets: 'Retweets',
+        quotes: 'Quote Tweets',
+        likes: 'Likes'
+      };
+      
+      Object.entries(statsLabels).forEach(([stat, label]) => {
+        const statElement = twitterContainer.querySelector(`#live-${stat}`).nextElementSibling;
+        statElement.textContent = label;
+      });
+    }
+
+    // Sync content between designs
+    syncContent(isX);
+  }
+
+  // Update the syncContent function to include views
+  function syncContent(isX) {
+    const twitterContainer = document.getElementById('tweet-preview');
+    const xContainer = document.getElementById('x-preview');
+    
+    if (isX) {
+      // Update X design with Twitter content
+      const name = twitterContainer.querySelector('#live-name').textContent;
+      const handle = twitterContainer.querySelector('#live-handle').textContent;
+      const text = twitterContainer.querySelector('#live-text').textContent;
+      const date = twitterContainer.querySelector('#live-date').textContent;
+      const verified = twitterContainer.querySelector('#verified-badge').style.display !== 'none';
+      const profilePic = twitterContainer.querySelector('#profile-pic').src;
+      const views = document.getElementById('views-input')?.value || '0';
+      
+      // Update X elements
+      xContainer.querySelector('#x-live-name').textContent = name;
+      xContainer.querySelector('#x-live-handle').textContent = handle;
+      xContainer.querySelector('#x-live-text').textContent = text;
+      xContainer.querySelector('#x-live-date').textContent = date;
+      xContainer.querySelector('#x-verified-badge').style.display = verified ? 'inline' : 'none';
+      xContainer.querySelector('#x-profile-pic').src = profilePic;
+      xContainer.querySelector('#x-live-views').textContent = views;
+    } else {
+      // Update Twitter design with X content
+      const name = xContainer.querySelector('#x-live-name').textContent;
+      const handle = xContainer.querySelector('#x-live-handle').textContent;
+      const text = xContainer.querySelector('#x-live-text').textContent;
+      const date = xContainer.querySelector('#x-live-date').textContent;
+      const verified = xContainer.querySelector('#x-verified-badge').style.display !== 'none';
+      const profilePic = xContainer.querySelector('#x-profile-pic').src;
+      const views = xContainer.querySelector('#x-live-views').textContent;
+      
+      // Update Twitter elements
+      twitterContainer.querySelector('#live-name').textContent = name;
+      twitterContainer.querySelector('#live-handle').textContent = handle;
+      twitterContainer.querySelector('#live-text').textContent = text;
+      twitterContainer.querySelector('#live-date').textContent = date;
+      twitterContainer.querySelector('#verified-badge').style.display = verified ? 'inline' : 'none';
+      twitterContainer.querySelector('#profile-pic').src = profilePic;
+      if (document.getElementById('views-input')) {
+        document.getElementById('views-input').value = views;
+      }
+    }
+  }
+</script> 
+
+<!-- Add this with your other hidden inputs -->
+<input type="hidden" id="views-input" value="0"> 
