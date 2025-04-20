@@ -1,0 +1,423 @@
+<div class="preview-modal" id="previewModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Preview</h5>
+      <button type="button" class="btn-close" onclick="closePreviewModal()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="preview-container">
+        <div class="preview-frame" id="previewFrame">
+          <!-- Preview content will be injected here -->
+        </div>
+      </div>
+      <div class="preview-info mt-3">
+        <div class="dimensions-info">
+          <span id="previewDimensions">1200 × 675</span>
+          <span class="text-secondary">px</span>
+        </div>
+        <div class="theme-info">
+          <span class="text-secondary">Theme:</span>
+          <span id="previewTheme">Light</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closePreviewModal()">Close</button>
+      <button type="button" class="btn btn-primary" onclick="downloadPreview()">
+        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+        Download
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .preview-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    padding: 20px;
+  }
+
+  .modal-content {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    max-width: 90vw;
+    max-height: 90vh;
+    margin: 30px auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-body {
+    padding: 1rem;
+    overflow: auto;
+  }
+
+  .modal-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 200px;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow: auto;
+    max-height: calc(90vh - 200px);
+  }
+
+  .preview-frame {
+    background: var(--bg-primary);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: visible;
+    height: auto;
+  }
+
+  .preview-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  .dimensions-info {
+    font-weight: 500;
+  }
+
+  .theme-info {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  /* Theme variables */
+  :root {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F7F9FA;
+    --text-primary: #0F1419;
+    --text-secondary: #536471;
+    --border-color: #CFD9DE;
+    --accent-color: #1D9BF0;
+    --instagram-accent: #0095F6;
+    --instagram-hover: #0081D6;
+  }
+
+  [data-theme="dark"] {
+    --bg-primary: #15202B;
+    --bg-secondary: #1E2732;
+    --text-primary: #F7F9F9;
+    --text-secondary: #8B98A5;
+    --border-color: #38444D;
+    --instagram-accent: #0095F6;
+    --instagram-hover: #0081D6;
+  }
+
+  /* Button styles */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background: #1A8CD8;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+  }
+
+  .btn-secondary:hover {
+    background: var(--bg-secondary);
+  }
+
+  .btn-close {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    border-radius: 50%;
+  }
+
+  .btn-close:hover {
+    background: var(--bg-secondary);
+  }
+
+  /* Instagram aspect ratio styles */
+  .preview-frame.preview-aspect-square .instagram-container {
+    width: min(600px, 90vw);
+  }
+
+  .preview-frame.preview-aspect-portrait .instagram-container {
+    width: min(600px, 90vw);
+  }
+
+  .preview-frame.preview-aspect-landscape .instagram-container {
+    width: min(800px, 90vw);
+  }
+
+  .preview-frame.preview-aspect-square .post-image {
+    aspect-ratio: 1/1;
+  }
+
+  .preview-frame.preview-aspect-portrait .post-image {
+    aspect-ratio: 4/5;
+  }
+
+  .preview-frame.preview-aspect-landscape .post-image {
+    aspect-ratio: 1.91/1;
+  }
+
+  /* Ensure Instagram container fits in preview */
+  .preview-frame .instagram-container {
+    margin: 0;
+    height: auto;
+  }
+
+  /* Fix Instagram post image sizing */
+  .preview-frame .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Platform-specific button colors */
+  .btn-primary[data-platform="instagram"] {
+    background: var(--instagram-accent);
+  }
+
+  .btn-primary[data-platform="instagram"]:hover {
+    background: var(--instagram-hover);
+  }
+</style>
+
+<script is:inline>
+  let currentPlatform = null;
+
+  function getContentToPreview(platform) {
+    switch (platform) {
+      case 'twitter':
+        return document.getElementById('platform-switch')?.checked ? 
+          document.getElementById('x-preview') : 
+          document.getElementById('tweet-preview');
+      case 'instagram':
+        return document.getElementById('instagram-preview');
+      default:
+        console.error('Unknown platform:', platform);
+        return null;
+    }
+  }
+
+  function showPreviewModal(platform) {
+    const modal = document.getElementById('previewModal');
+    const previewFrame = document.getElementById('previewFrame');
+    const dimensionsInfo = document.getElementById('previewDimensions');
+    const themeInfo = document.getElementById('previewTheme');
+    
+    currentPlatform = platform;
+    
+    // Get the content to preview based on platform
+    const content = getContentToPreview(platform);
+    if (!content) return;
+    
+    // Clone the content
+    const clonedContent = content.cloneNode(true);
+    
+    // If it's hidden, make it visible for the preview
+    clonedContent.style.display = 'block';
+    
+    // Special handling for Instagram aspect ratios
+    if (platform === 'instagram') {
+      const aspectRatio = content.querySelector('.post-image')?.getAttribute('data-aspect');
+      if (aspectRatio) {
+        const aspectClass = `preview-aspect-${aspectRatio}`;
+        previewFrame.className = `preview-frame ${aspectClass}`;
+        
+        // Ensure all interactive elements are visible
+        const elements = clonedContent.querySelectorAll('[contenteditable]');
+        elements.forEach(el => {
+          el.setAttribute('contenteditable', 'false');
+        });
+        
+        // Make sure dropdown menus are hidden
+        const dropdowns = clonedContent.querySelectorAll('.dropdown-menu');
+        dropdowns.forEach(dropdown => {
+          dropdown.style.display = 'none';
+        });
+      }
+    } else {
+      previewFrame.className = 'preview-frame';
+    }
+    
+    // Update preview frame
+    previewFrame.innerHTML = '';
+    previewFrame.appendChild(clonedContent);
+    
+    // Force layout recalculation to get correct dimensions
+    previewFrame.offsetHeight;
+    
+    // Update dimensions based on the actual content size
+    const width = clonedContent.offsetWidth;
+    const height = clonedContent.scrollHeight;
+    dimensionsInfo.textContent = `${width} × ${height}`;
+    
+    // Update theme
+    const theme = content.getAttribute('data-theme') || 'light';
+    themeInfo.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+    
+    // Show modal
+    modal.style.display = 'block';
+    
+    // Add escape key listener
+    document.addEventListener('keydown', handleEscapeKey);
+  }
+
+  function closePreviewModal() {
+    const modal = document.getElementById('previewModal');
+    modal.style.display = 'none';
+    currentPlatform = null;
+    document.removeEventListener('keydown', handleEscapeKey);
+  }
+
+  function handleEscapeKey(e) {
+    if (e.key === 'Escape') {
+      closePreviewModal();
+    }
+  }
+
+  async function downloadPreview() {
+    if (!currentPlatform) return;
+    
+    const button = document.querySelector('.modal-footer .btn-primary');
+    const spinner = button.querySelector('.spinner-border');
+    
+    try {
+      button.disabled = true;
+      spinner.classList.remove('d-none');
+      
+      const content = getContentToPreview(currentPlatform);
+      if (!content) throw new Error('No content to download');
+      
+      // Clone the content for capturing
+      const clonedContent = content.cloneNode(true);
+      
+      // If it's hidden, make it visible for capturing
+      clonedContent.style.display = 'block';
+      
+      // Special handling for Instagram aspect ratios
+      if (currentPlatform === 'instagram') {
+        const aspectRatio = content.querySelector('.post-image')?.getAttribute('data-aspect');
+        if (aspectRatio) {
+          const dimensions = {
+            square: { width: 1080, height: 1350 }, // Increased height to accommodate content
+            portrait: { width: 1080, height: 1620 }, // Increased height to accommodate content
+            landscape: { width: 1080, height: 836 }  // Increased height to accommodate content
+          };
+          
+          const size = dimensions[aspectRatio] || dimensions.square;
+          
+          // Set container width only, let height adjust naturally
+          clonedContent.style.width = `${size.width}px`;
+          
+          // Ensure all interactive elements are visible
+          const elements = clonedContent.querySelectorAll('[contenteditable]');
+          elements.forEach(el => {
+            el.setAttribute('contenteditable', 'false');
+          });
+          
+          // Make sure dropdown menus are hidden
+          const dropdowns = clonedContent.querySelectorAll('.dropdown-menu');
+          dropdowns.forEach(dropdown => {
+            dropdown.style.display = 'none';
+          });
+        }
+      }
+      
+      document.body.appendChild(clonedContent);
+      
+      // Create a canvas with the content
+      const canvas = await html2canvas(clonedContent, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false,
+        width: clonedContent.offsetWidth,
+        height: clonedContent.scrollHeight, // Use scrollHeight to capture full content
+        windowWidth: clonedContent.offsetWidth,
+        windowHeight: clonedContent.scrollHeight
+      });
+      
+      // Remove the temporary element
+      document.body.removeChild(clonedContent);
+      
+      // Convert to blob
+      const blob = await new Promise(resolve => {
+        canvas.toBlob(resolve, 'image/png');
+      });
+      
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const isX = document.getElementById('platform-switch')?.checked;
+      const platform = isX ? 'x' : currentPlatform;
+      const aspectRatio = content.querySelector('.post-image')?.getAttribute('data-aspect') || '';
+      const fileName = platform === 'instagram' ? 
+        `instagram-post-${aspectRatio}.png` : 
+        `${platform}-post.png`;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      closePreviewModal();
+    } catch (error) {
+      console.error('Error downloading preview:', error);
+      alert('Failed to download preview. Please try again.');
+    } finally {
+      button.disabled = false;
+      spinner.classList.add('d-none');
+    }
+  }
+
+  // Expose the showPreviewModal function globally
+  window.showPreviewModal = showPreviewModal;
+</script> 

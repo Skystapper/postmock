@@ -1,6 +1,8 @@
 ---
 import ImageCropper from "./ImageCropper.astro";
 import XPost from './XPost.astro';
+import PreviewModal from './PreviewModal.astro';
+import '../styles/TwitterTab.css';
 ---
 
 <div class="tab-pane fade show active" id="twitter-tab">
@@ -9,102 +11,115 @@ import XPost from './XPost.astro';
     <p>Create a realistic Twitter post mockup by editing the content below.</p>
   </div>
 
-  <!-- Controls Section -->
-  <div class="controls-section">
-    <div class="controls-row">
-      <!-- Theme Selector -->
+      <!-- Dimension Controls -->
+  <div class="dimension-section mb-3">
+      <div class="dimension-controls">
+      <div class="dimension-label">Image Size:</div>
+      
+      <div class="control-row">
+        <div class="dimension-field">
+          <span class="field-label">WIDTH</span>
+          <div class="field-input-group">
+            <button class="field-btn" onclick="adjustDimension('width', -1)">
+              <i class="bi bi-dash"></i>
+            </button>
+              <input 
+                type="text" 
+                id="image-width" 
+              class="field-input" 
+                value="1200"
+                onchange="validateDimension(this, 300, 4096)"
+            >
+            <button class="field-btn" onclick="adjustDimension('width', 1)">
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="dimension-separator">×</div>
+        
+        <div class="dimension-field">
+          <span class="field-label">HEIGHT</span>
+          <div class="field-input-group">
+            <button class="field-btn" onclick="adjustDimension('height', -1)">
+              <i class="bi bi-dash"></i>
+            </button>
+              <input 
+                type="text" 
+                id="image-height" 
+              class="field-input" 
+                value="675"
+                onchange="validateDimension(this, 300, 4096)"
+              >
+            <button class="field-btn" onclick="adjustDimension('height', 1)">
+              <i class="bi bi-plus"></i>
+            </button>
+              </div>
+            </div>
+        
+        <div class="dimension-actions">
+          <button class="action-btn reset-btn" onclick="resetSize()">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            Reset
+            </button>
+        </div>
+          </div>
+        </div>
+      </div>
+
+  <!-- Theme Controls -->
+  <div class="theme-section mb-3">
+    <div class="theme-controls">
       <div class="theme-selector">
+        <span class="control-label">Theme:</span>
         <div class="theme-toggle-group">
           <input type="radio" class="theme-toggle" name="theme" id="theme-light" value="light" checked>
-          <label class="theme-toggle-btn" for="theme-light">
+          <label class="theme-toggle-btn" for="theme-light" title="Light theme">
             <i class="bi bi-sun"></i>
           </label>
           
           <input type="radio" class="theme-toggle" name="theme" id="theme-dim" value="dim">
-          <label class="theme-toggle-btn" for="theme-dim">
+          <label class="theme-toggle-btn" for="theme-dim" title="Dim theme">
             <i class="bi bi-moon-stars"></i>
           </label>
           
           <input type="radio" class="theme-toggle" name="theme" id="theme-dark" value="dark">
-          <label class="theme-toggle-btn" for="theme-dark">
+          <label class="theme-toggle-btn" for="theme-dark" title="Dark theme">
             <i class="bi bi-moon"></i>
           </label>
         </div>
       </div>
 
-      <!-- Platform Toggle -->
-      <div class="platform-toggle">
-        <label class="modern-switch">
-          <input 
-            type="checkbox" 
-            id="platform-switch"
-            onchange="togglePlatformStyle(this.checked)"
-          >
-          <span class="switch-slider">
-            <svg class="twitter-icon" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/>
-            </svg>
-            <svg class="x-icon" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </span>
-        </label>
-      </div>
-
-      <button class="modern-btn compact" onclick="randomizeStats()">
-        <i class="bi bi-shuffle"></i>
+      <button class="modern-btn labeled-btn tooltip-btn" onclick="randomizeStats()" title="Generate random engagement stats">
+          <i class="bi bi-shuffle"></i>
+        <span class="btn-label">Randomize Stats</span>
+        <span class="tooltip-text">Generate random engagement numbers</span>
       </button>
-    </div>
 
-    <div class="controls-row">
-      <div class="size-input-group">
-        <div class="modern-input-wrapper">
-          <input 
-            type="number" 
-            id="image-width" 
-            class="modern-input" 
-            value="1200" 
-            min="300" 
-            max="4096"
-          >
-          <span class="dimension-label">W</span>
-        </div>
-        <span class="dimension-separator">×</span>
-        <div class="modern-input-wrapper">
-          <input 
-            type="number" 
-            id="image-height" 
-            class="modern-input" 
-            value="675" 
-            min="300" 
-            max="4096"
-          >
-          <span class="dimension-label">H</span>
-        </div>
-        <button class="modern-btn icon-btn" onclick="useCurrentSize()" title="Use current size">
-          <i class="bi bi-arrows-fullscreen"></i>
+      <button type="button" class="preview-btn" onclick="showPreviewModal('twitter')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+        </svg>
+        Preview
         </button>
-        <button class="modern-btn icon-btn" onclick="resetSize()" title="Reset size">
-          <i class="bi bi-aspect-ratio"></i>
-        </button>
-      </div>
     </div>
   </div>
 
   <!-- Tweet Container -->
+  <div class="tweet-wrapper" id="tweet-wrapper">
   <div class="tweet-container" id="tweet-preview" data-theme="light">
     <div class="tweet-header d-flex align-items-center gap-3 mb-2">
       <div 
         class="profile-pic rounded-circle bg-primary cursor-pointer" 
         style="width: 48px; height: 48px;"
-        onclick="uploadProfilePic()"
+        onclick="uploadTwitterProfilePic()"
         role="button"
         title="Click to change profile picture"
       >
         <img 
           id="profile-pic" 
-          src="/default-avatar.png" 
-          alt="" 
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E"
+          alt="Profile picture placeholder" 
           class="w-100 h-100 rounded-circle"
         >
       </div>
@@ -135,7 +150,7 @@ import XPost from './XPost.astro';
           <li><button class="dropdown-item" onclick="toggleVerified()">
             <i class="bi bi-patch-check"></i> Toggle verified
           </button></li>
-          <li><button class="dropdown-item" onclick="uploadProfilePic()">
+          <li><button class="dropdown-item" onclick="uploadTwitterProfilePic()">
             <i class="bi bi-camera"></i> Change profile picture
           </button></li>
         </ul>
@@ -183,667 +198,65 @@ import XPost from './XPost.astro';
           id="live-likes"
           data-input="likes-input">0</span>
         <span class="stat-label">Likes</span>
-      </div>
-    </div>
-  </div>
-
-    <!-- New X Design (initially hidden) -->
-    <div class="x-container" id="x-preview" style="display: none;">
-      <XPost
-        username="John Doe"
-        handle="johndoe"
-        verified={true}
-        text="Your tweet content here!"
-        date="8:21 PM · Mar 12, 2024"
-        views="2.7M"
-        replies="1K"
-        reposts="6K"
-        likes="34K"
-        bookmarks="143"
-        theme="dark"
-      />
-    </div>
-  </div>
-
-  <!-- Add this right before the action buttons -->
-  <div class="preview-modal modal fade" id="previewModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Preview Image</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="preview-container">
-            <div class="preview-size-info mb-2">
-              Output size: <span id="preview-dimensions">1200×675</span> px
-            </div>
-            <div class="preview-scroll">
-              <img id="preview-image" src="" alt="Preview">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="downloadFromPreview()">
-            <i class="bi bi-download"></i> Download
-          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Update the action buttons -->
-  <div class="action-buttons">
-    <button class="btn btn-secondary" onclick="showPreview()">
-      <i class="bi bi-eye"></i> Preview
-    </button>
-    <button class="btn btn-primary" onclick="downloadImage()">
-      <i class="bi bi-download"></i> Download
-    </button>
+  <!-- New X Design (initially hidden) -->
+  <div class="tweet-wrapper" id="x-wrapper">
+  <div class="x-container" id="x-preview" style="display: none;">
+    <XPost
+      username="John Doe"
+      handle="johndoe"
+      verified={true}
+      text="Your tweet content here!"
+      date="8:21 PM · Mar 12, 2024"
+      views="2.7M"
+      replies="1K"
+      reposts="6K"
+      likes="34K"
+      bookmarks="143"
+      theme="dark"
+    />
+    </div>
+  </div>
+
+  <!-- Platform Toggle -->
+  <div class="platform-toggle-section mt-3">
+    <div class="platform-toggle-wrapper">
+      <div class="platform-toggle-container">
+        <span class="platform-label">Toggle Platform:</span>
+        <label class="modern-switch" title="Switch between Twitter and X styles">
+          <input 
+            type="checkbox" 
+            id="platform-switch"
+            onchange="togglePlatformStyle(this.checked)"
+          >
+          <span class="switch-slider">
+            <svg class="twitter-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/>
+            </svg>
+            <svg class="x-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </span>
+        </label>
+        <span class="platform-indicator">
+          <span class="platform-twitter">Twitter</span>
+          <span class="platform-x">X</span>
+        </span>
+      </div>
+    </div>
   </div>
 </div>
 
 <ImageCropper />
 
-<style>
-  .mockup-header {
-    margin-bottom: 1.5rem;
-  }
+<input type="hidden" id="theme-input" value="light">
+<input type="hidden" id="views-input" value="0">
 
-  .mockup-header h2 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .mockup-header p {
-    color: #6c757d;
-    margin-bottom: 0;
-  }
-
-  .controls-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--bg-secondary);
-    border-radius: 16px;
-    margin-bottom: 2rem;
-  }
-
-  .controls-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: space-between;
-  }
-
-  .tweet-wrapper {
-    margin: 0 auto 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-
-  .tweet-container {
-    width: 600px;
-    border: none;
-    border-radius: 12px;
-    padding: 1rem;
-    margin: 0 auto;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    box-shadow: var(--post-shadow);
-    transition: box-shadow 0.2s ease;
-  }
-
-  .action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-
-  /* Theme variables */
-  .tweet-container[data-theme="light"] {
-    --bg-color: #FFFFFF;
-    --text-color: #0F1419;
-    --text-secondary: #536471;
-    --border-color: #CFD9DE;
-    --hover-bg: rgba(0, 0, 0, 0.03);
-    --focus-bg: rgba(29, 155, 240, 0.1);
-    --post-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  .tweet-container[data-theme="dim"] {
-    --bg-color: #15202B;
-    --text-color: #F7F9F9;
-    --text-secondary: #8B98A5;
-    --border-color: #38444D;
-    --hover-bg: rgba(255, 255, 255, 0.03);
-    --focus-bg: rgba(29, 155, 240, 0.1);
-    --post-shadow: 0 2px 12px rgba(136, 153, 166, 0.2),
-                   0 0 20px rgba(29, 155, 240, 0.1);
-  }
-
-  .tweet-container[data-theme="dark"] {
-    --bg-color: #000000;
-    --text-color: #E7E9EA;
-    --text-secondary: #71767B;
-    --border-color: #2F3336;
-    --hover-bg: rgba(255, 255, 255, 0.03);
-    --focus-bg: rgba(29, 155, 240, 0.1);
-    --post-shadow: 0 2px 12px rgba(255, 255, 255, 0.08),
-                   0 0 20px rgba(29, 155, 240, 0.15);
-  }
-
-  [contenteditable] {
-    outline: none;
-    padding: 2px 4px;
-    border-radius: 4px;
-  }
-
-  [contenteditable]:hover {
-    background: var(--hover-bg);
-  }
-
-  [contenteditable]:focus {
-    background: var(--focus-bg);
-    box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.3);
-  }
-
-  .tweet-content {
-    font-size: 1.25rem;
-    line-height: 1.5;
-    margin-bottom: 0.75rem;
-  }
-
-  .verified-badge {
-    display: inline-flex;
-  }
-
-  .stat {
-    display: flex;
-    gap: 4px;
-  }
-
-  .stat-number {
-    font-weight: bold;
-    color: var(--text-color);
-  }
-
-  .text-secondary {
-    color: var(--text-secondary) !important;
-  }
-
-  .btn-link.text-secondary {
-    color: var(--text-secondary) !important;
-  }
-
-  hr {
-    margin: 0.75rem 0;
-    border-color: var(--border-color);
-  }
-
-  .cursor-pointer {
-    cursor: pointer;
-  }
-
-  .profile-pic {
-    transition: opacity 0.2s ease;
-  }
-
-  .profile-pic:hover {
-    opacity: 0.8;
-  }
-
-  /* Add a subtle overlay on hover */
-  .profile-pic {
-    position: relative;
-  }
-
-  .profile-pic::after {
-    content: "Change";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 12px;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    pointer-events: none;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-  }
-
-  .profile-pic:hover::after {
-    opacity: 1;
-  }
-
-  /* Add these styles */
-  .preview-container {
-    background: transparent;
-    padding: 0;
-    border-radius: 8px;
-  }
-
-  .preview-scroll {
-    overflow: auto;
-    max-height: 70vh;
-    border-radius: 8px;
-    padding: 1rem;
-  }
-
-  .preview-scroll img {
-    display: block;
-    max-width: none;
-    height: auto;
-    margin: 0 auto;
-  }
-
-  .preview-size-info {
-    text-align: center;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-  }
-
-  /* Update modal styles */
-  .modal-dialog.modal-lg {
-    max-width: 90vw;
-  }
-
-  .modal-content {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-  }
-
-  .modal-header {
-    border-bottom-color: var(--border-color);
-  }
-
-  .modal-footer {
-    border-top-color: var(--border-color);
-  }
-
-  /* Add these styles */
-  .size-input-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-  }
-
-  .modern-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-
-  .modern-input {
-    width: 80px;
-    padding: 8px 24px 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-  }
-
-  .modern-input:focus {
-    border-color: var(--accent-color);
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.2);
-  }
-
-  .dimension-label {
-    position: absolute;
-    right: 8px;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    pointer-events: none;
-  }
-
-  .dimension-separator {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    padding: 0 2px;
-  }
-
-  /* Modern Switch */
-  .modern-switch {
-    position: relative;
-    display: inline-block;
-    width: 72px;
-    height: 36px;
-  }
-
-  .modern-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .switch-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 9999px;
-    transition: 0.4s;
-    display: flex;
-    align-items: center;
-    padding: 4px;
-  }
-
-  .switch-slider:before {
-    content: "";
-    position: absolute;
-    height: 28px;
-    width: 32px;
-    left: 4px;
-    bottom: 3px;
-    background: var(--accent-color);
-    opacity: 0.1;
-    border-radius: 9999px;
-    transition: 0.4s;
-  }
-
-  .modern-switch input:checked + .switch-slider:before {
-    transform: translateX(32px);
-  }
-
-  .twitter-icon,
-  .x-icon {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    transition: 0.4s;
-  }
-
-  .twitter-icon {
-    left: 8px;
-    color: var(--accent-color);
-  }
-
-  .x-icon {
-    right: 8px;
-    color: var(--text-primary);
-  }
-
-  .modern-switch input:checked ~ .switch-slider .twitter-icon {
-    color: var(--text-secondary);
-  }
-
-  .modern-switch input:checked ~ .switch-slider .x-icon {
-    color: var(--text-primary);
-  }
-
-  /* Add these new styles to handle dark/light modes */
-  [data-theme="light"] .x-icon {
-    color: #000000;
-  }
-
-  [data-theme="dim"] .x-icon,
-  [data-theme="dark"] .x-icon {
-    color: #FFFFFF;
-  }
-
-  /* Modern Button */
-  .modern-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 8px;
-    border-radius: 9999px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    height: 36px;
-    min-width: 36px;
-  }
-
-  .modern-btn:hover {
-    background: var(--hover-bg);
-  }
-
-  .modern-btn.compact {
-    padding: 8px;
-    width: 36px;
-  }
-
-  .icon-btn {
-    padding: 8px;
-    width: 36px;
-  }
-
-  /* Platform Toggle */
-  .modern-switch {
-    position: relative;
-    display: inline-block;
-    width: 72px;
-    height: 36px;
-  }
-
-  .switch-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 9999px;
-    transition: 0.4s;
-    display: flex;
-    align-items: center;
-    padding: 4px;
-  }
-
-  .modern-switch input:checked + .switch-slider:before {
-    transform: translateX(32px);
-  }
-
-  .modern-switch input:checked ~ .switch-slider .twitter-icon {
-    color: var(--text-secondary);
-  }
-
-  .modern-switch input:checked ~ .switch-slider .x-icon {
-    color: var(--text-primary);
-  }
-
-  /* X-specific styles */
-  .tweet-container[data-platform="x"] {
-    font-family: 'Helvetica Neue', sans-serif;
-  }
-
-  .tweet-container[data-platform="x"] .verified-badge svg {
-    fill: #000000;
-  }
-
-  .tweet-container[data-platform="x"][data-theme="dim"] .verified-badge svg,
-  .tweet-container[data-platform="x"][data-theme="dark"] .verified-badge svg {
-    fill: #FFFFFF;
-  }
-
-  /* Update header text based on platform */
-  .mockup-header[data-platform="x"] h2 {
-    font-family: 'Helvetica Neue', sans-serif;
-  }
-
-  /* Add styles for X container */
-  .x-container {
-    width: 600px;
-    margin: 0 auto;
-  }
-
-  /* Add hover effect for the entire container */
-  .tweet-container:hover {
-    box-shadow: var(--post-shadow),
-                0 0 30px rgba(29, 155, 240, 0.1);
-  }
-
-  /* Modern Controls Styling */
-  .controls-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--bg-secondary);
-    border-radius: 16px;
-    margin-bottom: 2rem;
-  }
-
-  .control-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-bottom: 0.5rem;
-    display: block;
-  }
-
-  /* Theme Toggle Group */
-  .theme-toggle-group {
-    display: inline-flex;
-    background: var(--bg-primary);
-    padding: 4px;
-    border-radius: 9999px;
-    border: 1px solid var(--border-color);
-  }
-
-  .theme-toggle {
-    display: none;
-  }
-
-  .theme-toggle-btn {
-    padding: 8px;
-    border-radius: 9999px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-  }
-
-  .theme-toggle:checked + .theme-toggle-btn {
-    background: var(--accent-color);
-    color: white;
-  }
-
-  /* Platform Toggle */
-  .modern-switch {
-    position: relative;
-    display: inline-block;
-    width: 72px;
-    height: 36px;
-  }
-
-  .switch-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 9999px;
-    transition: 0.4s;
-    display: flex;
-    align-items: center;
-    padding: 4px;
-  }
-
-  .modern-switch input:checked + .switch-slider:before {
-    transform: translateX(32px);
-  }
-
-  .modern-switch input:checked ~ .switch-slider .twitter-icon {
-    color: var(--text-secondary);
-  }
-
-  .modern-switch input:checked ~ .switch-slider .x-icon {
-    color: var(--text-primary);
-  }
-
-  /* Modern Button */
-  .modern-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 8px;
-    border-radius: 9999px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    height: 36px;
-    min-width: 36px;
-  }
-
-  .modern-btn:hover {
-    background: var(--hover-bg);
-  }
-
-  .modern-btn.compact {
-    padding: 8px;
-    width: 36px;
-  }
-
-  .icon-btn {
-    padding: 8px;
-    width: 36px;
-  }
-
-  /* Size Input Group */
-  .size-input-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-  }
-
-  .modern-input {
-    width: 80px;
-    padding: 8px 24px 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-  }
-
-  .dimension-label {
-    position: absolute;
-    right: 8px;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    pointer-events: none;
-  }
-
-  .dimension-separator {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    padding: 0 2px;
-  }
-</style>
+<PreviewModal />
 
 <script is:inline>
   // Handle contenteditable sync with inputs
@@ -878,8 +291,8 @@ import XPost from './XPost.astro';
     verifiedInput.dispatchEvent(new Event('input'));
   }
 
-  // Updated Profile picture upload function
-  function uploadProfilePic() {
+  // Updated Profile picture upload function for direct upload
+  function uploadTwitterProfilePic() {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -888,7 +301,15 @@ import XPost from './XPost.astro';
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          initCropper(e.target.result);
+          // Initialize cropper with the image and handle the cropped result
+          initImageCropper(e.target.result, 'twitter-profile', (croppedImageUrl) => {
+            const profilePic = document.getElementById('profile-pic');
+            const xProfilePic = document.getElementById('x-profile-pic');
+            
+            if (profilePic) profilePic.src = croppedImageUrl;
+            if (xProfilePic) xProfilePic.src = croppedImageUrl;
+            console.log('✅ Successfully updated Twitter profile picture');
+          });
         };
         reader.readAsDataURL(file);
       }
@@ -920,13 +341,16 @@ import XPost from './XPost.astro';
     });
   }
 
-  // Add this function to handle theme changes
+  // Update the updateTheme function
   function updateTheme(theme) {
     const container = document.getElementById('tweet-preview');
     const xContainer = document.getElementById('x-preview');
+    const themeInput = document.getElementById('theme-input');
     
     // Update Twitter container theme
-    container.setAttribute('data-theme', theme);
+    if (container) {
+      container.setAttribute('data-theme', theme);
+    }
     
     // Update X container theme
     if (xContainer) {
@@ -937,9 +361,10 @@ import XPost from './XPost.astro';
     }
     
     // Update the hidden input for the API
-    const themeInput = document.getElementById('theme-input');
-    themeInput.value = theme;
-    themeInput.dispatchEvent(new Event('input'));
+    if (themeInput) {
+      themeInput.value = theme;
+      themeInput.dispatchEvent(new Event('input'));
+    }
   }
 
   // Initialize
@@ -953,6 +378,9 @@ import XPost from './XPost.astro';
           element.textContent = input.value;
         }
       }
+      
+      // Add listener for content changes to auto-adjust height
+      element.addEventListener('input', debounce(updateHeightOnContentChange, 300));
     });
 
     // Add theme change handlers
@@ -976,199 +404,184 @@ import XPost from './XPost.astro';
         updateEditBoxSize();
         updatePreviewDimensions();
       });
-
-      // Add input event for real-time updates
-      input.addEventListener('input', () => {
-        const width = widthInput.value;
-        const height = heightInput.value;
-        document.getElementById('preview-dimensions').textContent = `${width}×${height}`;
-        updateEditBoxSize();
-      });
     });
 
-    // Set initial size
-    updateEditBoxSize();
+    // Set optimal size based on user's display width
+    setOptimalSize();
 
-    // Add tooltip for the Use Current Size button
-    const useCurrentSizeBtn = document.querySelector('.size-controls button');
-    if (useCurrentSizeBtn) {
-      useCurrentSizeBtn.title = 'Use the current tweet box dimensions';
-    }
+    // Listen for window resize to adjust size as needed
+    window.addEventListener('resize', debounce(setOptimalSize, 250));
 
     // Initialize platform style
     const platformSwitch = document.getElementById('platform-switch');
+    platformSwitch.addEventListener('change', function() {
+      togglePlatformStyle(this.checked);
+      // Adjust height for the newly displayed platform
+      setTimeout(updateHeightOnContentChange, 50);
+    });
+    
     togglePlatformStyle(platformSwitch.checked);
     
     // Set initial platform attribute
     document.getElementById('tweet-preview').setAttribute('data-platform', 'twitter');
   });
 
-  // Add these new functions
-  let previewCanvas = null;
-
-  async function generatePreview() {
-    const isX = document.getElementById('platform-switch').checked;
-    const container = isX ? document.getElementById('x-preview') : document.getElementById('tweet-preview');
-    const theme = container.getAttribute('data-theme');
-    const backgroundColor = theme === 'light' ? '#FFFFFF' : 
-                           theme === 'dim' ? '#15202B' : '#000000';
-
-    const width = parseInt(document.getElementById('image-width').value);
-    const height = parseInt(document.getElementById('image-height').value);
-
-    // Create wrapper with exact dimensions
-    const wrapper = document.createElement('div');
-    wrapper.style.backgroundColor = backgroundColor;
-    wrapper.style.display = 'inline-block';
-    wrapper.style.width = `${width}px`;
-    wrapper.style.height = `${height}px`;
-    
-    const clone = container.cloneNode(true);
-    clone.style.margin = '0';
-    clone.style.width = '100%';
-    clone.style.height = '100%';
-    clone.style.boxShadow = 'none';
-    clone.setAttribute('data-platform', isX ? 'x' : 'twitter');
-    
-    wrapper.appendChild(clone);
-    document.body.appendChild(wrapper);
-
-    try {
-      const canvas = await html2canvas(wrapper, {
-        scale: 2,
-        backgroundColor: backgroundColor,
-        logging: false,
-        useCORS: true,
-        allowTaint: true,
-        width: width,
-        height: height
-      });
-
-      document.body.removeChild(wrapper);
-      return canvas;
-    } catch (error) {
-      document.body.removeChild(wrapper);
-      throw error;
-    }
+  // Add debounce function to prevent excessive resize calculations
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
   }
 
-  async function showPreview() {
-    try {
-      const previewBtn = document.querySelector('.action-buttons .btn-secondary');
-      const originalText = previewBtn.innerHTML;
-      previewBtn.innerHTML = '<i class="bi bi-hourglass"></i> Generating...';
-      previewBtn.disabled = true;
+  // Function to calculate and set optimal size based on user's display
+  function setOptimalSize() {
+    // Get viewport width
+    const viewportWidth = window.innerWidth;
+    
+    // Calculate optimal width based on viewport
+    let optimalWidth = 600; // Default width
+    
+    if (viewportWidth < 768) {
+      // For mobile, use 90% of viewport width, but not less than 300px
+      optimalWidth = Math.max(Math.round(viewportWidth * 0.9), 300);
+    } else if (viewportWidth < 1200) {
+      // For tablets, use 70% of viewport width
+      optimalWidth = Math.round(viewportWidth * 0.7);
+    } else {
+      // For larger screens, cap at 800px
+      optimalWidth = Math.min(Math.round(viewportWidth * 0.5), 800);
+    }
+    
+    // Set width to input
+    document.getElementById('image-width').value = optimalWidth;
+    
+    // Apply the new width and calculate height based on content
+    updateEditBoxSize(true);
+    
+    console.log(`Optimal size set with width: ${optimalWidth}px and auto-height based on content`);
+  }
 
-      previewCanvas = await generatePreview();
-      const previewImage = document.getElementById('preview-image');
-      previewImage.src = previewCanvas.toDataURL('image/png');
+  // Update the function to handle size updates for both Twitter and X
+  function updateEditBoxSize(autoHeight = false) {
+    const width = parseInt(document.getElementById('image-width').value);
+    let height = parseInt(document.getElementById('image-height').value);
+    
+    // Update Twitter wrapper
+    const twitterWrapper = document.getElementById('tweet-wrapper');
+    const twitterContainer = document.getElementById('tweet-preview');
+    
+    if (twitterWrapper && twitterContainer) {
+      // Set the width
+      twitterWrapper.style.width = `${width}px`;
       
-      // Set exact dimensions
-      const width = document.getElementById('image-width').value;
-      const height = document.getElementById('image-height').value;
-      previewImage.style.width = `${width}px`;
-      previewImage.style.height = `${height}px`;
-
-      // Show the modal
-      const modal = new bootstrap.Modal(document.getElementById('previewModal'));
-      modal.show();
-
-      // Restore button state
-      previewBtn.innerHTML = originalText;
-      previewBtn.disabled = false;
-    } catch (error) {
-      console.error('Error generating preview:', error);
-      alert('Failed to generate preview. Please try again.');
+      if (autoHeight) {
+        // Auto-calculate height based on content
+        // First, remove any max-height constraints
+        twitterContainer.style.minHeight = 'auto';
+        twitterContainer.style.maxHeight = 'none';
+        twitterContainer.style.height = 'auto';
+        twitterContainer.style.overflowY = 'visible';
+        
+        // Let the layout settle
+        setTimeout(() => {
+          // Get the actual content height
+          const actualHeight = twitterContainer.scrollHeight;
+          
+          // Add a small buffer (15px) for padding
+          const optimalHeight = actualHeight + 15;
+          
+          // Update the height input
+          document.getElementById('image-height').value = optimalHeight;
+          
+          // Update the container height now that we know the actual content height
+          if (!document.getElementById('platform-switch').checked) {
+            twitterContainer.style.minHeight = `${optimalHeight}px`;
+          }
+          
+          console.log(`Content-based height set to: ${optimalHeight}px`);
+        }, 10);
+      } else {
+        // Use the manually set height
+        twitterContainer.style.minHeight = `${height}px`;
+        twitterContainer.style.maxHeight = 'none';
+        twitterContainer.style.overflowY = 'visible';
+      }
+    }
+    
+    // Update X wrapper
+    const xWrapper = document.getElementById('x-wrapper');
+    const xContainer = document.getElementById('x-preview');
+    
+    if (xWrapper && xContainer) {
+      // Set the width
+      xWrapper.style.width = `${width}px`;
+      
+      if (autoHeight) {
+        // Auto-calculate height based on content
+        // First, remove any max-height constraints
+        xContainer.style.minHeight = 'auto';
+        xContainer.style.maxHeight = 'none';
+        xContainer.style.height = 'auto';
+        xContainer.style.overflowY = 'visible';
+        
+        // Let the layout settle
+        setTimeout(() => {
+          // Get the actual content height
+          const actualHeight = xContainer.scrollHeight;
+          
+          // Add a small buffer (15px) for padding
+          const optimalHeight = actualHeight + 15;
+          
+          // Update the height input if X is active
+          if (document.getElementById('platform-switch').checked) {
+            document.getElementById('image-height').value = optimalHeight;
+            xContainer.style.minHeight = `${optimalHeight}px`;
+          }
+        }, 10);
+      } else {
+        // Use the manually set height
+        xContainer.style.minHeight = `${height}px`;
+        xContainer.style.maxHeight = 'none';
+        xContainer.style.overflowY = 'visible';
+      }
     }
   }
-
-  function downloadFromPreview() {
-    if (previewCanvas) {
-      const link = document.createElement('a');
-      link.download = `tweet-${Date.now()}.png`;
-      link.href = previewCanvas.toDataURL('image/png');
-      link.click();
+  
+  // Add a function to update height based on content changes
+  function updateHeightOnContentChange() {
+    // Check if the container is visible before trying to measure it
+    const isPlatformX = document.getElementById('platform-switch').checked;
+    const activeContainer = isPlatformX ? 
+      document.getElementById('x-preview') : 
+      document.getElementById('tweet-preview');
+    
+    if (!activeContainer || activeContainer.offsetParent === null) {
+      return; // Skip if container is not visible
     }
-  }
-
-  // Update the original downloadImage function to use the preview generator
-  async function downloadImage() {
-    try {
-      const downloadBtn = document.querySelector('.action-buttons .btn-primary');
-      const originalText = downloadBtn.innerHTML;
-      downloadBtn.innerHTML = '<i class="bi bi-hourglass"></i> Generating...';
-      downloadBtn.disabled = true;
-
-      const canvas = await generatePreview();
-      const link = document.createElement('a');
-      link.download = `tweet-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-
-      downloadBtn.innerHTML = originalText;
-      downloadBtn.disabled = false;
-    } catch (error) {
-      console.error('Error downloading image:', error);
-      alert('Failed to download image. Please try again.');
-    }
-  }
-
-  // Add these new functions
-  function resetSize() {
-    document.getElementById('image-width').value = '1200';
-    document.getElementById('image-height').value = '675';
-    updateEditBoxSize();
-  }
-
-  // Update the preview modal to show current dimensions
-  function updatePreviewDimensions() {
-    const width = document.getElementById('image-width').value;
-    const height = document.getElementById('image-height').value;
-    const previewImage = document.getElementById('preview-image');
     
-    // Update preview container style to maintain aspect ratio
-    const container = document.querySelector('.preview-container');
-    container.style.aspectRatio = `${width} / ${height}`;
-  }
-
-  // Update the useCurrentSize function to get exact dimensions
-  function useCurrentSize() {
-    const tweetContainer = document.getElementById('tweet-preview');
-    const rect = tweetContainer.getBoundingClientRect();
-    
-    const width = Math.round(rect.width);
-    const height = Math.round(rect.height);
-    
-    document.getElementById('image-width').value = width;
-    document.getElementById('image-height').value = height;
-    
-    const dimensionsDisplay = document.getElementById('preview-dimensions');
-    if (dimensionsDisplay) {
-      dimensionsDisplay.textContent = `${width}×${height}`;
-    }
-  }
-
-  // Add this new function to handle size updates
-  function updateEditBoxSize() {
+    // Get current width
     const width = parseInt(document.getElementById('image-width').value);
-    const height = parseInt(document.getElementById('image-height').value);
     
-    const wrapper = document.getElementById('tweet-wrapper');
-    const container = document.getElementById('tweet-preview');
+    // Remove height constraints to measure natural height
+    activeContainer.style.minHeight = 'auto';
+    activeContainer.style.maxHeight = 'none';
+    activeContainer.style.height = 'auto';
     
-    // Update wrapper size
-    wrapper.style.width = `${width}px`;
-    wrapper.style.margin = '0 auto';
-    
-    // Update container size
-    container.style.width = '100%';
-    container.style.height = `${height}px`;
-    
-    // Center the wrapper if it's smaller than its parent
-    const parentWidth = wrapper.parentElement.offsetWidth;
-    if (width < parentWidth) {
-      wrapper.style.margin = '0 auto';
-    }
+    // Wait for any content changes to apply
+    setTimeout(() => {
+      const contentHeight = activeContainer.scrollHeight;
+      const optimalHeight = contentHeight + 15; // Small buffer
+      
+      // Update height input and container
+      document.getElementById('image-height').value = optimalHeight;
+      activeContainer.style.minHeight = `${optimalHeight}px`;
+      
+      console.log(`Height adjusted to fit content: ${optimalHeight}px`);
+    }, 10);
   }
 
   // Update the togglePlatformStyle function
@@ -1208,7 +621,7 @@ import XPost from './XPost.astro';
     syncContent(isX);
   }
 
-  // Update the syncContent function to include views
+  // Add the syncContent function
   function syncContent(isX) {
     const twitterContainer = document.getElementById('tweet-preview');
     const xContainer = document.getElementById('x-preview');
@@ -1253,7 +666,78 @@ import XPost from './XPost.astro';
       }
     }
   }
-</script> 
 
-<!-- Add this with your other hidden inputs -->
-<input type="hidden" id="views-input" value="0"> 
+  // Add these new functions for dimension controls
+  function adjustDimension(type, delta) {
+    const input = document.getElementById(`image-${type}`);
+    const currentValue = parseInt(input.value) || 0;
+    const step = event.shiftKey ? 10 : 1; // Larger step when Shift is held
+    const newValue = currentValue + (delta * step);
+    
+    validateDimension(input, 300, 4096, newValue);
+    updateEditBoxSize();
+    updatePreviewDimensions();
+  }
+
+  function validateDimension(input, min, max, value = null) {
+    let newValue = value !== null ? value : parseInt(input.value) || 0;
+    
+    if (newValue < min) newValue = min;
+    if (newValue > max) newValue = max;
+    
+    input.value = newValue;
+    
+    // Trigger change event for other listeners
+    input.dispatchEvent(new Event('change'));
+  }
+
+  // Add keyboard support for increment/decrement
+  document.querySelectorAll('.modern-input').forEach(input => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const type = input.id.replace('image-', '');
+        adjustDimension(type, 1);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const type = input.id.replace('image-', '');
+        adjustDimension(type, -1);
+      }
+    });
+  });
+
+  // Add html2canvas script
+  document.addEventListener('DOMContentLoaded', function() {
+    const script = document.createElement('script');
+    script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+    script.async = true;
+    document.head.appendChild(script);
+  });
+
+  // Update resetSize to use the optimal size calculation
+  function resetSize() {
+    setOptimalSize();
+    
+    const dimensionsDisplay = document.getElementById('preview-dimensions');
+    if (dimensionsDisplay) {
+      setTimeout(() => {
+        const width = document.getElementById('image-width').value;
+        const height = document.getElementById('image-height').value;
+        dimensionsDisplay.textContent = `${width}×${height}`;
+      }, 50);
+    }
+  }
+
+  // Update the preview modal to show current dimensions
+  function updatePreviewDimensions() {
+    const width = document.getElementById('image-width').value;
+    const height = document.getElementById('image-height').value;
+    const previewImage = document.getElementById('preview-image');
+    
+    // Update preview container style to maintain aspect ratio
+    const container = document.querySelector('.preview-container');
+    if (container) {
+      container.style.aspectRatio = `${width} / ${height}`;
+    }
+  }
+</script> 

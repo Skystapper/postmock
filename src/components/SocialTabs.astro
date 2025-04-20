@@ -1,15 +1,14 @@
 ---
-const platforms = [
+const tabs = [
   { id: "twitter", name: "Twitter", icon: "bi-twitter" },
   { id: "instagram", name: "Instagram", icon: "bi-instagram" },
-  { id: "facebook", name: "Facebook", icon: "bi-facebook" },
-  { id: "chatgpt", name: "ChatGPT", icon: "bi-chat-square-text" }
+  { id: "facebook", name: "Facebook", icon: "bi-facebook" }
 ];
 ---
 
 <nav class="platform-tabs">
   <div class="nav flex-column" role="tablist">
-    {platforms.map((platform, index) => (
+    {tabs.map((platform, index) => (
       <button
         class={`platform-tab ${index === 0 ? 'active' : ''}`}
         data-bs-toggle="pill"

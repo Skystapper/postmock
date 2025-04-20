@@ -1,0 +1,807 @@
+/* Twitter Tab Styles */
+
+.mockup-header {
+  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mockup-header h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.mockup-header p {
+  color: var(--text-secondary);
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.controls-section {
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border-color);
+  margin: 0 0.25rem;
+}
+
+.tweet-wrapper {
+  width: 600px;
+  max-width: 100%;
+  margin: 0 auto;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.tweet-container,
+.x-container {
+  width: 100%;
+  margin: 2rem auto;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  box-shadow: var(--post-shadow);
+  transition: box-shadow 0.2s ease;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Theme variables */
+.tweet-container[data-theme="light"] {
+  --bg-color: #FFFFFF;
+  --text-color: #0F1419;
+  --text-secondary: #536471;
+  --border-color: #CFD9DE;
+  --hover-bg: rgba(0, 0, 0, 0.03);
+  --focus-bg: rgba(29, 155, 240, 0.1);
+  --post-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tweet-container[data-theme="dim"] {
+  --bg-color: #15202B;
+  --text-color: #F7F9F9;
+  --text-secondary: #8B98A5;
+  --border-color: #38444D;
+  --hover-bg: rgba(255, 255, 255, 0.03);
+  --focus-bg: rgba(29, 155, 240, 0.1);
+  --post-shadow: 0 2px 12px rgba(136, 153, 166, 0.2),
+                 0 0 20px rgba(29, 155, 240, 0.1);
+}
+
+.tweet-container[data-theme="dark"] {
+  --bg-color: #000000;
+  --text-color: #E7E9EA;
+  --text-secondary: #71767B;
+  --border-color: #2F3336;
+  --hover-bg: rgba(255, 255, 255, 0.03);
+  --focus-bg: rgba(29, 155, 240, 0.1);
+  --post-shadow: 0 2px 12px rgba(255, 255, 255, 0.08),
+                 0 0 20px rgba(29, 155, 240, 0.15);
+}
+
+[contenteditable] {
+  outline: none;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+[contenteditable]:hover {
+  background: var(--hover-bg);
+}
+
+[contenteditable]:focus {
+  background: var(--focus-bg);
+  box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.3);
+}
+
+.tweet-content {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.verified-badge {
+  display: inline-flex;
+}
+
+.stat {
+  display: flex;
+  gap: 4px;
+}
+
+.stat-number {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.btn-link.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+hr {
+  margin: 0.75rem 0;
+  border-color: var(--border-color);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.profile-pic {
+  transition: opacity 0.2s ease;
+  position: relative;
+}
+
+.profile-pic:hover {
+  opacity: 0.8;
+}
+
+/* Add a subtle overlay on hover */
+.profile-pic::after {
+  content: "Change";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.profile-pic:hover::after {
+  opacity: 1;
+}
+
+/* Preview styles */
+.preview-container {
+  background: transparent;
+  padding: 0;
+  border-radius: 8px;
+}
+
+.preview-scroll {
+  overflow: auto;
+  max-height: 70vh;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.preview-scroll img {
+  display: block;
+  max-width: none;
+  height: auto;
+  margin: 0 auto;
+}
+
+.preview-size-info {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Modal styles */
+.modal-dialog.modal-lg {
+  max-width: 90vw;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.modal-header {
+  border-bottom-color: var(--border-color);
+}
+
+.modal-footer {
+  border-top-color: var(--border-color);
+}
+
+/* Dimension controls */
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dimension-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-primary);
+  padding: 1rem 1.25rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .dimension-controls {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  .dimension-label {
+    margin-top: 8px;
+  }
+}
+
+.dimension-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0;
+}
+
+.dimension-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-right: 5px;
+}
+
+.dimension-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.75px;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.field-input-group {
+  display: flex;
+  align-items: center;
+  height: 36px;
+}
+
+.field-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #dee2e6;
+  background-color: white;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.field-btn:hover {
+  background-color: #f1f3f5;
+  color: #228be6;
+}
+
+.field-btn:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-right: none;
+}
+
+.field-btn:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-left: none;
+}
+
+.field-input {
+  width: 60px;
+  height: 36px;
+  border: 1px solid #dee2e6;
+  background-color: white;
+  color: #212529;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 5px;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: #91c4f8;
+  box-shadow: 0 0 0 2px rgba(35, 137, 230, 0.15);
+}
+
+.dimension-separator {
+  color: var(--text-secondary);
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 2px;
+  display: flex;
+  align-items: center;
+  height: 36px;
+}
+
+.dimension-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 15px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.reset-btn {
+  background-color: white;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.reset-btn:hover {
+  background-color: #f8f9fa;
+  color: #fa5252;
+  border-color: #fa5252;
+}
+
+.reset-btn i {
+  margin-right: 5px;
+}
+
+/* Remove spinner buttons from number input */
+.field-input::-webkit-outer-spin-button,
+.field-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.field-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Modern Switch */
+.modern-switch {
+  position: relative;
+  display: inline-block;
+  width: 72px;
+  height: 36px;
+}
+
+.modern-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.switch-slider:before {
+  content: "";
+  position: absolute;
+  height: 28px;
+  width: 32px;
+  left: 4px;
+  bottom: 3px;
+  background: var(--accent-color);
+  opacity: 0.1;
+  border-radius: 9999px;
+  transition: 0.4s;
+}
+
+.modern-switch input:checked + .switch-slider:before {
+  transform: translateX(32px);
+}
+
+.twitter-icon,
+.x-icon {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  transition: 0.4s;
+}
+
+.twitter-icon {
+  left: 8px;
+  color: var(--accent-color);
+}
+
+.x-icon {
+  right: 8px;
+  color: var(--text-primary);
+}
+
+.modern-switch input:checked ~ .switch-slider .twitter-icon {
+  color: var(--text-secondary);
+}
+
+.modern-switch input:checked ~ .switch-slider .x-icon {
+  color: var(--text-primary);
+}
+
+/* Dark/light modes for X icon */
+[data-theme="light"] .x-icon {
+  color: #000000;
+}
+
+[data-theme="dim"] .x-icon,
+[data-theme="dark"] .x-icon {
+  color: #FFFFFF;
+}
+
+/* Modern Button */
+.modern-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 8px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 36px;
+  min-width: 36px;
+}
+
+.modern-btn:hover {
+  background: var(--hover-bg);
+}
+
+.modern-btn.compact {
+  padding: 8px;
+  width: 36px;
+}
+
+.icon-btn {
+  padding: 8px;
+  width: 36px;
+}
+
+/* Size Input Group */
+.size-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+/* Updated styles for new layout */
+.dimension-section,
+.theme-section,
+.platform-toggle-section {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  padding: 0 1rem;
+}
+
+.theme-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  justify-content: center;
+  background: var(--bg-primary);
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.platform-toggle-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
+.theme-toggle-group {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-secondary);
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.theme-toggle {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  color: var(--text-primary);
+  background: rgba(29, 155, 240, 0.1);
+}
+
+.theme-toggle:checked + .theme-toggle-btn {
+  color: var(--accent-color);
+  background: rgba(29, 155, 240, 0.15);
+}
+
+.theme-toggle:checked + .theme-toggle-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--accent-color);
+  opacity: 0.4;
+  z-index: -1;
+}
+
+.theme-toggle-btn i {
+  font-size: 1.2rem;
+}
+
+.preview-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.preview-btn:hover {
+  background: #1A8CD8;
+}
+
+.preview-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.preview-btn:hover svg {
+  transform: translateX(2px);
+}
+
+/* Platform toggle container */
+.platform-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-primary);
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  justify-content: center;
+}
+
+/* Add accent color RGB variable for rgba usage */
+:root {
+  --accent-rgb: 29, 155, 240;
+}
+
+/* Custom scrollbar styles */
+/* For Webkit browsers like Chrome, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.5);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(136, 136, 136, 0.8);
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(136, 136, 136, 0.5) transparent;
+}
+
+/* Ensure the preview scroll container has a nicer scrollbar */
+.preview-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(136, 136, 136, 0.5) transparent;
+}
+
+/* Control label styles */
+.control-label, 
+.platform-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-right: 0.5rem;
+  white-space: nowrap;
+}
+
+/* Platform indicators */
+.platform-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.platform-twitter {
+  color: #1DA1F2;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.platform-x {
+  color: var(--text-primary);
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+#platform-switch:checked ~ .platform-indicator .platform-twitter {
+  opacity: 0.5;
+}
+
+#platform-switch:checked ~ .platform-indicator .platform-x {
+  opacity: 1;
+}
+
+/* Tooltip styles */
+.tooltip-btn {
+  position: relative;
+}
+
+.tooltip-text {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+}
+
+.tooltip-btn:hover .tooltip-text {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Labeled button styles */
+.labeled-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 12px;
+  height: 36px;
+  white-space: nowrap;
+}
+
+.btn-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Theme selector with label */
+.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Add responsive padding */
+@media (max-width: 768px) {
+  .dimension-controls,
+  .theme-controls,
+  .platform-toggle-container {
+    padding: 1rem;
+  }
+
+  .dimension-section,
+  .theme-section,
+  .platform-toggle-section {
+    padding: 0 0.75rem;
+  }
+} 

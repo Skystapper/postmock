@@ -40,9 +40,9 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" onclick="closeCropperModal()">Cancel</button>
-      <button type="button" class="btn btn-primary" onclick="cropAndUpload()" id="cropButton">
+      <button type="button" class="btn btn-primary" onclick="cropImage()" id="cropButton">
         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-        Crop & Upload
+        Crop
       </button>
     </div>
   </div>
@@ -118,18 +118,23 @@
 
 <script is:inline>
 let cropper = null;
-let currentCropType = 'post'; // 'post' or 'profile'
+let currentCropType = null;
+let cropCallback = null;
 
-function initCropper(imgSrc, options = {}) {
+// Initialize cropper with image source and options
+function initImageCropper(imgSrc, type, callback) {
+  console.log('Initializing cropper with type:', type);
   const modal = document.getElementById('cropperModal');
   const image = document.getElementById('cropperImage');
-  currentCropType = options.type || 'post';
+  currentCropType = type;
+  cropCallback = callback;
   
   modal.style.display = 'block';
   image.src = imgSrc;
   
   // Destroy existing cropper if any
   if (cropper) {
+    console.log('Destroying existing cropper instance');
     cropper.destroy();
   }
 
@@ -137,20 +142,37 @@ function initCropper(imgSrc, options = {}) {
   const aspectControls = document.querySelector('.aspect-ratio-controls');
   const shapeControls = document.querySelector('.shape-controls');
   
-  if (currentCropType === 'profile') {
+  // Check for profile picture type
+  if (type.includes('profile')) {
+    console.log('Setting up profile picture crop mode');
     aspectControls.style.display = 'none';
     shapeControls.style.display = 'block';
     document.getElementById('circleCrop').checked = true;
   } else {
+    console.log('Setting up post crop mode');
     aspectControls.style.display = 'block';
     shapeControls.style.display = 'none';
-    document.getElementById('ratioSquare').checked = true;
+    
+    // Set initial aspect ratio based on type
+    if (type.includes('instagram-post')) {
+      const aspectMatch = type.match(/instagram-post-(square|portrait|landscape)/);
+      if (aspectMatch) {
+        const aspectValue = aspectMatch[1];
+        document.getElementById(`ratio${aspectValue.charAt(0).toUpperCase() + aspectValue.slice(1)}`).checked = true;
+      } else {
+        document.getElementById('ratioSquare').checked = true;
+      }
+    } else {
+      document.getElementById('ratioSquare').checked = true;
+    }
   }
 
   // Get initial aspect ratio
-  const aspectRatio = getAspectRatio();
+  const aspectRatio = getAspectRatio(document.querySelector('input[name="aspectRatio"]:checked').value);
+  console.log('Initial aspect ratio:', aspectRatio);
 
   // Initialize cropper
+  console.log('Creating new Cropper instance');
   cropper = new Cropper(image, {
     aspectRatio: aspectRatio,
     viewMode: 1,
@@ -164,7 +186,8 @@ function initCropper(imgSrc, options = {}) {
     cropBoxResizable: true,
     toggleDragModeOnDblclick: false,
     ready: function() {
-      if (currentCropType === 'profile') {
+      console.log('Cropper ready');
+      if (type.includes('profile')) {
         document.querySelector('.cropper-view-box').style.borderRadius = '50%';
         document.querySelector('.cropper-face').style.borderRadius = '50%';
       }
@@ -175,6 +198,7 @@ function initCropper(imgSrc, options = {}) {
   document.querySelectorAll('input[name="aspectRatio"]').forEach(input => {
     input.addEventListener('change', (e) => {
       const newRatio = getAspectRatio(e.target.value);
+      console.log('Changing aspect ratio to:', newRatio);
       cropper.setAspectRatio(newRatio);
     });
   });
@@ -201,18 +225,6 @@ function getAspectRatio(type = 'square') {
   }
 }
 
-function getOutputSize(type = 'square') {
-  switch (type) {
-    case 'portrait':
-      return { width: 1080, height: 1350 };
-    case 'landscape':
-      return { width: 1080, height: 565 };
-    case 'square':
-    default:
-      return { width: 1080, height: 1080 };
-  }
-}
-
 function closeCropperModal() {
   const modal = document.getElementById('cropperModal');
   modal.style.display = 'none';
@@ -220,91 +232,59 @@ function closeCropperModal() {
     cropper.destroy();
     cropper = null;
   }
+  currentCropType = null;
+  cropCallback = null;
 }
 
-async function cropAndUpload() {
-  if (!cropper) return;
+async function cropImage() {
+  if (!cropper || !currentCropType || !cropCallback) {
+    console.warn('Missing required cropping parameters');
+    return;
+  }
 
   const cropButton = document.getElementById('cropButton');
   const spinner = cropButton.querySelector('.spinner-border');
   
   try {
+    console.log('Starting crop process');
     cropButton.disabled = true;
     spinner.classList.remove('d-none');
 
-    const aspectType = document.querySelector('input[name="aspectRatio"]:checked')?.value || 'square';
-    const outputSize = getOutputSize(aspectType);
-    
-    let croppedCanvas = cropper.getCroppedCanvas({
-      width: outputSize.width,
-      height: outputSize.height,
+    const croppedCanvas = cropper.getCroppedCanvas({
+      width: 400,
+      height: 400,
       imageSmoothingEnabled: true,
       imageSmoothingQuality: 'high',
     });
 
-    if (currentCropType === 'profile' && document.getElementById('circleCrop').checked) {
-      // Create circular crop for profile pictures
-      const circleCanvas = document.createElement('canvas');
-      circleCanvas.width = croppedCanvas.width;
-      circleCanvas.height = croppedCanvas.height;
-      const ctx = circleCanvas.getContext('2d');
-      
-      ctx.beginPath();
-      ctx.arc(
-        circleCanvas.width / 2,
-        circleCanvas.height / 2,
-        circleCanvas.width / 2,
-        0,
-        Math.PI * 2
+    if (!croppedCanvas) {
+      throw new Error('Failed to create cropped canvas');
+    }
+
+    console.log('Successfully created cropped canvas');
+
+    const blob = await new Promise((resolve, reject) => {
+      croppedCanvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Failed to create blob from canvas'));
+          }
+        },
+        'image/png'
       );
-      ctx.clip();
-      
-      ctx.drawImage(croppedCanvas, 0, 0);
-      croppedCanvas = circleCanvas;
-    }
+    });
 
-    const blob = await new Promise(resolve => croppedCanvas.toBlob(resolve, 'image/png'));
     const imageUrl = URL.createObjectURL(blob);
+    console.log(`Successfully created image blob with type: ${currentCropType}`);
     
-    if (currentCropType === 'profile') {
-      const profilePic = document.getElementById('ig-profile-pic');
-      profilePic.src = imageUrl;
-    } else {
-      // Find the post image container within Instagram preview
-      const postImage = document.querySelector('#instagram-preview .post-image');
-      
-      // Remove any existing images
-      postImage.querySelectorAll('img').forEach(img => img.remove());
-      
-      // Create new image element
-      const imgElement = document.createElement('img');
-      imgElement.src = imageUrl;
-      imgElement.style.width = '100%';
-      imgElement.style.height = '100%';
-      imgElement.style.objectFit = 'cover';
-      imgElement.style.display = 'block'; // Ensure block display
-      
-      // Append the new image
-      postImage.appendChild(imgElement);
-      
-      // Update container styles
-      postImage.style.aspectRatio = `${outputSize.width}/${outputSize.height}`;
-      postImage.dataset.aspect = aspectType;
-      
-      // Hide upload prompt
-      const uploadPrompt = postImage.querySelector('.upload-prompt');
-      if (uploadPrompt) {
-        uploadPrompt.style.display = 'none';
-      }
-
-      // Clear any background styles that might interfere
-      postImage.style.backgroundImage = 'none';
-      postImage.style.backgroundColor = 'transparent';
-    }
-
+    // Call the callback with the cropped image data
+    cropCallback(imageUrl);
+    console.log(`✅ Successfully cropped image for type: ${currentCropType}`);
     closeCropperModal();
   } catch (error) {
-    console.error('Error cropping image:', error);
+    console.error('Error during crop:', error);
     alert('Failed to crop image. Please try again.');
   } finally {
     cropButton.disabled = false;
@@ -318,4 +298,7 @@ document.addEventListener('keydown', (e) => {
     closeCropperModal();
   }
 });
+
+// Expose the initImageCropper function globally
+window.initImageCropper = initImageCropper;
 </script> 
