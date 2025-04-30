@@ -2,53 +2,201 @@
 import SocialTabs from "./SocialTabs.astro";
 ---
 
-<aside class="sidebar">
-  <div class="brand-header">
-    <h4>Social Media</h4>
-    <p>Post Mockup Generator</p>
-  </div>
-  <SocialTabs />
-</aside>
+<div class="sidebar-container">
+  <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle Sidebar">
+    <i class="bi bi-list"></i>
+  </button>
+  
+  <aside class="sidebar" id="sidebar">
+    <div class="brand-header">
+      <h4>Social Media</h4>
+      <p>Post Mockup Generator</p>
+      <button class="close-sidebar" id="close-sidebar" aria-label="Close Sidebar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <SocialTabs />
+  </aside>
+  
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+</div>
+
+<script>
+  // Initialize sidebar functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const closeSidebar = document.getElementById('close-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    
+    // Function to open sidebar
+    const openSidebar = () => {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
+    };
+    
+    // Function to close sidebar
+    const closeSidebarFn = () => {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = ''; // Restore scrolling
+    };
+    
+    // Event listeners
+    sidebarToggle.addEventListener('click', openSidebar);
+    closeSidebar.addEventListener('click', closeSidebarFn);
+    overlay.addEventListener('click', closeSidebarFn);
+    
+    // Close sidebar on window resize if it goes above mobile breakpoint
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768 && sidebar.classList.contains('active')) {
+        closeSidebarFn();
+      }
+    });
+  });
+</script>
 
 <style>
+  .sidebar-container {
+    position: relative;
+  }
+  
   .sidebar {
     width: var(--sidebar-width);
-    background: var(--sidebar-bg);
+    background: var(--bg-primary);
     border-right: 1px solid var(--border-color);
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     overflow-y: auto;
-    z-index: 100;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
+    box-shadow: var(--post-shadow);
   }
-
+  
   .brand-header {
     padding: 1.5rem;
     border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
   }
-
+  
   .brand-header h4 {
     margin: 0;
     font-weight: 600;
     color: var(--text-primary);
   }
-
+  
   .brand-header p {
     margin: 0;
     font-size: 0.875rem;
     color: var(--text-secondary);
+    position: absolute;
+    top: 2.75rem;
+    left: 1.5rem;
   }
-
+  
+  .close-sidebar {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    transition: all 0.2s ease;
+  }
+  
+  .close-sidebar:hover {
+    background: rgba(29, 161, 242, 0.1);
+    color: #1DA1F2;
+  }
+  
+  .sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 999;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .sidebar-toggle:hover {
+    background: rgba(29, 161, 242, 0.1);
+    color: #1DA1F2;
+  }
+  
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
   @media (max-width: 768px) {
     .sidebar {
-      position: relative;
-      width: 100%;
-      border-right: none;
-      border-bottom: 1px solid var(--border-color);
+      transform: translateX(-100%);
+      width: 280px;
+    }
+    
+    .sidebar.active {
+      transform: translateX(0);
+    }
+    
+    .sidebar-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .close-sidebar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
-</style> 
+  
+  @media (max-width: 480px) {
+    .sidebar {
+      width: 260px;
+    }
+    
+    .brand-header {
+      padding: 1.25rem;
+    }
+    
+    .brand-header p {
+      top: 2.5rem;
+      left: 1.25rem;
+    }
+  }
+</style>

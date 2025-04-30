@@ -1,5 +1,4 @@
 ---
-import PreviewEmbed from "./PreviewEmbed.astro";
 import PreviewModal from "./PreviewModal.astro";
 ---
 
@@ -18,6 +17,11 @@ import PreviewModal from "./PreviewModal.astro";
           <input type="radio" class="theme-toggle" name="ig-theme" id="ig-theme-light" value="light" checked>
           <label class="theme-toggle-btn" for="ig-theme-light" title="Light theme">
             <i class="bi bi-sun"></i>
+          </label>
+          
+          <input type="radio" class="theme-toggle" name="ig-theme" id="ig-theme-dim" value="dim">
+          <label class="theme-toggle-btn" for="ig-theme-dim" title="Dim theme">
+            <i class="bi bi-moon-stars"></i>
           </label>
           
           <input type="radio" class="theme-toggle" name="ig-theme" id="ig-theme-dark" value="dark">
@@ -90,8 +94,15 @@ import PreviewModal from "./PreviewModal.astro";
               contenteditable="true" 
               id="live-ig-username"
               data-input="ig-username-input">johndoe</span>
-            <span class="verified-badge" id="ig-verified-badge">
-              <svg viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm-1.7 14.5L6.8 13l1.4-1.4 2.1 2.1L15.7 8l1.4 1.4-6.8 7.1z"/></svg>
+            <span class="verified-badge" id="ig-verified-badge" onclick="toggleInstagramVerified()" style="display: inline;">
+              <svg width="16" height="16" viewBox="0 0 512 512" fill="#2D88FF">
+                <path d="M256 48C141.6 48 48 141.6 48 256s93.6 208 208 208 208-93.6 208-208S370.4 48 256 48zm-42.7 318.9L106.7 260.3l29.9-29.9 76.8 76.8 162.1-162.1 29.9 29.9-192.1 191.9z"/>
+              </svg>
+            </span>
+            <span class="verified-badge faded-badge" id="ig-faded-badge" onclick="toggleInstagramVerified()" style="display: none;">
+              <svg width="16" height="16" viewBox="0 0 512 512" fill="#2D88FF" style="opacity:0.5;">
+                <path d="M256 48C141.6 48 48 141.6 48 256s93.6 208 208 208 208-93.6 208-208S370.4 48 256 48zm-42.7 318.9L106.7 260.3l29.9-29.9 76.8 76.8 162.1-162.1 29.9 29.9-192.1 191.9z"/>
+              </svg>
             </span>
           </div>
           <div 
@@ -107,9 +118,6 @@ import PreviewModal from "./PreviewModal.astro";
           <svg viewBox="0 0 48 48"><circle cx="8" cy="24" r="4.5"/><circle cx="24" cy="24" r="4.5"/><circle cx="40" cy="24" r="4.5"/></svg>
         </button>
         <ul class="dropdown-menu">
-          <li><button class="dropdown-item" onclick="toggleInstagramVerified()">
-            <i class="bi bi-patch-check"></i> Toggle verified
-          </button></li>
           <li><button class="dropdown-item" onclick="uploadInstagramProfilePic()">
             <i class="bi bi-camera"></i> Change profile picture
           </button></li>
@@ -211,13 +219,24 @@ import PreviewModal from "./PreviewModal.astro";
       <button class="btn btn-link post-button p-0 text-decoration-none" onclick="postNewComment()">Post</button>
     </div>
   </div>
-
-  <div class="col col-md-6 mt-4">
-    <PreviewEmbed platform="instagram" previewSrc="/api-instagram" />
-  </div>
 </div>
 
+<PreviewModal />
+
 <script is:inline>
+  // Add the getAspectRatioValue function to the global scope
+  window.getAspectRatioValue = function(type) {
+    switch (type) {
+      case 'portrait':
+        return '4/5';
+      case 'landscape':
+        return '1.91/1';
+      case 'square':
+      default:
+        return '1/1';
+    }
+  };
+
   // Handle contenteditable sync with inputs
   document.querySelectorAll('[contenteditable]').forEach(element => {
     element.addEventListener('input', (e) => {
@@ -238,7 +257,33 @@ import PreviewModal from "./PreviewModal.astro";
     document.querySelectorAll('input[name="ig-theme"]').forEach(radio => {
       radio.addEventListener('change', (e) => {
         const container = document.getElementById('instagram-preview');
-        container.setAttribute('data-theme', e.target.value);
+        const appContainer = document.querySelector('.app-container');
+        const theme = e.target.value;
+        
+        // Update both Instagram container and app container themes
+        container.setAttribute('data-theme', theme);
+        appContainer.setAttribute('data-theme', theme);
+        
+        // Update the main theme radio buttons to match
+        const mainThemeRadio = document.querySelector(`input[name="theme"][value="${theme}"]`);
+        if (mainThemeRadio) {
+          mainThemeRadio.checked = true;
+        }
+      });
+    });
+
+    // Listen for main app theme changes
+    document.querySelectorAll('input[name="theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        const container = document.getElementById('instagram-preview');
+        // Update Instagram container theme
+        container.setAttribute('data-theme', theme);
+        // Update Instagram theme radio buttons to match
+        const igThemeRadio = document.querySelector(`input[name="ig-theme"][value="${theme}"]`);
+        if (igThemeRadio) {
+          igThemeRadio.checked = true;
+        }
       });
     });
 
@@ -252,21 +297,11 @@ import PreviewModal from "./PreviewModal.astro";
           // Update any existing image to maintain aspect ratio
           const existingImage = postImage.querySelector('img');
           if (existingImage) {
-            existingImage.style.aspectRatio = getAspectRatioValue(e.target.value);
+            existingImage.style.aspectRatio = window.getAspectRatioValue(e.target.value);
           }
         }
       });
     });
-
-    // Helper function to get aspect ratio value
-    function getAspectRatioValue(aspectType) {
-      switch (aspectType) {
-        case 'square': return '1/1';
-        case 'portrait': return '4/5';
-        case 'landscape': return '1.91/1';
-        default: return '1/1';
-      }
-    }
 
     // Set initial theme and aspect ratio
     const initialTheme = document.querySelector('input[name="ig-theme"]:checked').value;
@@ -278,15 +313,6 @@ import PreviewModal from "./PreviewModal.astro";
     container.setAttribute('data-theme', initialTheme);
     postImage.setAttribute('data-aspect', initialAspect);
   });
-
-  // Toggle verified badge
-  function toggleInstagramVerified() {
-    const verifiedInput = document.getElementById('ig-verified-input');
-    const verifiedBadge = document.getElementById('ig-verified-badge');
-    verifiedInput.checked = !verifiedInput.checked;
-    verifiedBadge.style.display = verifiedInput.checked ? 'inline' : 'none';
-    verifiedInput.dispatchEvent(new Event('input'));
-  }
 
   // Update profile picture upload function
   function uploadInstagramProfilePic() {
@@ -302,6 +328,9 @@ import PreviewModal from "./PreviewModal.astro";
             const igProfilePic = document.getElementById('ig-profile-pic');
             if (igProfilePic) {
               igProfilePic.src = croppedImageUrl;
+              // Apply the same shape to the profile picture display
+              const isCircle = document.getElementById('circleCrop').checked;
+              igProfilePic.style.borderRadius = isCircle ? '50%' : '0';
               console.log('✅ Successfully updated Instagram profile picture');
             }
           });
@@ -322,35 +351,57 @@ import PreviewModal from "./PreviewModal.astro";
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const aspectRatio = document.querySelector('input[name="ig-aspect"]:checked').value;
-          initImageCropper(e.target.result, `instagram-post-${aspectRatio}`, (croppedImageUrl) => {
-            const postImage = document.querySelector('#instagram-preview .post-image');
+          try {
+            const aspectRatio = document.querySelector('input[name="ig-aspect"]:checked').value;
+            if (!aspectRatio) throw new Error('No aspect ratio selected');
             
-            // Remove any existing images
-            postImage.querySelectorAll('img').forEach(img => img.remove());
-            
-            // Create new image element
-            const imgElement = document.createElement('img');
-            imgElement.src = croppedImageUrl;
-            imgElement.style.width = '100%';
-            imgElement.style.height = '100%';
-            imgElement.style.objectFit = 'cover';
-            imgElement.style.display = 'block';
-            imgElement.style.aspectRatio = getAspectRatioValue(aspectRatio);
-            
-            // Append the new image
-            postImage.appendChild(imgElement);
-            console.log('✅ Successfully updated Instagram post image');
-            
-            // Hide upload prompt
-            const uploadPrompt = postImage.querySelector('.upload-prompt');
-            if (uploadPrompt) {
-              uploadPrompt.style.display = 'none';
-            }
+            // Initialize cropper with proper type
+            initImageCropper(e.target.result, `instagram-post-${aspectRatio}`, (croppedImageUrl) => {
+              if (!croppedImageUrl) {
+                console.error('No cropped image URL received');
+                return;
+              }
 
-            // Update post image container aspect ratio
-            postImage.setAttribute('data-aspect', aspectRatio);
-          });
+              const postImage = document.querySelector('#instagram-preview .post-image');
+              if (!postImage) {
+                console.error('Post image container not found');
+                return;
+              }
+              
+              // Remove any existing images and upload prompt
+              postImage.querySelectorAll('img').forEach(img => img.remove());
+              const uploadPrompt = postImage.querySelector('.upload-prompt');
+              if (uploadPrompt) {
+                uploadPrompt.style.display = 'none';
+              }
+              
+              // Create and configure new image element
+              const imgElement = document.createElement('img');
+              imgElement.src = croppedImageUrl;
+              imgElement.style.width = '100%';
+              imgElement.style.height = '100%';
+              imgElement.style.objectFit = 'cover';
+              imgElement.style.display = 'block';
+              
+              // Set aspect ratio using the global function
+              imgElement.style.aspectRatio = window.getAspectRatioValue(aspectRatio);
+              
+              // Update container before appending image
+              postImage.setAttribute('data-aspect', aspectRatio);
+              
+              // Append the new image
+              postImage.appendChild(imgElement);
+              
+              console.log('✅ Successfully updated Instagram post image');
+            });
+          } catch (error) {
+            console.error('Error in Instagram post upload:', error);
+            alert('Failed to process image. Please try again.');
+          }
+        };
+        reader.onerror = (error) => {
+          console.error('Error reading file:', error);
+          alert('Failed to read image file. Please try again.');
         };
         reader.readAsDataURL(file);
       }
@@ -642,6 +693,49 @@ import PreviewModal from "./PreviewModal.astro";
       }
     });
   });
+
+  // Handle theme changes for Instagram
+  document.addEventListener('DOMContentLoaded', () => {
+    const appContainer = document.querySelector('.app-container');
+    
+    // Listen for Instagram theme changes
+    document.querySelectorAll('input[name="ig-theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (appContainer.getAttribute('data-platform') === 'instagram') {
+          appContainer.setAttribute('data-theme', e.target.value);
+        }
+      });
+    });
+  });
+
+  // Toggle verified badge
+  function toggleInstagramVerified() {
+    const verifiedBadge = document.getElementById('ig-verified-badge');
+    const fadedBadge = document.getElementById('ig-faded-badge');
+    const isVisible = verifiedBadge.style.display !== 'none';
+    verifiedBadge.style.display = isVisible ? 'none' : 'inline';
+    fadedBadge.style.display = isVisible ? 'inline' : 'none';
+  }
+
+  // Show faded badge on hover
+  document.addEventListener('DOMContentLoaded', function() {
+    const igNameContainer = document.querySelector('.username-container');
+    if (igNameContainer) {
+      igNameContainer.addEventListener('mouseenter', () => {
+        const fadedBadge = document.getElementById('ig-faded-badge');
+        const verifiedBadge = document.getElementById('ig-verified-badge');
+        if (verifiedBadge.style.display === 'none') {
+          fadedBadge.style.display = 'inline';
+        }
+      });
+      igNameContainer.addEventListener('mouseleave', () => {
+        const fadedBadge = document.getElementById('ig-faded-badge');
+        if (document.getElementById('ig-verified-badge').style.display === 'none') {
+          fadedBadge.style.display = 'none';
+        }
+      });
+    }
+  });
 </script>
 
 <style>
@@ -651,8 +745,28 @@ import PreviewModal from "./PreviewModal.astro";
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    box-shadow: var(--post-shadow);
-    transition: box-shadow 0.2s ease;
+    box-shadow: var(--glow-effect);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .instagram-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    border-radius: 10px;
+    z-index: -1;
+    opacity: 0.5;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  .instagram-container:hover::before {
+    opacity: 0.8;
   }
 
   .instagram-container[data-theme="light"] {
@@ -704,6 +818,9 @@ import PreviewModal from "./PreviewModal.astro";
     overflow: hidden;
     cursor: pointer;
     transition: opacity 0.2s ease;
+    position: relative;
+    padding: 2px;
+    background: var(--accent-gradient);
   }
 
   .profile-pic:hover {
@@ -714,6 +831,8 @@ import PreviewModal from "./PreviewModal.astro";
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 50%;
+    background: var(--bg-primary);
   }
 
   .user-info {
@@ -735,16 +854,6 @@ import PreviewModal from "./PreviewModal.astro";
   .location {
     font-size: 12px;
     color: var(--text-primary);
-  }
-
-  .verified-badge {
-    display: inline-flex;
-    width: 14px;
-    height: 14px;
-  }
-
-  .verified-badge svg {
-    fill: var(--verified-color);
   }
 
   .post-image {
@@ -879,17 +988,37 @@ import PreviewModal from "./PreviewModal.astro";
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: var(--accent-color, #0095F6);
+    background: var(--accent-gradient);
     color: white;
     border: none;
     border-radius: 9999px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .preview-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    z-index: -1;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  .preview-btn:hover::before {
+    opacity: 1;
   }
 
   .preview-btn:hover {
-    background: #0081D6;
+    background: var(--accent-gradient);
+    color: white;
   }
 
   .preview-btn svg {
@@ -918,8 +1047,27 @@ import PreviewModal from "./PreviewModal.astro";
     background: var(--bg-primary);
     padding: 1rem 1.5rem;
     border-radius: 16px;
-    border: 1px solid var(--border-color);
-    flex-wrap: wrap;
+    border: 1px solid transparent;
+    background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), 
+                      var(--accent-gradient);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    position: relative;
+    overflow: visible !important;
+  }
+
+  .theme-controls::before,
+  .aspect-controls::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    z-index: -1;
+    opacity: 0.1;
+    filter: blur(8px);
   }
 
   .theme-selector,
@@ -944,8 +1092,12 @@ import PreviewModal from "./PreviewModal.astro";
     padding: 4px;
     background: var(--bg-secondary);
     border-radius: 9999px;
-    border: 1px solid var(--border-color);
+    border: 1px solid transparent;
     position: relative;
+    background-image: linear-gradient(var(--bg-secondary), var(--bg-secondary)), 
+                      var(--accent-gradient);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
   }
 
   .theme-toggle,
@@ -968,19 +1120,19 @@ import PreviewModal from "./PreviewModal.astro";
     position: relative;
     z-index: 1;
     color: var(--text-secondary);
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
   }
 
   .theme-toggle-btn:hover,
   .aspect-toggle-btn:hover {
-    color: var(--text-primary);
-    background: rgba(var(--accent-rgb), 0.1);
+    background: var(--accent-gradient);
+    color: white;
   }
 
   .theme-toggle:checked + .theme-toggle-btn,
   .aspect-toggle:checked + .aspect-toggle-btn {
-    color: var(--accent-color);
-    background: rgba(var(--accent-rgb), 0.15);
+    background: var(--accent-gradient);
+    color: white;
   }
 
   .theme-toggle:checked + .theme-toggle-btn::after,
@@ -992,8 +1144,8 @@ import PreviewModal from "./PreviewModal.astro";
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    box-shadow: 0 0 0 2px var(--accent-color);
-    opacity: 0.4;
+    background: var(--accent-gradient);
+    opacity: 0.2;
     z-index: -1;
   }
 
@@ -1008,17 +1160,37 @@ import PreviewModal from "./PreviewModal.astro";
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: var(--accent-color);
+    background: var(--accent-gradient);
     color: white;
     border: none;
     border-radius: 9999px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .preview-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    z-index: -1;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  .preview-btn:hover::before {
+    opacity: 1;
   }
 
   .preview-btn:hover {
-    background: var(--accent-hover);
+    background: var(--accent-gradient);
+    color: white;
   }
 
   .preview-btn svg {
@@ -1151,6 +1323,103 @@ import PreviewModal from "./PreviewModal.astro";
   .comment-input:focus::placeholder {
     opacity: 0.5;
   }
-</style>
 
-<PreviewModal /> 
+  /* Gradient borders and accents */
+  .instagram-theme-accent {
+    border: 2px solid transparent;
+    background-image: linear-gradient(var(--bg-primary), var(--bg-primary)), 
+                      var(--accent-gradient);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: all 0.3s ease;
+  }
+
+  .instagram-glow {
+    box-shadow: var(--glow-effect);
+    position: relative;
+  }
+
+  .instagram-glow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent-gradient);
+    opacity: 0.1;
+    z-index: -1;
+    filter: blur(20px);
+  }
+
+  /* Apply to interactive elements */
+  .theme-toggle-btn:hover,
+  .preview-btn,
+  .modern-btn:hover {
+    background: var(--accent-gradient);
+    color: white !important;
+    border-color: transparent;
+  }
+
+  /* Gradient text for accents */
+  .gradient-text {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Add gradient definition for SVG icons */
+  .instagram-container {
+    --accent-hover: #0081D6;
+    --accent-rgb: 56, 151, 240;
+  }
+
+  /* Add this at the beginning of your container */
+  <svg width="0" height="0" style="position: absolute">
+    <defs>
+      <linearGradient id="instagram-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color: #feda75"/>
+        <stop offset="30%" style="stop-color: #fa7e1e"/>
+        <stop offset="60%" style="stop-color: #d62976"/>
+        <stop offset="80%" style="stop-color: #962fbf"/>
+        <stop offset="100%" style="stop-color: #4f5bd5"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  /* Add glow effect to post image on hover */
+  .post-image:hover::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    z-index: -1;
+    opacity: 0.3;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  /* Add gradient effect to verified badge */
+  .verified-badge svg {
+    fill: url(#instagram-gradient);
+  }
+
+  #ig-verified-badge svg,
+  #ig-faded-badge svg {
+    fill: #2D88FF !important;
+  }
+
+  .faded-badge {
+    display: none;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+
+  .username-container:hover .faded-badge {
+    opacity: 1;
+  }
+</style> 

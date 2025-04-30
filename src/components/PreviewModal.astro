@@ -5,10 +5,8 @@
       <button type="button" class="btn-close" onclick="closePreviewModal()"></button>
     </div>
     <div class="modal-body">
-      <div class="preview-container">
-        <div class="preview-frame" id="previewFrame">
-          <!-- Preview content will be injected here -->
-        </div>
+      <div class="preview-container" id="previewContainer">
+        <!-- Preview content will be injected here -->
       </div>
       <div class="preview-info mt-3">
         <div class="dimensions-info">
@@ -123,6 +121,8 @@
     --accent-color: #1D9BF0;
     --instagram-accent: #0095F6;
     --instagram-hover: #0081D6;
+    --fb-blue: #1877F2;
+    --fb-light-blue: #E7F3FF;
   }
 
   [data-theme="dark"] {
@@ -133,6 +133,8 @@
     --border-color: #38444D;
     --instagram-accent: #0095F6;
     --instagram-hover: #0081D6;
+    --fb-blue: #1877F2;
+    --fb-light-blue: #E7F3FF;
   }
 
   /* Button styles */
@@ -226,10 +228,31 @@
   .btn-primary[data-platform="instagram"]:hover {
     background: var(--instagram-hover);
   }
+
+  .btn-primary[data-platform="facebook"] {
+    background: var(--fb-blue);
+  }
+
+  .btn-primary[data-platform="facebook"]:hover {
+    background: var(--fb-light-blue);
+  }
+
+  /* Fix Facebook post sizing in preview */
+  .preview-frame .facebook-container {
+    margin: 0;
+    height: auto;
+    width: 100%;
+  }
+
+  .preview-frame .facebook-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 </style>
 
 <script is:inline>
-  let currentPlatform = null;
+  var currentPlatform = null;
 
   function getContentToPreview(platform) {
     switch (platform) {
@@ -239,6 +262,10 @@
           document.getElementById('tweet-preview');
       case 'instagram':
         return document.getElementById('instagram-preview');
+      case 'facebook':
+        return document.getElementById('facebook-preview');
+      case 'comment':
+        return document.getElementById('cmtContent');
       default:
         console.error('Unknown platform:', platform);
         return null;
@@ -247,11 +274,18 @@
 
   function showPreviewModal(platform) {
     const modal = document.getElementById('previewModal');
-    const previewFrame = document.getElementById('previewFrame');
+    const previewContainer = document.getElementById('previewContainer');
     const dimensionsInfo = document.getElementById('previewDimensions');
     const themeInfo = document.getElementById('previewTheme');
+    const downloadBtn = document.querySelector('.modal-footer .btn-primary');
     
-    currentPlatform = platform;
+    // Store current platform
+    window.currentPlatform = platform;
+    
+    // Set platform attribute on download button
+    if (downloadBtn) {
+      downloadBtn.setAttribute('data-platform', platform);
+    }
     
     // Get the content to preview based on platform
     const content = getContentToPreview(platform);
@@ -263,19 +297,21 @@
     // If it's hidden, make it visible for the preview
     clonedContent.style.display = 'block';
     
+    // Set the preview size to match the original rendered size
+    clonedContent.style.width = content.offsetWidth + 'px';
+    clonedContent.style.height = content.offsetHeight + 'px';
+    
     // Special handling for Instagram aspect ratios
     if (platform === 'instagram') {
       const aspectRatio = content.querySelector('.post-image')?.getAttribute('data-aspect');
       if (aspectRatio) {
         const aspectClass = `preview-aspect-${aspectRatio}`;
-        previewFrame.className = `preview-frame ${aspectClass}`;
-        
+        previewContainer.className = `preview-container ${aspectClass}`;
         // Ensure all interactive elements are visible
         const elements = clonedContent.querySelectorAll('[contenteditable]');
         elements.forEach(el => {
           el.setAttribute('contenteditable', 'false');
         });
-        
         // Make sure dropdown menus are hidden
         const dropdowns = clonedContent.querySelectorAll('.dropdown-menu');
         dropdowns.forEach(dropdown => {
@@ -283,15 +319,15 @@
         });
       }
     } else {
-      previewFrame.className = 'preview-frame';
+      previewContainer.className = 'preview-container';
     }
     
-    // Update preview frame
-    previewFrame.innerHTML = '';
-    previewFrame.appendChild(clonedContent);
+    // Update preview container
+    previewContainer.innerHTML = '';
+    previewContainer.appendChild(clonedContent);
     
     // Force layout recalculation to get correct dimensions
-    previewFrame.offsetHeight;
+    previewContainer.offsetHeight;
     
     // Update dimensions based on the actual content size
     const width = clonedContent.offsetWidth;
@@ -340,6 +376,10 @@
       
       // If it's hidden, make it visible for capturing
       clonedContent.style.display = 'block';
+      
+      // Set the preview size to match the original rendered size
+      clonedContent.style.width = content.offsetWidth + 'px';
+      clonedContent.style.height = content.offsetHeight + 'px';
       
       // Special handling for Instagram aspect ratios
       if (currentPlatform === 'instagram') {

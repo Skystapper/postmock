@@ -1,0 +1,31 @@
+:root {
+  /* Twitter theme colors */
+  --twitter-blue: #1d9bf0;
+  --twitter-blue-hover: #1a8cd8;
+  --twitter-background: #ffffff;
+  --twitter-text: #0f1419;
+  --twitter-border: #cfd9de;
+
+  /* X theme colors */
+  --x-accent: #000000;
+  --x-accent-hover: #333333;
+  --x-background: #ffffff;
+  --x-text: #000000;
+  --x-border: #e1e8ed;
+
+  /* Dynamic theme variables */
+  --accent-color: var(--twitter-blue);
+  --accent-hover: var(--twitter-blue-hover);
+  --bg-primary: var(--twitter-background);
+  --text-primary: var(--twitter-text);
+  --border-color: var(--twitter-border);
+}
+
+/* X platform theme */
+[data-platform="x"] {
+  --accent-color: var(--x-accent);
+  --accent-hover: var(--x-accent-hover);
+  --bg-primary: var(--x-background);
+  --text-primary: var(--x-text);
+  --border-color: var(--x-border);
+} 

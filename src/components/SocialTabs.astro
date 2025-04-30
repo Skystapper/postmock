@@ -2,7 +2,8 @@
 const tabs = [
   { id: "twitter", name: "Twitter", icon: "bi-twitter" },
   { id: "instagram", name: "Instagram", icon: "bi-instagram" },
-  { id: "facebook", name: "Facebook", icon: "bi-facebook" }
+  { id: "facebook", name: "Facebook", icon: "bi-facebook" },
+  { id: "comment", name: "Pornhub", icon: "bi-chat-dots" }
 ];
 ---
 
@@ -10,14 +11,29 @@ const tabs = [
   <div class="nav flex-column" role="tablist">
     {tabs.map((platform, index) => (
       <button
-        class={`platform-tab ${index === 0 ? 'active' : ''}`}
+        class={`platform-tab ${platform.id}-tab ${index === 0 ? 'active' : ''}`}
         data-bs-toggle="pill"
         data-bs-target={`#${platform.id}-tab`}
         type="button"
         role="tab"
       >
-        <i class={`bi ${platform.icon}`}></i>
-        <span>{platform.name}</span>
+        {platform.id === 'comment' ? (
+          <span class="ph-icon-wrapper">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <defs>
+                <mask id="ph-mask" x="0" y="0" width="24" height="24" maskUnits="userSpaceOnUse">
+                  <circle cx="12" cy="12" r="12" fill="white" />
+                  <text x="50%" y="56%" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="black">PH</text>
+                </mask>
+              </defs>
+              <circle cx="12" cy="12" r="12" class="ph-rect" mask="url(#ph-mask)" />
+              <text x="50%" y="56%" text-anchor="middle" dominant-baseline="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" class="ph-text">PH</text>
+            </svg>
+          </span>
+        ) : (
+          <i class={`bi ${platform.icon}`}></i>
+        )}
+        <span class="platform-label">{platform.name}</span>
       </button>
     ))}
   </div>
@@ -43,6 +59,8 @@ const tabs = [
     text-align: left;
     transition: all 0.2s ease;
     font-weight: 500;
+    position: relative;
+    overflow: hidden;
   }
 
   .platform-tab:hover {
@@ -56,7 +74,229 @@ const tabs = [
     font-weight: 600;
   }
 
+  /* Instagram tab specific styles */
+  .instagram-tab {
+    position: relative;
+  }
+
+  .instagram-tab:hover,
+  .instagram-tab.active {
+    background: var(--hover-bg);
+    color: inherit;
+  }
+
+  .instagram-tab:hover .platform-label,
+  .instagram-tab.active .platform-label {
+    background: var(--instagram-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .instagram-tab:hover i,
+  .instagram-tab.active i {
+    background: var(--instagram-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .instagram-tab::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    z-index: -1;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  .instagram-tab:hover::before,
+  .instagram-tab.active::before {
+    opacity: 0.15;
+  }
+
+  /* Facebook tab specific styles */
+  .facebook-tab {
+    position: relative;
+  }
+
+  .facebook-tab:hover,
+  .facebook-tab.active {
+    background: var(--hover-bg);
+  }
+
+  .facebook-tab:hover span,
+  .facebook-tab.active span {
+    color: #3b5998;
+  }
+
+  .facebook-tab:hover i,
+  .facebook-tab.active i {
+    color: #3b5998;
+  }
+
+  .facebook-tab::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: linear-gradient(45deg, #3b5998, #8b9dc3);
+    z-index: -1;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  .facebook-tab:hover::before,
+  .facebook-tab.active::before {
+    opacity: 0.15;
+  }
+
+  /* Twitter tab specific styles */
+  .twitter-tab {
+    position: relative;
+  }
+
+  .twitter-tab:hover,
+  .twitter-tab.active {
+    background: var(--hover-bg);
+  }
+
+  .twitter-tab:hover span,
+  .twitter-tab.active span {
+    color: #1DA1F2;
+  }
+
+  .twitter-tab:hover i,
+  .twitter-tab.active i {
+    color: #1DA1F2;
+  }
+
+  .twitter-tab::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: linear-gradient(45deg, #1DA1F2, #71c9f8);
+    z-index: -1;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  .twitter-tab:hover::before,
+  .twitter-tab.active::before {
+    opacity: 0.15;
+  }
+
+  /* Comment tab specific styles */
+  .comment-tab {
+    position: relative;
+  }
+
+  .comment-tab:hover,
+  .comment-tab.active {
+    background: var(--hover-bg);
+  }
+
+  .comment-tab:hover span,
+  .comment-tab.active span {
+    color: #ffa31a;
+  }
+
+  .comment-tab:hover i,
+  .comment-tab.active i {
+    color: #ffa31a;
+  }
+
+  .comment-tab::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: linear-gradient(45deg, #ffa31a, #ffb74d);
+    z-index: -1;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  .comment-tab:hover::before,
+  .comment-tab.active::before {
+    opacity: 0.15;
+  }
+
   .platform-tab i {
     font-size: 1.25rem;
+  }
+
+  .ph-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    margin-right: 0.25rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .platform-tab.comment-tab .ph-rect {
+    fill: #808080;
+    transition: fill 0.2s;
+  }
+  .platform-tab.comment-tab .ph-text {
+    display: none;
+  }
+  .platform-tab.comment-tab.active .ph-rect,
+  .platform-tab.comment-tab:focus .ph-rect,
+  .platform-tab.comment-tab:hover .ph-rect {
+    fill: #ffa31a;
+    mask: none;
+  }
+  .platform-tab.comment-tab.active .ph-text,
+  .platform-tab.comment-tab:focus .ph-text,
+  .platform-tab.comment-tab:hover .ph-text {
+    display: block;
+    fill: #111;
+  }
+  .platform-tab.comment-tab.active .ph-rect,
+  .platform-tab.comment-tab:focus .ph-rect {
+    mask: none;
+  }
+  .ph-icon-wrapper svg {
+    display: block;
+  }
+
+  .ph-icon-wrapper.ph-circle-bg {
+    background: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.25rem;
+    transition: background 0.2s, color 0.2s;
+    box-sizing: border-box;
+  }
+  .ph-icon-wrapper.ph-circle-bg svg {
+    display: block;
+    width: 28px;
+    height: 28px;
+  }
+
+  :root {
+    --instagram-gradient: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
   }
 </style> 

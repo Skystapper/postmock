@@ -1,6 +1,6 @@
 ---
 ---
-<div class="image-cropper-modal" id="cropperModal">
+<div class="image-cropper-modal" id="cropperModal" data-theme="light">
   <div class="modal-content">
     <div class="modal-header">
       <h5 class="modal-title">Crop Image</h5>
@@ -110,6 +110,19 @@
 
   .shape-controls {
     display: none;
+  }
+
+  .image-cropper-modal[data-theme="light"] .modal-content {
+    background: #fff;
+    color: #222;
+  }
+  .image-cropper-modal[data-theme="dim"] .modal-content {
+    background: #1e2732;
+    color: #f7f9f9;
+  }
+  .image-cropper-modal[data-theme="dark"] .modal-content {
+    background: #15202b;
+    color: #f7f9f9;
   }
 </style>
 
@@ -301,4 +314,26 @@ document.addEventListener('keydown', (e) => {
 
 // Expose the initImageCropper function globally
 window.initImageCropper = initImageCropper;
+
+// Theme sync for cropper modal
+function updateCropperTheme(theme) {
+  const modal = document.getElementById('cropperModal');
+  if (modal) {
+    modal.setAttribute('data-theme', theme);
+  }
+}
+
+// Listen for main app theme changes
+function listenForAppThemeChanges() {
+  const appContainer = document.querySelector('.app-container');
+  if (!appContainer) return;
+  // Set initial theme
+  updateCropperTheme(appContainer.getAttribute('data-theme') || 'light');
+  // Listen for changes
+  const observer = new MutationObserver(() => {
+    updateCropperTheme(appContainer.getAttribute('data-theme') || 'light');
+  });
+  observer.observe(appContainer, { attributes: true, attributeFilter: ['data-theme'] });
+}
+document.addEventListener('DOMContentLoaded', listenForAppThemeChanges);
 </script> 

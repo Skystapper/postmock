@@ -1,0 +1,671 @@
+<div class="tab-pane fade" id="comment-tab">
+  <div class="mockup-header">
+    <h2>Comment Chain</h2>
+    <p>Create a realistic comment chain mockup by editing the content below.</p>
+    <div class="comment-controls">
+      <button type="button" class="preview-btn" onclick="showPreviewModal('comment')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+        </svg>
+        Preview
+      </button>
+      <button type="button" class="randomize-btn" onclick="randomizeCommentStats()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4v5h.582M20 20v-5h-.581M19.418 9A7.974 7.974 0 0 0 12 4c-2.042 0-3.899.767-5.318 2.018M4.582 15A7.974 7.974 0 0 0 12 20c2.042 0 3.899-.767 5.318-2.018"/>
+        </svg>
+        Randomize Stats
+      </button>
+    </div>
+  </div>
+
+  <div class="comment-wrapper">
+    <div class="comment-container" data-theme="dark" id="cmtContent">
+      <!-- Parent Comment -->
+      <div class="commentBlock closestComment clearfix">
+        <div class="topCommentBlock clearfix">
+          <div class="userWrap">
+            <div class="boxUserComments">
+              <span class="userLink marked clearfix">
+                <img class="commentAvatarImg" 
+                  src="https://ei.phncdn.com/pics/users/default/pornhub/(m=bJWsSeKlbyaT)(mh=4N6NZAtseWL0p9UF)male.jpg" 
+                  loading="lazy" 
+                  alt="unknown"
+                  onclick="uploadCommentProfilePic(this, 'unknown')"
+                  style="cursor: pointer;"
+                  title="Click to change profile picture">
+                <span class="toggle-verify-badge" onclick="toggleVerification(this)" title="Toggle verification badge">
+                  <img src="https://ei.phncdn.com/www-static/images/verified-badge.svg?cache=2025041602" alt="verified">
+                </span>
+              </span>
+            </div>
+            <div class="usernameWrap clearfix">
+              <span class="usernameBadgesWrapper">
+                <span class="username unknown" contenteditable="true">unknown</span>
+              </span>
+              <div class="date" contenteditable="true">10 years ago</div>
+            </div>
+          </div>
+
+          <div class="commentMessage">
+            <span contenteditable="true">What the fuck? He fucked her without removing her bra?</span>
+            <div class="actionButtonsBlock">
+              <a class="gtm-event-watch-page tooltipTrig float-left commentBtn buttonClass generalBtn thumbsUp thumbs">
+                <i class="ph-icon-thumb-up"></i>
+              </a>
+              <span class="rightMargin float-left voteTotal" contenteditable="true">719</span>
+              <a class="tooltipTrig rightMargin float-left commentBtn buttonClass generalBtn thumbsDown thumbs">
+                <i class="ph-icon-thumb-down"></i>
+              </a>
+              <div class="rightMargin float-left replyBlock">
+                <a class="commentBtn buttonClass generalBtn reply">
+                  <span>Reply</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="buttonBlockRight clearfix">
+            <button data-title="Report" class="tooltipTrig commentBtn buttonClass generalBtn reportBtn flag float-left">
+              <i class="ph-icon-flag"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nested Comments -->
+      <div class="nestedBlock childrenOf19595421">
+        <!-- First Reply -->
+        <div class="clearfix">
+          <div class="commentBlock closestComment clearfix">
+            <div class="topCommentBlock clearfix">
+              <div class="userWrap">
+                <div class="boxUserComments verified-user">
+                  <a class="userLink clearfix">
+                    <img class="commentAvatarImg" 
+                      src="https://ei.phncdn.com/(m=bLWsSeKlbyaT)(mh=GPkFbwcjNQFQ5N3Q)5e08a2b4-39df-4f19-b9a3-d44a020fec1f.jpg" 
+                      loading="lazy" 
+                      alt="Lily Corinth"
+                      onclick="uploadCommentProfilePic(this, 'lily')"
+                      style="cursor: pointer;"
+                      title="Click to change profile picture">
+                    <span class="verified-icon flag tooltipTrig" data-title="Verified Model" onclick="toggleVerification(this)">
+                      <img src="https://ei.phncdn.com/www-static/images/verified-badge.svg?cache=2025041602" alt="verified">
+                    </span>
+                  </a>
+                </div>
+                <div class="usernameWrap clearfix">
+                  <span class="usernameBadgesWrapper">
+                    <span class="username orange-name" contenteditable="true">Lily Corinth</span>
+                    <i class="verified-icon userBadges spriteUi" data-title="Verified Model"></i>
+                  </span>
+                  <div class="date" contenteditable="true">1 month ago</div>
+                </div>
+              </div>
+
+              <div class="commentMessage">
+                <span contenteditable="true">Sometimes it feels hot leaving it on, like when a man just wants to go directly to fucking with no foreplay 🤤</span>
+                <div class="actionButtonsBlock">
+                  <a class="gtm-event-watch-page tooltipTrig float-left commentBtn buttonClass generalBtn thumbsUp thumbs">
+                    <i class="ph-icon-thumb-up"></i>
+                  </a>
+                  <span class="rightMargin float-left voteTotal" contenteditable="true">1</span>
+                  <a class="tooltipTrig rightMargin float-left commentBtn buttonClass generalBtn thumbsDown thumbs">
+                    <i class="ph-icon-thumb-down"></i>
+                  </a>
+                  <div class="rightMargin float-left replyBlock">
+                    <a class="commentBtn buttonClass generalBtn reply">
+                      <span>Reply</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="buttonBlockRight clearfix">
+                <button data-title="Report" class="tooltipTrig commentBtn buttonClass generalBtn reportBtn flag float-left">
+                  <i class="ph-icon-flag"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Second Reply -->
+        <div class="clearfix">
+          <div class="commentBlock closestComment clearfix">
+            <div class="topCommentBlock clearfix">
+              <div class="userWrap">
+                <div class="boxUserComments">
+                  <a class="userLink clearfix">
+                    <img class="commentAvatarImg" 
+                      src="https://ei.phncdn.com/pics/users/default/pornhub/(m=bJWsSeKlbyaT)(mh=4N6NZAtseWL0p9UF)male.jpg" 
+                      loading="lazy" 
+                      alt="Dickgolightly"
+                      onclick="uploadCommentProfilePic(this, 'dick')"
+                      style="cursor: pointer;"
+                      title="Click to change profile picture">
+                    <span class="toggle-verify-badge" onclick="toggleVerification(this)" title="Toggle verification badge">
+                      <img src="https://ei.phncdn.com/www-static/images/verified-badge.svg?cache=2025041602" alt="verified">
+                    </span>
+                  </a>
+                </div>
+                <div class="usernameWrap clearfix">
+                  <span class="usernameBadgesWrapper">
+                    <span class="username orange-name" contenteditable="true">Dickgolightly</span>
+                  </span>
+                  <div class="date" contenteditable="true">2 years ago</div>
+                </div>
+              </div>
+
+              <div class="commentMessage">
+                <span contenteditable="true">he did, this is shortened version</span>
+                <div class="actionButtonsBlock">
+                  <a class="gtm-event-watch-page tooltipTrig float-left commentBtn buttonClass generalBtn thumbsUp thumbs">
+                    <i class="ph-icon-thumb-up"></i>
+                  </a>
+                  <span class="rightMargin float-left voteTotal" contenteditable="true">10</span>
+                  <a class="tooltipTrig rightMargin float-left commentBtn buttonClass generalBtn thumbsDown thumbs">
+                    <i class="ph-icon-thumb-down"></i>
+                  </a>
+                  <div class="rightMargin float-left replyBlock">
+                    <a class="commentBtn buttonClass generalBtn reply">
+                      <span>Reply</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="buttonBlockRight clearfix">
+                <button data-title="Report" class="tooltipTrig commentBtn buttonClass generalBtn reportBtn flag float-left">
+                  <i class="ph-icon-flag"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- View All Replies Button -->
+      <div class="viewAllReplies">
+        <button class="viewRepliesBtn">
+          <span>View All Replies (4)</span>
+          <i class="ph-icon-chevron-down"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Base styles */
+.comment-wrapper {
+  width: 600px;
+  max-width: 100%;
+  margin: 0 auto;
+  transition: width 0.3s ease;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.comment-container {
+  width: 100%;
+  margin: 2rem auto;
+  border: none;
+  border-radius: 16px;
+  padding: 1.5rem;
+  background: #000000;
+  color: #fff;
+}
+
+/* Comment blocks */
+.commentBlock {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.nestedBlock {
+  margin-left: 40px;
+  border-left: 2px solid #292929;
+  padding-left: 10px;
+}
+
+/* User info */
+.userWrap {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.boxUserComments {
+  margin-right: 10px;
+}
+
+.commentAvatarImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.usernameBadgesWrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.username {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.username.unknown {
+  color: #969696;
+}
+
+.username.orange-name {
+  color: #ffa31a;
+}
+
+.date {
+  color: #808080;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Comment content */
+.commentMessage {
+  color: #b8b8b8;
+  width: 87.5%;
+  width: calc(100% - 72px);
+  word-break: break-word;
+  word-wrap: break-word;
+  font-size: 14px;
+}
+
+.commentMessage span {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Action buttons */
+.actionButtonsBlock {
+  display: flex;
+  align-items: center;
+  padding-top: .5em;
+  width: 100%;
+}
+
+.float-left {
+  float: none;
+  display: flex;
+  align-items: center;
+}
+
+.rightMargin {
+  margin-right: 10px;
+}
+
+.commentBtn {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  color: #969696;
+  margin: 0;
+  padding: 0;
+  outline-style: none;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.buttonClass.generalBtn {
+  font-size: 13px;
+  height: 18px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.thumbs {
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.commentBtn:hover {
+  color: #ffa31a;
+}
+
+.voteTotal {
+  color: #969696;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  height: 18px;
+  line-height: 18px;
+}
+
+.replyBlock {
+  display: flex;
+  align-items: center;
+  height: 18px;
+  line-height: 18px;
+}
+
+.replyBlock span {
+  color: #969696;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.replyBlock span::before {
+  content: "•";
+  font-size: 16px;
+  margin: 0 8px;
+  line-height: 13px;
+}
+
+/* Verified badge */
+.userLink {
+  position: relative;
+}
+
+.verified-icon.flag {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 20px;
+  height: 20px;
+  background: #000000;
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.verified-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.verified-icon.userBadges {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+/* Toggleable verification badge */
+.toggle-verify-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 20px;
+  height: 20px;
+  background: #000000;
+  border-radius: 50%;
+  padding: 2px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.userLink:hover .toggle-verify-badge {
+  opacity: 0.5;
+}
+
+.toggle-verify-badge:hover {
+  opacity: 0.8 !important;
+}
+
+.toggle-verify-badge img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Button block right */
+.buttonBlockRight {
+  float: right;
+}
+
+.reportBtn {
+  color: #969696;
+}
+
+.reportBtn:hover {
+  color: #ffa31a;
+}
+
+/* View All Replies */
+.viewAllReplies {
+  padding-left: 50px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.viewRepliesBtn {
+  background: none;
+  border: none;
+  color: #969696;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.viewRepliesBtn:hover {
+  color: #ffa31a;
+}
+
+/* Icons */
+.ph-icon-chevron-down {
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23969696' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3C/svg%3E");
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.ph-icon-thumb-up {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23969696' d='M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z'/%3E%3C/svg%3E");
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.ph-icon-thumb-down {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23969696' d='M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z'/%3E%3C/svg%3E");
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.ph-icon-flag {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23969696' d='M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z'/%3E%3C/svg%3E");
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Helper classes */
+[contenteditable] {
+  outline: none;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+[contenteditable]:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[contenteditable]:focus {
+  background: rgba(255, 163, 26, 0.1);
+  box-shadow: 0 0 0 2px rgba(255, 163, 26, 0.3);
+}
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.comment-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  align-items: center;
+}
+
+.preview-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffa31a;
+  color: #111;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.preview-btn:hover {
+  background: #ffb74d;
+  color: #111;
+}
+
+.randomize-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #292929;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.randomize-btn:hover {
+  background: #444;
+  color: #ffa31a;
+}
+</style>
+
+<script is:inline>
+  function uploadCommentProfilePic(imgElement, userId) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          // Initialize cropper with the image and handle the cropped result
+          initImageCropper(e.target.result, 'comment-profile', (croppedImageUrl) => {
+            // Update all instances of this user's profile picture
+            document.querySelectorAll(`.commentAvatarImg[alt="${imgElement.alt}"]`).forEach(img => {
+              img.src = croppedImageUrl;
+            });
+            console.log(`✅ Successfully updated profile picture for ${userId}`);
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  }
+
+  function toggleVerification(badgeElement) {
+    // Get the parent user container
+    const userLink = badgeElement.closest('.userLink');
+    const userContainer = userLink.closest('.boxUserComments');
+    const usernameElement = userLink.closest('.userWrap').querySelector('.username');
+    
+    // Check if the badge is a toggle-verify-badge or an active verified-icon
+    const isToggleBadge = badgeElement.classList.contains('toggle-verify-badge');
+    
+    if (isToggleBadge) {
+      // Activate the verification badge
+      badgeElement.classList.remove('toggle-verify-badge');
+      badgeElement.classList.add('verified-icon', 'flag', 'tooltipTrig');
+      badgeElement.setAttribute('data-title', 'Verified Model');
+      
+      // Add verified-user class to the container
+      userContainer.classList.add('verified-user');
+      
+      // Add orange color to username if not already
+      if (!usernameElement.classList.contains('orange-name')) {
+        usernameElement.classList.add('orange-name');
+        if (usernameElement.classList.contains('unknown')) {
+          usernameElement.classList.remove('unknown');
+        }
+      }
+      
+      // Add verified badge icon next to username if not present
+      const usernameBadgesWrapper = usernameElement.closest('.usernameBadgesWrapper');
+      if (!usernameBadgesWrapper.querySelector('.verified-icon.userBadges')) {
+        const verifiedBadge = document.createElement('i');
+        verifiedBadge.className = 'verified-icon userBadges spriteUi';
+        verifiedBadge.setAttribute('data-title', 'Verified Model');
+        usernameBadgesWrapper.appendChild(verifiedBadge);
+      }
+    } else {
+      // Deactivate the verification badge
+      badgeElement.classList.remove('verified-icon', 'flag', 'tooltipTrig');
+      badgeElement.classList.add('toggle-verify-badge');
+      badgeElement.removeAttribute('data-title');
+      
+      // Remove verified-user class from the container
+      userContainer.classList.remove('verified-user');
+      
+      // Remove verified badge icon next to username
+      const usernameBadgesWrapper = usernameElement.closest('.usernameBadgesWrapper');
+      const verifiedBadge = usernameBadgesWrapper.querySelector('.verified-icon.userBadges');
+      if (verifiedBadge) {
+        verifiedBadge.remove();
+      }
+    }
+    
+    // Prevent the click from propagating to parent elements
+    event.stopPropagation();
+  }
+  
+  // Initialize all verification badges on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Make sure all verified badges are clickable
+    document.querySelectorAll('.verified-icon.flag').forEach(badge => {
+      if (!badge.hasAttribute('onclick')) {
+        badge.setAttribute('onclick', 'toggleVerification(this)');
+        badge.style.cursor = 'pointer';
+      }
+    });
+  });
+
+  function randomizeCommentStats() {
+    // Randomize all voteTotal spans
+    document.querySelectorAll('.voteTotal').forEach(el => {
+      el.textContent = Math.floor(Math.random() * 1000);
+    });
+  }
+</script>

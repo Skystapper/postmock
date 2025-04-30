@@ -30,7 +30,7 @@ const {
 } = Astro.props;
 ---
 
-<article class="x-post" data-theme={theme}>
+<div class="x-container" data-theme={theme}>
   <div class="post-container">
     <!-- Header -->
     <div class="post-header">
@@ -50,20 +50,30 @@ const {
             id="x-live-name"
             data-input="username-input"
           >{username}</span>
-          {verified && (
-            <span class="verified-badge" id="x-verified-badge">
-              <svg viewBox="0 0 22 22" aria-label="Verified account" role="img" class="verified-icon" data-testid="icon-verified">
-                <g>
-                  <path 
-                    clip-rule="evenodd" 
-                    d="M12.05 2.056c-.568-.608-1.532-.608-2.1 0l-1.393 1.49c-.284.303-.685.47-1.1.455L5.42 3.932c-.832-.028-1.514.654-1.486 1.486l.069 2.039c.014.415-.152.816-.456 1.1l-1.49 1.392c-.608.568-.608 1.533 0 2.101l1.49 1.393c.304.284.47.684.456 1.1l-.07 2.038c-.027.832.655 1.514 1.487 1.486l2.038-.069c.415-.014.816.152 1.1.455l1.392 1.49c.569.609 1.533.609 2.102 0l1.393-1.49c.283-.303.684-.47 1.099-.455l2.038.069c.832.028 1.515-.654 1.486-1.486L18 14.542c-.015-.415.152-.815.455-1.099l1.49-1.393c.608-.568.608-1.533 0-2.101l-1.49-1.393c-.303-.283-.47-.684-.455-1.1l.068-2.038c.029-.832-.654-1.514-1.486-1.486l-2.038.07c-.415.013-.816-.153-1.1-.456zm-5.817 9.367l3.429 3.428 5.683-6.206-1.347-1.247-4.4 4.795-2.072-2.072z" 
-                    fill="#829aab" 
-                    fill-rule="evenodd"
-                  />
-                </g>
-              </svg>
-            </span>
-          )}
+          <span class="verified-badge" id="x-verified-badge" onclick="toggleXVerified()" style={verified ? 'display:inline' : 'display:none'}>
+            <svg viewBox="0 0 22 22" aria-label="Verified account" role="img" class="verified-icon" data-testid="icon-verified">
+              <g>
+                <path 
+                  clip-rule="evenodd" 
+                  d="M12.05 2.056c-.568-.608-1.532-.608-2.1 0l-1.393 1.49c-.284.303-.685.47-1.1.455L5.42 3.932c-.832-.028-1.514.654-1.486 1.486l.069 2.039c.014.415-.152.816-.456 1.1l-1.49 1.392c-.608.568-.608 1.533 0 2.101l1.49 1.393c.304.284.47.684.456 1.1l-.07 2.038c-.027.832.655 1.514 1.487 1.486l2.038-.069c.415-.014.816.152 1.1.455l1.392 1.49c.569.609 1.533.609 2.102 0l1.393-1.49c.283-.303.684-.47 1.099-.455l2.038.069c.832.028 1.515-.654 1.486-1.486L18 14.542c-.015-.415.152-.815.455-1.099l1.49-1.393c.608-.568.608-1.533 0-2.101l-1.49-1.393c-.303-.283-.47-.684-.455-1.1l.068-2.038c.029-.832-.654-1.514-1.486-1.486l-2.038.07c-.415.013-.816-.153-1.1-.456zm-5.817 9.367l3.429 3.428 5.683-6.206-1.347-1.247-4.4 4.795-2.072-2.072z" 
+                  fill="#829aab" 
+                  fill-rule="evenodd"
+                />
+              </g>
+            </svg>
+          </span>
+          <span class="verified-badge faded-badge" id="x-faded-badge" onclick="toggleXVerified()" style={verified ? 'display:none' : 'display:inline'}>
+            <svg viewBox="0 0 22 22" aria-label="Verified account" role="img" class="verified-icon" data-testid="icon-verified" style="opacity:0.5;">
+              <g>
+                <path 
+                  clip-rule="evenodd" 
+                  d="M12.05 2.056c-.568-.608-1.532-.608-2.1 0l-1.393 1.49c-.284.303-.685.47-1.1.455L5.42 3.932c-.832-.028-1.514.654-1.486 1.486l.069 2.039c.014.415-.152.816-.456 1.1l-1.49 1.392c-.608.568-.608 1.533 0 2.101l1.49 1.393c.304.284.47.684.456 1.1l-.07 2.038c-.027.832.655 1.514 1.487 1.486l2.038-.069c.415-.014.816.152 1.1.455l1.392 1.49c.569.609 1.533.609 2.102 0l1.393-1.49c.283-.303.684-.47 1.099-.455l2.038.069c.832.028 1.515-.654 1.486-1.486L18 14.542c-.015-.415.152-.815.455-1.099l1.49-1.393c.608-.568.608-1.533 0-2.101l-1.49-1.393c-.303-.283-.47-.684-.455-1.1l.068-2.038c.029-.832-.654-1.514-1.486-1.486l-2.038.07c-.415.013-.816-.153-1.1-.456zm-5.817 9.367l3.429 3.428 5.683-6.206-1.347-1.247-4.4 4.795-2.072-2.072z" 
+                  fill="#829aab" 
+                  fill-rule="evenodd"
+                />
+              </g>
+            </svg>
+          </span>
         </div>
         <span 
           class="handle" 
@@ -156,217 +166,261 @@ const {
       </button>
     </div>
   </div>
-</article>
+</div>
 
 <style>
-  .x-post {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    padding: 16px;
-    color: var(--text-primary);
-    background: var(--bg-primary);
-    border-radius: 16px;
-    box-shadow: var(--post-shadow);
-    transition: box-shadow 0.2s ease;
+  :root {
+    --x-bg-light: #fff;
+    --x-bg-dark: #000;
+    --x-text-light: #0f1419;
+    --x-text-dark: #e7e9ea;
+    --x-secondary-light: #536471;
+    --x-secondary-dark: #71767b;
+    --x-border-light: #eff3f4;
+    --x-border-dark: #2f3336;
   }
-
-  .x-post[data-theme="light"] {
-    --bg-primary: #FFFFFF;
-    --text-primary: #0F1419;
-    --text-secondary: #536471;
-    --border-color: #EFF3F4;
-    --verified-color: #000000;
-    --hover-bg: rgba(15, 20, 25, 0.1);
-    --hover-secondary: #E7E7E8;
-    --post-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  .x-container[data-theme="light"] {
+    background: var(--x-bg-light);
+    color: var(--x-text-light);
+    border: 1px solid var(--x-border-light);
   }
-
-  .x-post[data-theme="dim"] {
-    --bg-primary: #15202B;
-    --text-primary: #F7F9F9;
-    --text-secondary: #8B98A5;
-    --border-color: #38444D;
-    --verified-color: #FFFFFF;
-    --hover-bg: rgba(247, 249, 249, 0.1);
-    --hover-secondary: #1C2732;
-    --post-shadow: 0 2px 12px rgba(136, 153, 166, 0.2),
-                   0 0 20px rgba(29, 155, 240, 0.1);
+  .x-container[data-theme="dark"] {
+    background: var(--x-bg-dark);
+    color: var(--x-text-dark);
+    border: 1px solid var(--x-border-dark);
+    box-shadow: 0 0 12px 2px rgba(29,155,240,0.10), 0 0 24px 2px rgba(29,155,240,0.15);
   }
-
-  .x-post[data-theme="dark"] {
-    --bg-primary: #000000;
-    --text-primary: #E7E9EA;
-    --text-secondary: #71767B;
-    --border-color: #2F3336;
-    --verified-color: #FFFFFF;
-    --hover-bg: rgba(231, 233, 234, 0.1);
-    --hover-secondary: #181818;
-    --post-shadow: 0 2px 12px rgba(255, 255, 255, 0.08),
-                   0 0 20px rgba(29, 155, 240, 0.15);
+  .x-container[data-theme="dim"] {
+    background: #15202B;
+    color: var(--x-text-dark);
+    border: 1px solid #38444D;
+    box-shadow: 0 2px 12px rgba(136,153,166,0.2), 0 0 20px rgba(29,155,240,0.1);
   }
-
-  .post-container {
+  .x-container {
     max-width: 600px;
     margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: none;
+    position: relative;
+    font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size-adjust: 0.5;
+    padding: 16px;
   }
-
+  .post-container {
+    padding: 0;
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+  }
   .post-header {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
   }
-
   .avatar {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
+    flex-shrink: 0;
   }
-
   .avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 50%;
   }
-
   .user-info {
     flex-grow: 1;
+    min-width: 0;
   }
-
   .name-container {
     display: flex;
     align-items: center;
     gap: 4px;
-  }
-
-  .name {
+    font-size: 15px;
     font-weight: 700;
-    color: var(--text-primary);
+    line-height: 20px;
+    color: inherit;
   }
-
+  .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: inherit;
+    line-height: 20px;
+    margin-right: 4px;
+    word-break: break-word;
+  }
   .verified-badge {
     display: inline-flex;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 4px;
   }
-
   .verified-badge .verified-icon {
-    width: 100%;
-    height: 100%;
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.5;
   }
-
-  .verified-badge svg path {
-    fill: var(--verified-color);
-  }
-
   .handle {
-    color: var(--text-secondary);
-    font-size: 0.9em;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--x-secondary-light);
+    line-height: 20px;
+    margin-right: 4px;
+    word-break: break-all;
   }
-
+  .x-container[data-theme="dark"] .handle {
+    color: var(--x-secondary-dark);
+  }
+  .more-options {
+    margin-left: auto;
+    display: flex;
+    align-items: flex-start;
+  }
   .more-options button {
     background: none;
     border: none;
-    padding: 8px;
+    padding: 4px;
     cursor: pointer;
     border-radius: 50%;
+    color: var(--x-secondary-light);
+    transition: background 0.2s;
   }
-
+  .x-container[data-theme="dark"] .more-options button {
+    color: var(--x-secondary-dark);
+  }
+  .more-options button:hover {
+    background: #f7f9fa;
+  }
+  .x-container[data-theme="dark"] .more-options button:hover {
+    background: #16181c;
+  }
   .more-options svg {
     width: 20px;
     height: 20px;
-    fill: var(--text-secondary);
+    fill: currentColor;
   }
-
   .post-content {
     margin-bottom: 12px;
-    font-size: 1.1em;
-    line-height: 1.5;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 24px;
+    color: inherit;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
-
   .post-meta {
-    color: var(--text-secondary);
-    font-size: 0.9em;
-    margin-bottom: 12px;
+    color: var(--x-secondary-light);
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 0;
     display: flex;
     align-items: center;
     gap: 4px;
+    line-height: 20px;
   }
-
+  .x-container[data-theme="dark"] .post-meta {
+    color: var(--x-secondary-dark);
+  }
   .separator {
     margin: 0 4px;
+    color: inherit;
   }
-
   .post-stats {
     display: flex;
+    flex-direction: row;
+    align-items: stretch;
     justify-content: space-between;
-    padding-top: 12px;
-    border-top: 1px solid var(--border-color);
+    padding-left: 4px;
+    padding-right: 4px;
+    column-gap: 4px;
+    min-height: 1.875rem;
+    height: 48px;
+    border-top: 1px solid var(--x-border-light);
+    border-bottom: 1px solid var(--x-border-light);
+    margin-top: 8px;
+    margin-bottom: 0;
+    background: none;
+    z-index: 0;
   }
-
+  .x-container[data-theme="dark"] .post-stats {
+    border-top: 1px solid var(--x-border-dark);
+    border-bottom: 1px solid var(--x-border-dark);
+  }
   .stat-item {
     background: none;
     border: none;
-    padding: 8px;
+    padding: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--text-secondary);
-    font-size: 0.9em;
+    color: var(--x-secondary-light);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    transition: color 0.2s;
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
   }
-
+  .x-container[data-theme="dark"] .stat-item {
+    color: var(--x-secondary-dark);
+  }
   .stat-item svg {
     width: 18px;
     height: 18px;
     fill: currentColor;
+    stroke-width: 1.5;
+    display: block;
   }
-
+  .stat-item span {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  }
   .stat-item:hover {
-    color: var(--text-primary);
+    color: #1da1f2;
   }
-
   [contenteditable] {
     outline: none;
-    padding: 2px 4px;
+    padding: 0;
     border-radius: 4px;
+    background: none;
   }
-
-  [contenteditable]:hover {
-    background: var(--hover-bg);
+  [contenteditable]:hover, [contenteditable]:focus {
+    background: #f7f9fa;
   }
-
-  [contenteditable]:focus {
-    background: var(--hover-bg);
+  .x-container[data-theme="dark"] [contenteditable]:hover, .x-container[data-theme="dark"] [contenteditable]:focus {
+    background: #16181c;
   }
-
   .cursor-pointer {
     cursor: pointer;
   }
-
   .avatar {
     transition: opacity 0.2s ease;
   }
-
   .avatar:hover {
     opacity: 0.8;
   }
-
-  /* Add hover effect for stats */
-  .stat-item:hover {
-    background: var(--hover-bg);
-    border-radius: 9999px;
+  .faded-badge {
+    display: none;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
   }
-
-  /* Update more options button hover */
-  .more-options button:hover {
-    background: var(--hover-bg);
+  .name-container:hover .faded-badge {
+    opacity: 1;
   }
-
-  /* Add hover effect for the entire post */
-  .x-post:hover {
-    box-shadow: var(--post-shadow),
-                0 0 30px rgba(29, 155, 240, 0.1);
+  .x-container::before,
+  .x-container:hover::before {
+    display: none !important;
+    content: none !important;
   }
 </style>
 
@@ -394,4 +448,29 @@ function uploadProfilePic() {
   };
   input.click();
 }
+
+// Toggle verified badge for X
+function toggleXVerified() {
+  const verifiedBadge = document.getElementById('x-verified-badge');
+  const fadedBadge = document.getElementById('x-faded-badge');
+  const isVisible = verifiedBadge.style.display !== 'none';
+  verifiedBadge.style.display = isVisible ? 'none' : 'inline';
+  fadedBadge.style.display = isVisible ? 'inline' : 'none';
+}
+
+// Show faded badge on hover
+const xUserInfo = document.querySelector('.user-info .name-container');
+xUserInfo.addEventListener('mouseenter', () => {
+  const fadedBadge = document.getElementById('x-faded-badge');
+  const verifiedBadge = document.getElementById('x-verified-badge');
+  if (verifiedBadge.style.display === 'none') {
+    fadedBadge.style.display = 'inline';
+  }
+});
+xUserInfo.addEventListener('mouseleave', () => {
+  const fadedBadge = document.getElementById('x-faded-badge');
+  if (document.getElementById('x-verified-badge').style.display === 'none') {
+    fadedBadge.style.display = 'none';
+  }
+});
 </script> 

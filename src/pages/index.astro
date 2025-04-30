@@ -6,6 +6,7 @@ import Sidebar from "../components/Sidebar.astro";
 import TwitterTab from "../components/TwitterTab.astro";
 import InstagramTab from "../components/InstagramTab.astro";
 import FacebookTab from "../components/FacebookTab.astro";
+import CommentTab from "../components/CommentTab.astro";
 ---
 
 <Layout title="Social Media Post Mockup Generator">
@@ -17,6 +18,7 @@ import FacebookTab from "../components/FacebookTab.astro";
         <TwitterTab />
         <InstagramTab />
         <FacebookTab />
+        <CommentTab />
       </div>
     </div>
   </main>
@@ -25,43 +27,203 @@ import FacebookTab from "../components/FacebookTab.astro";
 <style>
   :root {
     --sidebar-width: 260px;
+    --post-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   }
 
   /* Twitter Theme Variables */
   .app-container[data-platform="twitter"][data-theme="light"] {
     --bg-primary: #ffffff;
-    --bg-secondary: #f8f9fa;
-    --text-primary: #0F1419;
+    --bg-secondary: #f7f9f9;
+    --text-primary: #0f1419;
     --text-secondary: #536471;
-    --border-color: #CFD9DE;
-    --hover-bg: rgba(0, 0, 0, 0.03);
-    --focus-bg: rgba(29, 155, 240, 0.1);
+    --border-color: #eff3f4;
+    --hover-bg: rgba(15, 20, 25, 0.1);
+    --focus-bg: rgba(15, 20, 25, 0.2);
     --accent-color: #1DA1F2;
+    --accent-gradient: linear-gradient(45deg, #1DA1F2, #71c9f8);
+    --glow-effect: 0 4px 24px rgba(29, 161, 242, 0.15);
     --sidebar-bg: #ffffff;
   }
 
   .app-container[data-platform="twitter"][data-theme="dim"] {
-    --bg-primary: #15202B;
+    --bg-primary: #15202b;
     --bg-secondary: #1e2732;
-    --text-primary: #F7F9F9;
-    --text-secondary: #8B98A5;
-    --border-color: #38444D;
-    --hover-bg: rgba(255, 255, 255, 0.03);
-    --focus-bg: rgba(29, 155, 240, 0.1);
+    --text-primary: #f7f9f9;
+    --text-secondary: #8b98a5;
+    --border-color: #38444d;
+    --hover-bg: rgba(239, 243, 244, 0.1);
+    --focus-bg: rgba(239, 243, 244, 0.2);
     --accent-color: #1DA1F2;
+    --accent-gradient: linear-gradient(45deg, #1DA1F2, #71c9f8);
+    --glow-effect: 0 4px 24px rgba(29, 161, 242, 0.25);
     --sidebar-bg: #15202B;
   }
 
   .app-container[data-platform="twitter"][data-theme="dark"] {
     --bg-primary: #000000;
     --bg-secondary: #16181c;
-    --text-primary: #E7E9EA;
-    --text-secondary: #71767B;
-    --border-color: #2F3336;
-    --hover-bg: rgba(255, 255, 255, 0.03);
-    --focus-bg: rgba(29, 155, 240, 0.1);
+    --text-primary: #e7e9ea;
+    --text-secondary: #71767b;
+    --border-color: #2f3336;
+    --hover-bg: rgba(231, 233, 234, 0.1);
+    --focus-bg: rgba(231, 233, 234, 0.2);
     --accent-color: #1DA1F2;
+    --accent-gradient: linear-gradient(45deg, #1DA1F2, #71c9f8);
+    --glow-effect: 0 4px 24px rgba(29, 161, 242, 0.3);
     --sidebar-bg: #000000;
+  }
+
+  /* Instagram Theme Variables */
+  .app-container[data-platform="instagram"][data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #fafafa;
+    --text-primary: #262626;
+    --text-secondary: #8e8e8e;
+    --border-color: #dbdbdb;
+    --hover-bg: rgba(0, 0, 0, 0.05);
+    --accent-gradient: linear-gradient(
+      45deg,
+      #feda75 0%,
+      #fa7e1e 30%,
+      #d62976 60%,
+      #962fbf 80%,
+      #4f5bd5 100%
+    );
+    --glow-effect: 0 4px 24px rgba(214, 41, 118, 0.15);
+    --sidebar-bg: #ffffff;
+  }
+
+  .app-container[data-platform="instagram"][data-theme="dim"] {
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #a8a8a8;
+    --border-color: #363636;
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --accent-gradient: linear-gradient(
+      45deg,
+      #feda75 0%,
+      #fa7e1e 30%,
+      #d62976 60%,
+      #962fbf 80%,
+      #4f5bd5 100%
+    );
+    --glow-effect: 0 4px 24px rgba(214, 41, 118, 0.3);
+    --sidebar-bg: #0f0f0f;
+  }
+
+  .app-container[data-platform="instagram"][data-theme="dark"] {
+    --bg-primary: #000000;
+    --bg-secondary: #121212;
+    --text-primary: #ffffff;
+    --text-secondary: #8e8e8e;
+    --border-color: #262626;
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --accent-gradient: linear-gradient(
+      45deg,
+      #feda75 0%,
+      #fa7e1e 30%,
+      #d62976 60%,
+      #962fbf 80%,
+      #4f5bd5 100%
+    );
+    --glow-effect: 0 4px 24px rgba(214, 41, 118, 0.4);
+    --sidebar-bg: #000000;
+  }
+
+  /* Facebook Theme Variables */
+  .app-container[data-platform="facebook"][data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f2f5;
+    --text-primary: #050505;
+    --text-secondary: #65676B;
+    --border-color: #dddfe2;
+    --hover-bg: rgba(59, 89, 152, 0.05);
+    --focus-bg: rgba(59, 89, 152, 0.1);
+    --accent-color: #3b5998;
+    --accent-gradient: linear-gradient(45deg, #3b5998, #8b9dc3);
+    --glow-effect: 0 4px 24px rgba(59, 89, 152, 0.15);
+    --sidebar-bg: #ffffff;
+    --fb-blue: #3b5998;
+    --fb-light-blue: #8b9dc3;
+    --fb-lighter-blue: #dfe3ee;
+    --fb-grey: #f7f7f7;
+  }
+
+  .app-container[data-platform="facebook"][data-theme="dim"] {
+    --bg-primary: #242526;
+    --bg-secondary: #18191a;
+    --text-primary: #e4e6eb;
+    --text-secondary: #b0b3b8;
+    --border-color: #3e4042;
+    --hover-bg: rgba(139, 157, 195, 0.1);
+    --focus-bg: rgba(139, 157, 195, 0.15);
+    --accent-color: #3b5998;
+    --accent-gradient: linear-gradient(45deg, #3b5998, #8b9dc3);
+    --glow-effect: 0 4px 24px rgba(59, 89, 152, 0.25);
+    --sidebar-bg: #242526;
+    --fb-blue: #3b5998;
+    --fb-light-blue: #8b9dc3;
+    --fb-lighter-blue: #3e4042;
+    --fb-grey: #18191a;
+  }
+
+  .app-container[data-platform="facebook"][data-theme="dark"] {
+    --bg-primary: #18191a;
+    --bg-secondary: #242526;
+    --text-primary: #e4e6eb;
+    --text-secondary: #b0b3b8;
+    --border-color: #2d2d2d;
+    --hover-bg: rgba(139, 157, 195, 0.1);
+    --focus-bg: rgba(139, 157, 195, 0.15);
+    --accent-color: #3b5998;
+    --accent-gradient: linear-gradient(45deg, #3b5998, #8b9dc3);
+    --glow-effect: 0 4px 24px rgba(59, 89, 152, 0.3);
+    --sidebar-bg: #18191a;
+    --fb-blue: #3b5998;
+    --fb-light-blue: #8b9dc3;
+    --fb-lighter-blue: #3e4042;
+    --fb-grey: #18191a;
+  }
+
+  /* Platform-specific theme variables */
+  .app-container[data-platform="x"][data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7f9f9;
+    --text-primary: #0f1419;
+    --text-secondary: #536471;
+    --border-color: #eff3f4;
+    --hover-bg: rgba(15, 20, 25, 0.1);
+    --focus-bg: rgba(15, 20, 25, 0.2);
+    --accent-color: #000000;
+    --accent-gradient: linear-gradient(45deg, #000000, #333333);
+    --glow-effect: 0 4px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .app-container[data-platform="x"][data-theme="dim"] {
+    --bg-primary: #15202b;
+    --bg-secondary: #1e2732;
+    --text-primary: #f7f9f9;
+    --text-secondary: #8b98a5;
+    --border-color: #38444d;
+    --hover-bg: rgba(239, 243, 244, 0.1);
+    --focus-bg: rgba(239, 243, 244, 0.2);
+    --accent-color: #ffffff;
+    --accent-gradient: linear-gradient(45deg, #ffffff, #cccccc);
+    --glow-effect: 0 4px 24px rgba(255, 255, 255, 0.25);
+  }
+
+  .app-container[data-platform="x"][data-theme="dark"] {
+    --bg-primary: #000000;
+    --bg-secondary: #16181c;
+    --text-primary: #e7e9ea;
+    --text-secondary: #71767b;
+    --border-color: #2f3336;
+    --hover-bg: rgba(231, 233, 234, 0.1);
+    --focus-bg: rgba(231, 233, 234, 0.2);
+    --accent-color: #ffffff;
+    --accent-gradient: linear-gradient(45deg, #ffffff, #cccccc);
+    --glow-effect: 0 4px 24px rgba(255, 255, 255, 0.3);
   }
 
   .app-container {
@@ -102,14 +264,16 @@ import FacebookTab from "../components/FacebookTab.astro";
     // Listen for theme changes
     document.querySelectorAll('input[name="theme"]').forEach(radio => {
       radio.addEventListener('change', (e) => {
-        appContainer.setAttribute('data-theme', e.target.value);
+        const target = e.target as HTMLInputElement;
+        appContainer.setAttribute('data-theme', target.value);
       });
     });
 
     // Listen for platform changes
     document.querySelectorAll('[data-bs-toggle="pill"]').forEach(tab => {
       tab.addEventListener('shown.bs.tab', (e) => {
-        const platform = e.target.getAttribute('data-bs-target').replace('#', '').replace('-tab', '');
+        const target = e.target as HTMLElement;
+        const platform = target.getAttribute('data-bs-target').replace('#', '').replace('-tab', '');
         appContainer.setAttribute('data-platform', platform);
       });
     });

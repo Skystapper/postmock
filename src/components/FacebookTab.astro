@@ -1,28 +1,70 @@
 ---
-import PreviewEmbed from "./PreviewEmbed.astro";
 ---
 
 <div class="tab-pane fade" id="facebook-tab">
-  <div class="toolbar mb-3">
-    <!-- Theme Selection -->
-    <div class="theme-options mb-3">
-      <label class="form-label">Theme</label>
-      <div class="btn-group" role="group">
-        <input type="radio" class="btn-check" name="fb-theme" id="fb-theme-light" value="light" checked>
-        <label class="btn btn-outline-secondary" for="fb-theme-light">Light</label>
-        
-        <input type="radio" class="btn-check" name="fb-theme" id="fb-theme-dark" value="dark">
-        <label class="btn btn-outline-secondary" for="fb-theme-dark">Dark</label>
+  <div class="mockup-header">
+    <h2>Facebook Post</h2>
+    <p>Create a realistic Facebook post mockup by editing the content below.</p>
+  </div>
+
+  <!-- Theme Controls -->
+  <div class="theme-section mb-3">
+    <div class="theme-controls">
+      <div class="theme-selector">
+        <span class="control-label">Theme:</span>
+        <div class="theme-toggle-group">
+          <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-light" value="light" checked>
+          <label class="theme-toggle-btn" for="fb-theme-light" title="Light theme">
+            <i class="bi bi-sun"></i>
+          </label>
+          
+          <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-dim" value="dim">
+          <label class="theme-toggle-btn" for="fb-theme-dim" title="Dim theme">
+            <i class="bi bi-moon-stars"></i>
+          </label>
+          
+          <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-dark" value="dark">
+          <label class="theme-toggle-btn" for="fb-theme-dark" title="Dark theme">
+            <i class="bi bi-moon"></i>
+          </label>
+        </div>
       </div>
+
+      <div class="media-toggle">
+        <button class="modern-btn labeled-btn tooltip-btn" onclick="toggleMediaPost()" id="mediaToggleBtn">
+          <i class="bi bi-image"></i>
+          <span class="btn-label">Show Media</span>
+          <span class="tooltip-text">Toggle media post visibility</span>
+        </button>
+      </div>
+
+      <button class="modern-btn labeled-btn tooltip-btn" onclick="randomizeFacebookStats()" title="Generate random engagement stats">
+          <i class="bi bi-shuffle"></i>
+        <span class="btn-label">Randomize Stats</span>
+        <span class="tooltip-text">Generate random engagement numbers</span>
+      </button>
+
+      <button type="button" class="preview-btn" onclick="showPreviewModal('facebook')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+        </svg>
+        Preview
+      </button>
     </div>
   </div>
 
   <!-- Interactive Facebook Preview -->
-  <div class="facebook-container" id="facebook-preview">
+  <div class="facebook-container" id="facebook-preview" data-theme="light">
     <!-- Header -->
     <div class="fb-header d-flex justify-content-between align-items-start">
       <div class="d-flex gap-2">
-        <div class="profile-pic rounded-circle bg-primary" style="width: 40px; height: 40px;">
+        <div 
+          class="profile-pic rounded-circle bg-primary cursor-pointer" 
+          style="width: 40px; height: 40px;"
+          onclick="uploadFacebookImage()"
+          role="button"
+          title="Click to change profile picture"
+        >
           <img id="fb-profile-pic" 
             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E"
             alt="Profile picture placeholder" 
@@ -36,8 +78,13 @@ import PreviewEmbed from "./PreviewEmbed.astro";
               contenteditable="true" 
               id="live-fb-username"
               data-input="fb-username-input">John Doe</span>
-            <span class="verified-badge" id="fb-verified-badge">
+            <span class="verified-badge" id="fb-verified-badge" onclick="toggleFacebookVerified()" style="display: inline;">
               <svg width="16" height="16" viewBox="0 0 512 512" fill="#2D88FF">
+                <path d="M256 48C141.6 48 48 141.6 48 256s93.6 208 208 208 208-93.6 208-208S370.4 48 256 48zm-42.7 318.9L106.7 260.3l29.9-29.9 76.8 76.8 162.1-162.1 29.9 29.9-192.1 191.9z"/>
+              </svg>
+            </span>
+            <span class="verified-badge faded-badge" id="fb-faded-badge" onclick="toggleFacebookVerified()" style="display: none;">
+              <svg width="16" height="16" viewBox="0 0 512 512" fill="#2D88FF" style="opacity:0.5;">
                 <path d="M256 48C141.6 48 48 141.6 48 256s93.6 208 208 208 208-93.6 208-208S370.4 48 256 48zm-42.7 318.9L106.7 260.3l29.9-29.9 76.8 76.8 162.1-162.1 29.9 29.9-192.1 191.9z"/>
               </svg>
             </span>
@@ -58,14 +105,14 @@ import PreviewEmbed from "./PreviewEmbed.astro";
 
       <div class="dropdown">
         <button class="btn btn-link text-secondary p-0" data-bs-toggle="dropdown">
-          <i class="fas fa-ellipsis-h"></i>
+          <i class="bi bi-three-dots"></i>
         </button>
         <ul class="dropdown-menu">
           <li><button class="dropdown-item" onclick="toggleFacebookVerified()">
-            <i class="fas fa-badge-check"></i> Toggle verified
+            <i class="bi bi-patch-check"></i> Toggle verified
           </button></li>
           <li><button class="dropdown-item" onclick="uploadFacebookImage()">
-            <i class="fas fa-camera"></i> Change profile picture
+            <i class="bi bi-camera"></i> Change profile picture
           </button></li>
         </ul>
       </div>
@@ -77,6 +124,21 @@ import PreviewEmbed from "./PreviewEmbed.astro";
       contenteditable="true" 
       id="live-fb-text"
       data-input="fb-text-input">Write something...</div>
+
+    <!-- Image Container (new) -->
+    <div 
+      class="post-image"
+      onclick="uploadFacebookPost()"
+      role="button"
+      title="Click to add photo"
+      style="display: none;"
+      id="fb-media-container"
+    >
+      <div class="upload-prompt">
+        <i class="bi bi-camera"></i>
+        <span>Add Photo</span>
+      </div>
+    </div>
 
     <!-- Engagement Stats -->
     <div class="engagement-stats border-top border-bottom py-2">
@@ -108,19 +170,15 @@ import PreviewEmbed from "./PreviewEmbed.astro";
     <!-- Action Buttons -->
     <div class="action-buttons d-flex justify-content-between py-1">
       <button class="btn btn-light flex-grow-1 mx-1">
-        <i class="far fa-thumbs-up"></i> Like
+        <i class="bi bi-hand-thumbs-up"></i> Like
       </button>
       <button class="btn btn-light flex-grow-1 mx-1">
-        <i class="far fa-comment"></i> Comment
+        <i class="bi bi-chat"></i> Comment
       </button>
       <button class="btn btn-light flex-grow-1 mx-1">
-        <i class="far fa-share-square"></i> Share
+        <i class="bi bi-share"></i> Share
       </button>
     </div>
-  </div>
-
-  <div class="col col-md-6 mt-4">
-    <PreviewEmbed platform="facebook" previewSrc="/api-facebook" />
   </div>
 </div>
 
@@ -141,12 +199,32 @@ import PreviewEmbed from "./PreviewEmbed.astro";
 
   // Toggle verified badge
   function toggleFacebookVerified() {
-    const verifiedInput = document.getElementById('fb-verified-input');
     const verifiedBadge = document.getElementById('fb-verified-badge');
-    verifiedInput.checked = !verifiedInput.checked;
-    verifiedBadge.style.display = verifiedInput.checked ? 'inline' : 'none';
-    verifiedInput.dispatchEvent(new Event('input'));
+    const fadedBadge = document.getElementById('fb-faded-badge');
+    const isVisible = verifiedBadge.style.display !== 'none';
+    verifiedBadge.style.display = isVisible ? 'none' : 'inline';
+    fadedBadge.style.display = isVisible ? 'inline' : 'none';
   }
+
+  // Show faded badge on hover
+  document.addEventListener('DOMContentLoaded', function() {
+    const fbNameContainer = document.querySelector('.fb-header .d-flex.align-items-center');
+    if (fbNameContainer) {
+      fbNameContainer.addEventListener('mouseenter', () => {
+        const fadedBadge = document.getElementById('fb-faded-badge');
+        const verifiedBadge = document.getElementById('fb-verified-badge');
+        if (verifiedBadge.style.display === 'none') {
+          fadedBadge.style.display = 'inline';
+        }
+      });
+      fbNameContainer.addEventListener('mouseleave', () => {
+        const fadedBadge = document.getElementById('fb-faded-badge');
+        if (document.getElementById('fb-verified-badge').style.display === 'none') {
+          fadedBadge.style.display = 'none';
+        }
+      });
+    }
+  });
 
   // Profile picture upload
   function uploadFacebookImage() {
@@ -158,12 +236,119 @@ import PreviewEmbed from "./PreviewEmbed.astro";
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          document.getElementById('fb-profile-pic').src = e.target.result;
+          // Initialize cropper with the image and handle the cropped result
+          initImageCropper(e.target.result, 'facebook-profile', (croppedImageUrl) => {
+            const profilePic = document.getElementById('fb-profile-pic');
+            if (profilePic) {
+              profilePic.src = croppedImageUrl;
+              console.log('✅ Successfully updated Facebook profile picture');
+            }
+          });
         };
         reader.readAsDataURL(file);
       }
     };
     input.click();
+  }
+
+  // Add event listener for cropped images
+  document.addEventListener('imageCropped', (event) => {
+    const { imageUrl, cropType } = event.detail;
+    
+    // Only handle Facebook-specific crop types
+    if (!cropType.startsWith('facebook-')) {
+      return;
+    }
+    
+    if (cropType === 'facebook-profile') {
+      console.log('Updating Facebook profile picture');
+      const fbProfilePic = document.getElementById('fb-profile-pic');
+      if (fbProfilePic) {
+        fbProfilePic.src = imageUrl;
+        console.log('✅ Successfully updated Facebook profile picture');
+      }
+    } else if (cropType === 'facebook-post') {
+      console.log('Updating Facebook post image');
+      const postImage = document.querySelector('#facebook-preview .post-image');
+      if (postImage) {
+        // Remove any existing images
+        postImage.querySelectorAll('img').forEach(img => img.remove());
+        
+        // Create new image element
+        const imgElement = document.createElement('img');
+        imgElement.src = imageUrl;
+        imgElement.style.width = '100%';
+        imgElement.style.height = '100%';
+        imgElement.style.objectFit = 'cover';
+        imgElement.style.display = 'block';
+        
+        // Append the new image
+        postImage.appendChild(imgElement);
+        
+        // Hide upload prompt
+        const uploadPrompt = postImage.querySelector('.upload-prompt');
+        if (uploadPrompt) {
+          uploadPrompt.style.display = 'none';
+        }
+        
+        console.log('✅ Successfully updated Facebook post image');
+      }
+    }
+  });
+
+  // Randomize stats
+  function randomizeFacebookStats() {
+    const formatNumber = (num) => {
+      if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num/1000).toFixed(1) + 'K';
+      return num;
+    };
+
+    ['reactions', 'comments', 'shares'].forEach(stat => {
+      const randomNum = formatNumber(Math.floor(Math.random() * 1000000));
+      const liveElement = document.getElementById(`live-fb-${stat}`);
+      const input = document.getElementById(`fb-${stat}-input`);
+      
+      if (liveElement) liveElement.textContent = randomNum;
+      if (input) {
+        input.value = randomNum;
+        input.dispatchEvent(new Event('input'));
+      }
+    });
+  }
+
+  // Update Facebook theme
+  function updateFacebookTheme(theme) {
+    console.log(`Updating Facebook theme to: ${theme}`);
+    const container = document.getElementById('facebook-preview');
+    const appContainer = document.querySelector('.app-container');
+    
+    // Update Facebook container theme
+    if (container) {
+      container.setAttribute('data-theme', theme);
+      console.log(`Facebook container theme set to: ${theme}`);
+    } else {
+      console.log('Facebook container not found');
+    }
+    
+    // Update app container theme
+    if (appContainer) {
+      appContainer.setAttribute('data-theme', theme);
+      appContainer.setAttribute('data-platform', 'facebook');
+      console.log(`App container theme set to: ${theme}`);
+    } else {
+      console.log('App container not found');
+    }
+    
+    // Update the main theme radio buttons to match
+    const mainThemeRadio = document.querySelector(`input[name="theme"][value="${theme}"]`);
+    if (mainThemeRadio) {
+      mainThemeRadio.checked = true;
+      mainThemeRadio.dispatchEvent(new Event('change', { bubbles: true }));
+      console.log(`Main theme radio updated to: ${theme}`);
+    } else {
+      console.log(`Main theme radio for ${theme} not found`);
+    }
   }
 
   // Initialize
@@ -179,17 +364,117 @@ import PreviewEmbed from "./PreviewEmbed.astro";
       }
     });
 
-    // Update privacy when select changes - add null check
-    const privacyInput = document.getElementById('fb-privacy-input');
-    if (privacyInput) {
-      privacyInput.addEventListener('change', (e) => {
-        const privacyText = document.getElementById('live-fb-privacy');
-        if (privacyText) {
-          privacyText.textContent = e.target.value;
+    // Add theme change handlers
+    document.querySelectorAll('input[name="fb-theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const target = e.target;
+        if (target && target instanceof HTMLInputElement) {
+          updateFacebookTheme(target.value);
         }
       });
+    });
+
+    // Listen for main app theme changes
+    document.querySelectorAll('input[name="theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const target = e.target;
+        if (target && target instanceof HTMLInputElement) {
+          const theme = target.value;
+          const container = document.getElementById('facebook-preview');
+          
+          // Update Facebook container theme
+          if (container) {
+            container.setAttribute('data-theme', theme);
+          }
+          
+          // Update Facebook theme radio buttons to match
+          const fbThemeRadio = document.querySelector(`input[name="fb-theme"][value="${theme}"]`);
+          if (fbThemeRadio && fbThemeRadio instanceof HTMLInputElement) {
+            fbThemeRadio.checked = true;
+          }
+        }
+      });
+    });
+
+    // Apply initial theme to ensure it's set
+    const checkedFbTheme = document.querySelector('input[name="fb-theme"]:checked');
+    if (checkedFbTheme && checkedFbTheme instanceof HTMLInputElement) {
+      updateFacebookTheme(checkedFbTheme.value);
     }
   });
+
+  // Add post image upload function
+  function uploadFacebookPost() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            // Initialize cropper with the image
+            initImageCropper(e.target.result, 'facebook-post', (croppedImageUrl) => {
+              if (!croppedImageUrl) {
+                console.error('No cropped image URL received');
+                return;
+              }
+
+              const postImage = document.querySelector('#facebook-preview .post-image');
+              if (!postImage) {
+                console.error('Post image container not found');
+                return;
+              }
+              
+              // Remove any existing images and upload prompt
+              postImage.querySelectorAll('img').forEach(img => img.remove());
+              const uploadPrompt = postImage.querySelector('.upload-prompt');
+              if (uploadPrompt) {
+                uploadPrompt.style.display = 'none';
+              }
+              
+              // Create and configure new image element
+              const imgElement = document.createElement('img');
+              imgElement.src = croppedImageUrl;
+              imgElement.style.width = '100%';
+              imgElement.style.height = '100%';
+              imgElement.style.objectFit = 'cover';
+              imgElement.style.display = 'block';
+              
+              // Append the new image
+              postImage.appendChild(imgElement);
+              
+              console.log('✅ Successfully updated Facebook post image');
+            });
+          } catch (error) {
+            console.error('Error in Facebook post upload:', error);
+            alert('Failed to process image. Please try again.');
+          }
+        };
+        reader.onerror = (error) => {
+          console.error('Error reading file:', error);
+          alert('Failed to read image file. Please try again.');
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  }
+
+  // Add media toggle function
+  function toggleMediaPost() {
+    const mediaContainer = document.getElementById('fb-media-container');
+    const toggleBtn = document.querySelector('.media-toggle .modern-btn');
+    const isVisible = mediaContainer.style.display !== 'none';
+    
+    mediaContainer.style.display = isVisible ? 'none' : 'block';
+    toggleBtn.textContent = isVisible ? 'Show Media' : 'Hide Media';
+    toggleBtn.classList.toggle('active', !isVisible);
+    
+    // Update tooltip
+    toggleBtn.setAttribute('title', isVisible ? 'Add media to your post' : 'Remove media from your post');
+  }
 </script>
 
 <style>
@@ -213,22 +498,23 @@ import PreviewEmbed from "./PreviewEmbed.astro";
   }
 
   [contenteditable]:focus {
-    background: rgba(24, 119, 242, 0.1);
+    background: rgba(59, 89, 152, 0.1);
   }
 
   .btn-light {
-    background: #e4e6eb;
+    background: #dfe3ee;
     border: none;
     color: #050505;
     font-weight: 600;
   }
 
   .btn-light:hover {
-    background: #dadde1;
+    background: #8b9dc3;
+    color: #fff;
   }
 
   .reaction-icon {
-    background: #e4e6eb;
+    background: #dfe3ee;
     border-radius: 50%;
     width: 18px;
     height: 18px;
@@ -238,22 +524,264 @@ import PreviewEmbed from "./PreviewEmbed.astro";
     font-size: 12px;
   }
 
-  /* Dark theme styles */
-  [data-theme="dark"] {
+  /* Facebook theme styles */
+  .facebook-container[data-theme="light"] {
+    background: white;
+    color: #050505;
+    border-color: #dddfe2;
+  }
+
+  .facebook-container[data-theme="light"] .text-secondary {
+    color: #65676B !important;
+  }
+
+  .facebook-container[data-theme="dim"] {
     background: #242526;
     color: #e4e6eb;
+    border-color: #3E4042;
   }
 
-  [data-theme="dark"] .btn-light {
+  .facebook-container[data-theme="dim"] .text-secondary {
+    color: #B0B3B8 !important;
+  }
+
+  .facebook-container[data-theme="dim"] .btn-light {
     background: #3a3b3c;
     color: #e4e6eb;
   }
 
-  [data-theme="dark"] .btn-light:hover {
-    background: #4e4f50;
+  .facebook-container[data-theme="dim"] .btn-light:hover {
+    background: #8b9dc3;
+    color: #e4e6eb;
   }
 
-  [data-theme="dark"] .reaction-icon {
+  .facebook-container[data-theme="dim"] .reaction-icon {
     background: #3a3b3c;
+  }
+
+  .facebook-container[data-theme="dark"] {
+    background: #18191a;
+    color: #e4e6eb;
+    border-color: #2D2D2D;
+  }
+
+  .facebook-container[data-theme="dark"] .text-secondary {
+    color: #B0B3B8 !important;
+  }
+
+  .facebook-container[data-theme="dark"] .btn-light {
+    background: #3a3b3c;
+    color: #e4e6eb;
+  }
+
+  .facebook-container[data-theme="dark"] .btn-light:hover {
+    background: #8b9dc3;
+    color: #e4e6eb;
+  }
+
+  .facebook-container[data-theme="dark"] .reaction-icon {
+    background: #3a3b3c;
+  }
+
+  /* Theme controls */
+  .theme-section {
+    margin-bottom: 1rem;
+  }
+
+  .theme-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .theme-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .theme-toggle-group {
+    display: flex;
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    padding: 0.25rem;
+  }
+
+  .theme-toggle {
+    display: none;
+  }
+
+  .theme-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 0.15rem;
+  }
+
+  .theme-toggle:checked + .theme-toggle-btn {
+    background: var(--fb-blue);
+    color: white;
+  }
+
+  .mockup-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .mockup-header h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .mockup-header p {
+    color: var(--text-secondary);
+  }
+
+  /* Modern button style */
+  .modern-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-secondary);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .modern-btn:hover {
+    background: var(--fb-light-blue);
+    color: white;
+  }
+
+  .modern-btn.active {
+    background: var(--fb-blue);
+    color: white;
+  }
+
+  .labeled-btn {
+    gap: 0.5rem;
+  }
+
+  .media-toggle {
+    margin: 0 0.5rem;
+  }
+
+  .media-toggle .modern-btn {
+    transition: all 0.2s ease;
+  }
+
+  .media-toggle .modern-btn.active {
+    background: var(--fb-blue);
+    color: white;
+  }
+
+  .media-toggle .modern-btn.active:hover {
+    background: var(--fb-light-blue);
+    opacity: 0.9;
+  }
+
+  /* Preview button */
+  .preview-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--fb-blue);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .preview-btn:hover {
+    background: var(--fb-light-blue);
+    opacity: 0.9;
+  }
+
+  /* Tooltip button */
+  .tooltip-btn {
+    position: relative;
+  }
+
+  .tooltip-btn .tooltip-text {
+    visibility: hidden;
+    width: 180px;
+    background-color: rgba(59, 89, 152, 0.9);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-weight: normal;
+    font-size: 0.85rem;
+  }
+
+  .tooltip-btn:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .post-image {
+    width: 100%;
+    background-color: var(--fb-lighter-blue);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    aspect-ratio: 16/9;
+    margin-bottom: 12px;
+  }
+
+  .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .post-image .upload-prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .upload-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+  }
+
+  .upload-prompt i {
+    font-size: 24px;
+  }
+
+  .faded-badge {
+    display: none;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  .d-flex.align-items-center:hover .faded-badge {
+    opacity: 1;
   }
 </style> 

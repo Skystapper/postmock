@@ -8,64 +8,48 @@ import '../styles/TwitterTab.css';
 <div class="tab-pane fade show active" id="twitter-tab">
   <div class="mockup-header">
     <h2>Twitter Post</h2>
-    <p>Create a realistic Twitter post mockup by editing the content below.</p>
+    <p class="mockup-description">Create a realistic Twitter post mockup by editing the content below.</p>
   </div>
 
-      <!-- Dimension Controls -->
-  <div class="dimension-section mb-3">
-      <div class="dimension-controls">
-      <div class="dimension-label">Image Size:</div>
-      
-      <div class="control-row">
-        <div class="dimension-field">
-          <span class="field-label">WIDTH</span>
-          <div class="field-input-group">
-            <button class="field-btn" onclick="adjustDimension('width', -1)">
-              <i class="bi bi-dash"></i>
-            </button>
-              <input 
-                type="text" 
-                id="image-width" 
-              class="field-input" 
-                value="1200"
-                onchange="validateDimension(this, 300, 4096)"
-            >
-            <button class="field-btn" onclick="adjustDimension('width', 1)">
-              <i class="bi bi-plus"></i>
-            </button>
-          </div>
-        </div>
-
-        <div class="dimension-separator">×</div>
-        
-        <div class="dimension-field">
-          <span class="field-label">HEIGHT</span>
-          <div class="field-input-group">
-            <button class="field-btn" onclick="adjustDimension('height', -1)">
-              <i class="bi bi-dash"></i>
-            </button>
-              <input 
-                type="text" 
-                id="image-height" 
-              class="field-input" 
-                value="675"
-                onchange="validateDimension(this, 300, 4096)"
-              >
-            <button class="field-btn" onclick="adjustDimension('height', 1)">
-              <i class="bi bi-plus"></i>
-            </button>
-              </div>
-            </div>
-        
-        <div class="dimension-actions">
-          <button class="action-btn reset-btn" onclick="resetSize()">
-            <i class="bi bi-arrow-counterclockwise"></i>
-            Reset
-            </button>
-        </div>
-          </div>
+  <!-- Dimension Controls -->
+  <div class="dimension-section">
+    <span class="size-label">Image Size:</span>
+    <div class="size-controls">
+      <div class="dimension-field">
+        <span class="field-label">W</span>
+        <div class="input-container">
+          <button class="field-btn" onclick="adjustDimension('width', -1)">−</button>
+          <input 
+            type="text" 
+            id="image-width" 
+            class="field-input" 
+            value="1200"
+            onchange="validateDimension(this, 300, 4096)"
+          >
+          <button class="field-btn" onclick="adjustDimension('width', 1)">+</button>
         </div>
       </div>
+
+      <div class="dimension-field">
+        <span class="field-label">H</span>
+        <div class="input-container">
+          <button class="field-btn" onclick="adjustDimension('height', -1)">−</button>
+          <input 
+            type="text" 
+            id="image-height" 
+            class="field-input" 
+            value="675"
+            onchange="validateDimension(this, 300, 4096)"
+          >
+          <button class="field-btn" onclick="adjustDimension('height', 1)">+</button>
+        </div>
+      </div>
+      
+      <button class="reset-size-btn" onclick="resetSize()" title="Reset size">
+        <i class="bi bi-arrow-counterclockwise"></i>
+      </button>
+    </div>
+  </div>
 
   <!-- Theme Controls -->
   <div class="theme-section mb-3">
@@ -131,8 +115,14 @@ import '../styles/TwitterTab.css';
             contenteditable="true" 
             id="live-name"
             data-input="username-input">John Doe</span>
-          <span class="verified-badge" id="verified-badge">
+          <span class="verified-badge" id="verified-badge" onclick="toggleVerified()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path></svg>
+          </span>
+          
+          <span class="verified-badge faded-badge" id="faded-badge" onclick="toggleVerified()" style="display: none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DA1F2" style="opacity: 0.5;">
+              <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path>
+            </svg>
           </span>
         </div>
         <div 
@@ -205,48 +195,40 @@ import '../styles/TwitterTab.css';
 
   <!-- New X Design (initially hidden) -->
   <div class="tweet-wrapper" id="x-wrapper">
-  <div class="x-container" id="x-preview" style="display: none;">
-    <XPost
-      username="John Doe"
-      handle="johndoe"
-      verified={true}
-      text="Your tweet content here!"
-      date="8:21 PM · Mar 12, 2024"
-      views="2.7M"
-      replies="1K"
-      reposts="6K"
-      likes="34K"
-      bookmarks="143"
-      theme="dark"
-    />
+    <div id="x-preview" style="display: none;">
+      <XPost
+        username="John Doe"
+        handle="johndoe"
+        verified={true}
+        text="Your tweet content here!"
+        date="8:21 PM · Mar 12, 2024"
+        views="2.7M"
+        replies="1K"
+        reposts="6K"
+        likes="34K"
+        bookmarks="143"
+        theme="dark"
+      />
     </div>
   </div>
 
   <!-- Platform Toggle -->
-  <div class="platform-toggle-section mt-3">
-    <div class="platform-toggle-wrapper">
-      <div class="platform-toggle-container">
-        <span class="platform-label">Toggle Platform:</span>
-        <label class="modern-switch" title="Switch between Twitter and X styles">
-          <input 
-            type="checkbox" 
-            id="platform-switch"
-            onchange="togglePlatformStyle(this.checked)"
-          >
-          <span class="switch-slider">
-            <svg class="twitter-icon" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/>
-            </svg>
-            <svg class="x-icon" viewBox="0 0 24 24">
-              <path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-          </span>
-        </label>
-        <span class="platform-indicator">
-          <span class="platform-twitter">Twitter</span>
-          <span class="platform-x">X</span>
+  <div class="platform-toggle-section">
+    <div class="platform-switch">
+      <label class="switch-option twitter-option">
+        <input type="radio" name="platform-toggle" id="platform-twitter" value="twitter" checked>
+        <span class="option-icon">
+          <svg viewBox="0 0 24 24"><path fill="currentColor" d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/></svg>
         </span>
-      </div>
+        <span class="option-text">Twitter</span>
+      </label>
+      <label class="switch-option x-option">
+        <input type="radio" name="platform-toggle" id="platform-x" value="x">
+        <span class="option-icon">
+          <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </span>
+        <span class="option-text">X</span>
+      </label>
     </div>
   </div>
 </div>
@@ -275,21 +257,31 @@ import '../styles/TwitterTab.css';
 
   // Toggle verified badge
   function toggleVerified() {
-    const verifiedInput = document.getElementById('verified-input');
-    const twitterBadge = document.getElementById('verified-badge');
-    const xBadge = document.getElementById('x-verified-badge');
-    const isX = document.getElementById('platform-switch').checked;
+    const verifiedBadge = document.getElementById('verified-badge');
+    const fadedBadge = document.getElementById('faded-badge');
+    const isVisible = verifiedBadge.style.display !== 'none';
     
-    verifiedInput.checked = !verifiedInput.checked;
-    
-    // Toggle both badges
-    twitterBadge.style.display = verifiedInput.checked ? 'inline' : 'none';
-    if (xBadge) {
-      xBadge.style.display = verifiedInput.checked ? 'inline' : 'none';
-    }
-    
-    verifiedInput.dispatchEvent(new Event('input'));
+    // Toggle visibility
+    verifiedBadge.style.display = isVisible ? 'none' : 'inline';
+    fadedBadge.style.display = isVisible ? 'inline' : 'none';
   }
+
+  // Show faded badge on hover
+  const userInfo = document.querySelector('.user-info');
+  userInfo.addEventListener('mouseenter', () => {
+    const fadedBadge = document.getElementById('faded-badge');
+    const verifiedBadge = document.getElementById('verified-badge');
+    if (verifiedBadge.style.display === 'none') {
+      fadedBadge.style.display = 'inline';
+    }
+  });
+
+  userInfo.addEventListener('mouseleave', () => {
+    const fadedBadge = document.getElementById('faded-badge');
+    if (document.getElementById('verified-badge').style.display === 'none') {
+      fadedBadge.style.display = 'none';
+    }
+  });
 
   // Updated Profile picture upload function for direct upload
   function uploadTwitterProfilePic() {
@@ -354,9 +346,10 @@ import '../styles/TwitterTab.css';
     
     // Update X container theme
     if (xContainer) {
-      const xPost = xContainer.querySelector('.x-post');
-      if (xPost) {
-        xPost.setAttribute('data-theme', theme);
+      // Find the .x-container inside #x-preview
+      const xPostContainer = xContainer.querySelector('.x-container');
+      if (xPostContainer) {
+        xPostContainer.setAttribute('data-theme', theme);
       }
     }
     
@@ -603,22 +596,11 @@ import '../styles/TwitterTab.css';
     // Update container attributes
     twitterContainer.setAttribute('data-platform', isX ? 'x' : 'twitter');
     
-    // Update stats labels only in Twitter container
-    if (!isX) {
-      const statsLabels = {
-        retweets: 'Retweets',
-        quotes: 'Quote Tweets',
-        likes: 'Likes'
-      };
-      
-      Object.entries(statsLabels).forEach(([stat, label]) => {
-        const statElement = twitterContainer.querySelector(`#live-${stat}`).nextElementSibling;
-        statElement.textContent = label;
-      });
-    }
-
     // Sync content between designs
     syncContent(isX);
+
+    // Dispatch event for button positioning
+    document.dispatchEvent(new CustomEvent('platformToggled', { detail: { isX } }));
   }
 
   // Add the syncContent function
@@ -740,4 +722,351 @@ import '../styles/TwitterTab.css';
       container.style.aspectRatio = `${width} / ${height}`;
     }
   }
-</script> 
+
+  // Platform toggle state management
+  const platformToggle = document.querySelectorAll('input[name="platform-toggle"]');
+  const appContainer = document.querySelector('.app-container');
+  const twitterPreview = document.querySelector('.twitter-preview');
+  const xPreview = document.querySelector('.x-preview');
+
+  // Initialize platform state from localStorage or default to "twitter"
+  const savedPlatform = localStorage.getItem('platform') || 'twitter';
+  appContainer.setAttribute('data-platform', savedPlatform);
+  document.querySelector(`input[value="${savedPlatform}"]`).checked = true;
+
+  // Show/hide previews based on initial platform
+  if (savedPlatform === 'twitter') {
+    twitterPreview.style.display = 'block';
+    xPreview.style.display = 'none';
+  } else {
+    twitterPreview.style.display = 'none';
+    xPreview.style.display = 'block';
+  }
+
+  // Handle platform toggle changes
+  platformToggle.forEach(toggle => {
+    toggle.addEventListener('change', (e) => {
+      const platform = e.target.value;
+      
+      // Update platform state
+      appContainer.setAttribute('data-platform', platform);
+      localStorage.setItem('platform', platform);
+
+      // Toggle preview visibility with smooth transition
+      if (platform === 'twitter') {
+        twitterPreview.style.display = 'block';
+        twitterPreview.style.opacity = '1';
+        xPreview.style.opacity = '0';
+        setTimeout(() => {
+          xPreview.style.display = 'none';
+        }, 300);
+      } else {
+        xPreview.style.display = 'block';
+        xPreview.style.opacity = '1';
+        twitterPreview.style.opacity = '0';
+        setTimeout(() => {
+          twitterPreview.style.display = 'none';
+        }, 300);
+      }
+    });
+  });
+</script>
+
+<style>
+  .faded-badge {
+    display: none; /* Start hidden */
+    opacity: 0.5; /* Faded appearance */
+    transition: opacity 0.3s ease;
+  }
+
+  .user-info:hover .faded-badge {
+    opacity: 1; /* Show on hover */
+  }
+
+  .tweet-container[data-theme="dark"] {
+    background: #000;
+    color: #e7e9ea;
+    border: 1px solid #2f3336;
+    box-shadow: 0 0 12px 2px rgba(29,155,240,0.10), 0 0 24px 2px rgba(29,155,240,0.15);
+  }
+  .tweet-container[data-theme="dim"] {
+    background: #15202B;
+    color: #e7e9ea;
+    border: 1px solid #38444D;
+    box-shadow: 0 2px 12px rgba(136,153,166,0.2), 0 0 20px rgba(29,155,240,0.1);
+  }
+
+  /* Updated styles */
+  .mockup-header {
+    padding: 1rem 0 0.75rem;
+    text-align: center;
+  }
+
+  .mockup-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .mockup-description {
+    margin: 0.5rem 0 0;
+    color: #666;
+    font-size: 0.95rem;
+  }
+
+  .dimension-section {
+    margin: 0 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .size-label, .toggle-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+  }
+
+  .size-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dimension-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .field-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  .input-container {
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border-radius: 6px;
+    padding: 0.25rem;
+  }
+
+  .field-input {
+    width: 50px;
+    text-align: center;
+    background: transparent;
+    border: 1px solid var(--border-input);
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 0.9rem;
+    color: inherit;
+  }
+
+  .field-btn {
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    padding: 2px 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+  }
+
+  .field-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+  }
+
+  .reset-size-btn {
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+
+  .reset-size-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+  }
+
+  /* Platform toggle styling */
+  .platform-toggle-section {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+  }
+
+  .platform-switch {
+    display: flex;
+    gap: 0.5rem;
+    padding: 4px;
+    background: var(--bg-primary);
+    border-radius: 9999px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .switch-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-secondary);
+    min-width: 120px;
+    justify-content: center;
+  }
+
+  .switch-option:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+  }
+
+  .switch-option input {
+    display: none;
+  }
+
+  .switch-option input:checked + .option-icon {
+    color: var(--accent-color);
+  }
+
+  .switch-option input:checked + .option-icon + .option-text {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .twitter-option input:checked ~ .option-icon {
+    color: #1DA1F2;
+  }
+
+  .x-option input:checked ~ .option-icon {
+    color: var(--text-primary);
+  }
+
+  .option-icon {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+  }
+
+  .option-text {
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+
+  /* Dark theme adjustments */
+  [data-theme="dark"] .platform-switch {
+    background: var(--bg-dark);
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 480px) {
+    .platform-toggle-section {
+      padding: 0.75rem;
+      margin: 0.75rem 0;
+    }
+    
+    .switch-option {
+      padding: 0.4rem 0.8rem;
+      min-width: 100px;
+    }
+    
+    .option-text {
+      font-size: 0.85rem;
+    }
+  }
+
+  /* CSS Variables for theming */
+  :root {
+    --text-primary: #000;
+    --text-secondary: #536471;
+    --bg-hover: rgba(15, 20, 25, 0.1);
+    --bg-input: rgba(15, 20, 25, 0.05);
+    --border-input: rgba(15, 20, 25, 0.1);
+  }
+
+  [data-theme="dark"] {
+    --text-primary: #fff;
+    --text-secondary: #71767b;
+    --bg-hover: rgba(239, 243, 244, 0.1);
+    --bg-input: rgba(239, 243, 244, 0.05);
+    --border-input: rgba(51, 54, 57, 0.5);
+  }
+
+  [data-theme="dim"] {
+    --text-primary: #fff;
+    --text-secondary: #8b98a5;
+    --bg-hover: rgba(239, 243, 244, 0.1);
+    --bg-input: rgba(239, 243, 244, 0.05);
+    --border-input: rgba(51, 54, 57, 0.5);
+  }
+
+  /* Button layout adjustments */
+  .tweet-wrapper {
+    margin-bottom: 1rem;
+  }
+
+  /* Spacing for randomize button */
+  .modern-btn.labeled-btn.tooltip-btn {
+    margin: 0.75rem 0;
+  }
+
+  /* Platform toggle styles */
+  .platform-toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border-radius: 9999px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+  }
+
+  .platform-toggle label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .platform-toggle input[type="radio"] {
+    display: none;
+  }
+
+  .platform-toggle input[type="radio"]:checked + label {
+    background: var(--accent-color);
+    color: var(--bg-primary);
+  }
+
+  /* Preview transition styles */
+  .twitter-preview,
+  .x-preview {
+    transition: opacity 0.3s ease;
+  }
+</style>
+
+<!-- Import mobile layout script with client:load directive for client-side execution -->
+    <script>
+      // Import the mobile layout script
+      import "../scripts/mobilelayout.js";
+    </script>
