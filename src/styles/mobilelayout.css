@@ -2,6 +2,169 @@
  * Mobile layout styles for the Twitter Post Mockup app
  */
 
+/* Base mobile container */
+.mobile-layout-container {
+  position: relative;
+  padding: 12px;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  box-sizing: border-box;
+}
+
+/* Mobile section layouts */
+.mobile-top-section {
+  height: 40px;
+  padding: 0 5px;
+  position: relative;
+}
+
+.mobile-controls-section {
+  padding: 10px 5px;
+  margin-top: 40px;
+}
+
+.mobile-content-section {
+  padding: 10px 0;
+  position: relative;
+}
+
+.mobile-bottom-section {
+  padding: 10px 5px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Fix for content wrapper */
+@media (max-width: 768px) {
+  .content-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Preview containers */
+  #tweet-wrapper,
+  #x-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+  
+  .tweet-container,
+  .x-container {
+    margin: 0 auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 12px !important;
+  }
+
+  /* Controls layout */
+  .dimension-section,
+  .theme-section,
+  .platform-toggle-section {
+    margin: 10px 0 !important;
+    padding: 8px !important;
+  }
+  
+  .size-controls {
+    gap: 8px !important;
+  }
+  
+  .field-input {
+    width: 45px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  /* Button sizes */
+  .preview-btn,
+  .modern-btn.labeled-btn.tooltip-btn {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 8px 0 !important;
+    font-size: 0.9rem !important;
+    padding: 8px 10px !important;
+  }
+  
+  /* Theme toggle */
+  .theme-toggle-group {
+    transform: scale(0.9) !important;
+  }
+  
+  /* Platform switch */
+  .platform-switch {
+    width: 100% !important;
+    max-width: 280px !important;
+    margin: 0 auto !important;
+  }
+  
+  .switch-option {
+    padding: 6px 10px !important;
+    min-width: auto !important;
+    flex: 1 !important;
+  }
+  
+  /* Header styling */
+  .mockup-header {
+    padding: 0.75rem 0 !important;
+  }
+  
+  .mockup-header h2 {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+  
+  .mockup-description {
+    font-size: 0.85rem !important;
+    padding: 0 10px !important;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .field-input {
+    width: 40px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .theme-toggle-group {
+    transform: scale(0.8) !important;
+  }
+  
+  .switch-option {
+    padding: 4px 8px !important;
+  }
+  
+  .option-text {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Improved transitions for platform toggle */
+#tweet-preview, 
+#x-preview {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  will-change: opacity, transform;
+}
+
+/* Fix for initial layout */
+.tweet-wrapper {
+  position: relative;
+  min-height: 200px;
+}
+
+/* Fix for content height calculation */
+.tweet-container, 
+.x-container {
+  transition: box-shadow 0.3s ease;
+  min-height: 200px;
+}
+
+/* Improved scrolling for mobile */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
 .mobile-controls-container {
   display: none; /* Initially hidden, shown via JavaScript */
 }
@@ -81,5 +244,81 @@
   .mobile-theme-toggle,
   .mobile-platform-switch {
     transform: scale(0.8);
+  }
+}
+
+/* Mobile layout transitions */
+.mobile-optimized {
+  transition: width 0.3s ease, 
+              padding 0.3s ease, 
+              margin 0.3s ease, 
+              font-size 0.3s ease,
+              border-radius 0.3s ease;
+}
+
+/* Class for body when mobile layout is active */
+body.mobile-layout .content-wrapper {
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: padding 0.3s ease, margin 0.3s ease;
+}
+
+/* Layout transition helpers */
+.desktop-transitioning,
+.mobile-transitioning {
+  overflow: hidden !important;
+  height: auto !important;
+  transition: height 0.3s ease-in-out !important;
+}
+
+/* Prevent content jumping during transition */
+body.layout-transitioning {
+  overflow-x: hidden !important;
+}
+
+/* Mobile device detection - these will apply regardless of JS */
+@media (max-width: 768px) {
+  #tweet-wrapper,
+  #x-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    transition: width 0.3s ease;
+  }
+  
+  .tweet-container,
+  .x-container {
+    padding: 12px !important;
+    border-radius: 12px !important;
+    transition: padding 0.3s ease, border-radius 0.3s ease;
+  }
+  
+  .theme-controls {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    transition: flex-direction 0.3s ease, gap 0.3s ease;
+  }
+  
+  .dimension-section {
+    padding: 0 0.5rem !important;
+  }
+  
+  .size-controls {
+    gap: 0.5rem !important;
+  }
+  
+  .platform-toggle-section {
+    padding: 0.75rem !important;
+    margin: 0.75rem 0 !important;
+  }
+  
+  .preview-btn,
+  .modern-btn.labeled-btn.tooltip-btn {
+    width: 100% !important;
+    font-size: 0.9rem !important;
+    padding: 0.5rem !important;
+    margin: 0.5rem 0 !important;
+    transition: width 0.3s ease, font-size 0.3s ease, padding 0.3s ease;
   }
 } 

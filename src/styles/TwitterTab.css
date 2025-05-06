@@ -1,11 +1,12 @@
 /* Twitter Tab Styles */
 
 .mockup-header {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   text-align: center;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 1rem;
 }
 
 @media (max-width: 480px) {
@@ -67,9 +68,9 @@
 }
 
 .tweet-wrapper {
-  width: 600px;
-  max-width: 100%;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+  margin: 1.5rem auto;
   transition: width 0.3s ease, height 0.3s ease;
 }
 
@@ -88,8 +89,8 @@
 .tweet-container,
 .x-container {
   width: 100%;
-  margin: 2rem auto;
-  border: none;
+  margin: 0 auto;
+  border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 1.5rem;
   background: var(--bg-primary);
@@ -332,15 +333,17 @@ hr {
 }
 
 .dimension-controls {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  gap: 1.5rem;
   background: var(--bg-primary);
-  padding: 1rem 1.25rem;
-  border-radius: 16px;
   border: 1px solid var(--border-color);
-  flex-wrap: wrap;
-  flex-direction: column;
+  border-radius: 16px;
 }
 
 @media (min-width: 768px) {
@@ -673,22 +676,25 @@ hr {
 .theme-section,
 .platform-toggle-section {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto 2rem;
-  padding: 0 1rem;
-  position: relative;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .theme-controls {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
   justify-content: center;
+  gap: 1.5rem;
   background: var(--bg-primary);
-  padding: 1rem 1.5rem;
-  border-radius: 16px;
   border: 1px solid var(--border-color);
-  flex-wrap: wrap;
+  border-radius: 16px;
 }
 
 @media (max-width: 480px) {
@@ -852,14 +858,16 @@ hr {
 
 /* Platform toggle container */
 .platform-toggle-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  background: var(--bg-primary);
-  padding: 1rem 1.5rem;
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
   justify-content: center;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
 }
 
 @media (max-width: 480px) {
@@ -1582,12 +1590,361 @@ hr {
 #tweet-wrapper,
 #x-wrapper {
   transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: 1;
-  transform: translateY(0);
+  width: 100%;
+  margin: 0 auto;
 }
 
 #tweet-wrapper[style*="display: none"],
 #x-wrapper[style*="display: none"] {
   opacity: 0;
   transform: translateY(10px);
+}
+
+/* Responsive layout container */
+.responsive-twitter-container {
+  width: 100%;
+}
+
+/* Update to scope the container to Twitter tab only */
+#twitter-tab .responsive-twitter-container {
+  width: 100%;
+}
+
+/* Make sure the container is hidden in other tabs */
+#instagram-tab .responsive-twitter-container,
+#facebook-tab .responsive-twitter-container,
+#comment-tab .responsive-twitter-container {
+  display: none !important;
+}
+
+/* Mobile/Desktop visibility */
+.mobile-only-container {
+  display: none;
+}
+
+.desktop-only-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .mobile-only-container {
+    display: block;
+  }
+  
+  .desktop-only-container {
+    display: none;
+  }
+  
+  /* Fixed positioning for theme toggle and controls in mobile */
+  .mobile-theme-toggle-group {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Make all content full width */
+  #tweet-wrapper,
+  #x-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+  
+  .tweet-container,
+  .x-container {
+    padding: 12px !important;
+    margin: 10px auto !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  
+  /* Position buttons appropriately */
+  .mobile-randomize-btn {
+    width: 100%;
+    margin: 10px auto;
+    display: block;
+  }
+  
+  .mobile-preview-btn {
+    width: 100%;
+    margin: 10px auto;
+    display: block;
+  }
+  
+  /* Improve mobile spacing */
+  .mobile-platform-toggle {
+    width: 100%;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .mobile-dimensions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px auto;
+    gap: 12px;
+  }
+}
+
+/* Platform-specific visibility */
+body[data-platform="twitter"] #x-wrapper,
+body[data-platform="twitter"] #x-preview {
+  display: none !important;
+}
+
+body[data-platform="twitter"] #tweet-wrapper,
+body[data-platform="twitter"] #tweet-preview {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body[data-platform="x"] #tweet-wrapper,
+body[data-platform="x"] #tweet-preview {
+  display: none !important;
+}
+
+body[data-platform="x"] #x-wrapper,
+body[data-platform="x"] #x-preview {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Platform toggle animation */
+.platform-switch {
+  position: relative;
+  overflow: hidden;
+}
+
+.platform-switch::before {
+  content: '';
+  position: absolute;
+  height: calc(100% - 8px);
+  top: 4px;
+  width: 50%;
+  background: rgba(29, 155, 240, 0.1);
+  border-radius: 9999px;
+  z-index: 0;
+  transform: translateX(var(--toggle-position, 0));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.switch-option input:checked ~ * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Dark theme input styling */
+body.dark-theme .input-container,
+body[data-theme="dark"] .input-container,
+body[data-theme="dim"] .input-container {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+body.dark-theme .field-input,
+body[data-theme="dark"] .field-input,
+body[data-theme="dim"] .field-input {
+  color: #e0e0e0 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body.dark-theme .field-btn:hover,
+body[data-theme="dark"] .field-btn:hover,
+body[data-theme="dim"] .field-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Spacing and transitions */
+.desktop-only-container > * {
+  width: 100%;
+  max-width: 600px;
+  transition: all 0.3s ease;
+}
+
+/* Control sections spacing */
+.dimension-section + .theme-section,
+.theme-section + .platform-toggle-section {
+  margin-top: 1.5rem;
+}
+
+/* Preview container transitions */
+#tweet-wrapper,
+#x-wrapper {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease,
+              transform 0.3s ease,
+              width 0.3s ease;
+}
+
+#tweet-wrapper[style*="display: none"],
+#x-wrapper[style*="display: none"] {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Control groups alignment */
+.control-group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Responsive adjustments */
+@media (min-width: 769px) {
+  .desktop-only-container {
+    padding: 2rem 1rem;
+  }
+
+  .dimension-controls,
+  .theme-controls,
+  .platform-toggle-container {
+    margin: 0 auto 1.5rem;
+  }
+
+  .tweet-wrapper {
+    margin: 2rem auto;
+  }
+}
+
+/* Add these CSS rules to properly handle tweet and X containers in both desktop and mobile modes */
+
+/* Base container structure for mobile and desktop */
+.tweet-container,
+.x-container {
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  box-shadow: var(--post-shadow);
+  transition: all 0.3s ease;
+}
+
+/* Ensure wrappers exist in both mobile and desktop layouts */
+#tweet-wrapper, 
+#x-wrapper {
+  width: 100%;
+  max-width: 600px;
+  margin: 1rem auto;
+  position: relative;
+  min-height: 200px;
+  transition: all 0.3s ease;
+}
+
+/* Improved responsive layout - shown in both mobile and desktop by default */
+.mobile-content-area {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Mobile/Desktop section visibility - using display instead of moving DOM elements */
+@media (max-width: 768px) {
+  /* Mobile mode */
+  .desktop-only-container {
+    display: none !important;
+  }
+  
+  .mobile-only-container {
+    display: block !important;
+  }
+  
+  /* Tweet container copy is shown in mobile */
+  .mobile-content-area #tweet-wrapper,
+  .mobile-content-area #x-wrapper {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (min-width: 769px) {
+  /* Desktop mode */
+  .desktop-only-container {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mobile-only-container {
+    display: none !important;
+  }
+  
+  /* Tweet container copy is shown in desktop */
+  .desktop-only-container #tweet-wrapper,
+  .desktop-only-container #x-wrapper {
+    display: block;
+    max-width: 600px;
+    margin: 2rem auto;
+  }
+}
+
+/* Platform-specific visibility - these styles use CSS visibility instead of DOM manipulation */
+/* Rules moved to final section at end of file */
+
+/* Mobile container display rules based on platform */
+/* Rules moved to final section at end of file */
+
+/* Platform container visibility - Mobile first approach */
+/* Rules moved to final section at end of file */
+
+/* Rules moved to final section at end of file */
+
+/* Ensure containers have proper size in both views */
+.tweet-wrapper,
+#tweet-wrapper,
+#x-wrapper {
+  box-sizing: border-box;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+/* IMPORTANT: Final platform container visibility rules - overrides any previous rules */
+/* Base rule - hide all containers by default */
+#tweet-wrapper,
+#x-wrapper,
+#mobile-tweet-wrapper,
+#mobile-x-wrapper {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Show Twitter containers only when twitter platform is selected */
+body[data-platform="twitter"] #tweet-wrapper,
+body[data-platform="twitter"] #mobile-tweet-wrapper {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Show X containers only when x platform is selected */
+body[data-platform="x"] #x-wrapper,
+body[data-platform="x"] #mobile-x-wrapper {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

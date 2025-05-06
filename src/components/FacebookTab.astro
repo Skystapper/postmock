@@ -1,60 +1,69 @@
 ---
+import MobileFacebookLayout from "./MobileFacebookLayout.astro";
 ---
 
 <div class="tab-pane fade" id="facebook-tab">
-  <div class="mockup-header">
-    <h2>Facebook Post</h2>
-    <p>Create a realistic Facebook post mockup by editing the content below.</p>
-  </div>
+  <!-- Desktop Layout (hidden on mobile) -->
+  <div class="desktop-layout d-none d-md-block">
+    <div class="mockup-header">
+      <h2>Facebook Post</h2>
+      <p>Create a realistic Facebook post mockup by editing the content below.</p>
+    </div>
 
-  <!-- Theme Controls -->
-  <div class="theme-section mb-3">
-    <div class="theme-controls">
-      <div class="theme-selector">
-        <span class="control-label">Theme:</span>
-        <div class="theme-toggle-group">
-          <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-light" value="light" checked>
-          <label class="theme-toggle-btn" for="fb-theme-light" title="Light theme">
-            <i class="bi bi-sun"></i>
-          </label>
-          
-          <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-dim" value="dim">
-          <label class="theme-toggle-btn" for="fb-theme-dim" title="Dim theme">
-            <i class="bi bi-moon-stars"></i>
-          </label>
-          
-          <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-dark" value="dark">
-          <label class="theme-toggle-btn" for="fb-theme-dark" title="Dark theme">
-            <i class="bi bi-moon"></i>
-          </label>
+    <!-- Theme Controls -->
+    <div class="theme-section mb-3">
+      <div class="theme-controls">
+        <div class="theme-selector">
+          <span class="control-label">Theme:</span>
+          <div class="theme-toggle-group">
+            <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-light" value="light" checked>
+            <label class="theme-toggle-btn" for="fb-theme-light" title="Light theme">
+              <i class="bi bi-sun"></i>
+            </label>
+            
+            <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-dim" value="dim">
+            <label class="theme-toggle-btn" for="fb-theme-dim" title="Dim theme">
+              <i class="bi bi-moon-stars"></i>
+            </label>
+            
+            <input type="radio" class="theme-toggle" name="fb-theme" id="fb-theme-dark" value="dark">
+            <label class="theme-toggle-btn" for="fb-theme-dark" title="Dark theme">
+              <i class="bi bi-moon"></i>
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div class="media-toggle">
-        <button class="modern-btn labeled-btn tooltip-btn" onclick="toggleMediaPost()" id="mediaToggleBtn">
-          <i class="bi bi-image"></i>
-          <span class="btn-label">Show Media</span>
-          <span class="tooltip-text">Toggle media post visibility</span>
+        <div class="media-toggle">
+          <button class="modern-btn fb-toggle-btn labeled-btn tooltip-btn" onclick="toggleMediaPost()" id="mediaToggleBtn">
+            <i class="bi bi-image"></i>
+            <span class="btn-label">Show Media</span>
+            <span class="tooltip-text">Toggle media post visibility</span>
+          </button>
+        </div>
+
+        <button class="modern-btn labeled-btn tooltip-btn" onclick="randomizeFacebookStats()" title="Generate random engagement stats">
+            <i class="bi bi-shuffle"></i>
+          <span class="btn-label">Randomize Stats</span>
+          <span class="tooltip-text">Generate random engagement numbers</span>
+        </button>
+
+        <button class="fb-preview-btn" id="facebook-desktop-btn" onclick="showPreviewModal('facebook')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+          </svg>
+          Preview
         </button>
       </div>
-
-      <button class="modern-btn labeled-btn tooltip-btn" onclick="randomizeFacebookStats()" title="Generate random engagement stats">
-          <i class="bi bi-shuffle"></i>
-        <span class="btn-label">Randomize Stats</span>
-        <span class="tooltip-text">Generate random engagement numbers</span>
-      </button>
-
-      <button type="button" class="preview-btn" onclick="showPreviewModal('facebook')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
-        </svg>
-        Preview
-      </button>
     </div>
   </div>
 
-  <!-- Interactive Facebook Preview -->
-  <div class="facebook-container" id="facebook-preview" data-theme="light">
+  <!-- Mobile Layout (shown only on small screens) -->
+  <div class="d-block d-md-none">
+    <MobileFacebookLayout />
+  </div>
+
+  <!-- Interactive Facebook Preview (desktop only) -->
+  <div class="facebook-container d-none d-md-block" id="desktop-facebook-preview" data-theme="light">
     <!-- Header -->
     <div class="fb-header d-flex justify-content-between align-items-start">
       <div class="d-flex gap-2">
@@ -204,6 +213,12 @@
     const isVisible = verifiedBadge.style.display !== 'none';
     verifiedBadge.style.display = isVisible ? 'none' : 'inline';
     fadedBadge.style.display = isVisible ? 'inline' : 'none';
+    
+    // Also update mobile verified badge if exists
+    const mobileVerifiedBadge = document.getElementById('mobile-fb-verified-badge');
+    if (mobileVerifiedBadge) {
+      mobileVerifiedBadge.style.display = isVisible ? 'none' : 'inline';
+    }
   }
 
   // Show faded badge on hover
@@ -242,6 +257,12 @@
             if (profilePic) {
               profilePic.src = croppedImageUrl;
               console.log('✅ Successfully updated Facebook profile picture');
+              
+              // Also update mobile profile pic if it exists
+              const mobileProfilePic = document.getElementById('mobile-fb-profile-pic');
+              if (mobileProfilePic) {
+                mobileProfilePic.src = croppedImageUrl;
+              }
             }
           });
         };
@@ -266,10 +287,16 @@
       if (fbProfilePic) {
         fbProfilePic.src = imageUrl;
         console.log('✅ Successfully updated Facebook profile picture');
+        
+        // Also update mobile profile pic if it exists
+        const mobileProfilePic = document.getElementById('mobile-fb-profile-pic');
+        if (mobileProfilePic) {
+          mobileProfilePic.src = imageUrl;
+        }
       }
     } else if (cropType === 'facebook-post') {
       console.log('Updating Facebook post image');
-      const postImage = document.querySelector('#facebook-preview .post-image');
+      const postImage = document.querySelector('#desktop-facebook-preview .post-image');
       if (postImage) {
         // Remove any existing images
         postImage.querySelectorAll('img').forEach(img => img.remove());
@@ -291,6 +318,23 @@
           uploadPrompt.style.display = 'none';
         }
         
+        // Show the media container if it was hidden
+        postImage.style.display = 'block';
+        
+        // Update media toggle button if it exists
+        const mediaToggleBtn = document.getElementById('mediaToggleBtn');
+        if (mediaToggleBtn) {
+          mediaToggleBtn.querySelector('.btn-label').textContent = 'Hide Media';
+          mediaToggleBtn.classList.add('active');
+        }
+        
+        // Also update mobile media container if it exists
+        const mobileMediaContainer = document.getElementById('mobile-fb-media-container');
+        if (mobileMediaContainer) {
+          mobileMediaContainer.style.display = 'block';
+          mobileMediaContainer.innerHTML = postImage.innerHTML;
+        }
+        
         console.log('✅ Successfully updated Facebook post image');
       }
     }
@@ -307,9 +351,11 @@
     ['reactions', 'comments', 'shares'].forEach(stat => {
       const randomNum = formatNumber(Math.floor(Math.random() * 1000000));
       const liveElement = document.getElementById(`live-fb-${stat}`);
+      const mobileElement = document.getElementById(`mobile-live-fb-${stat}`);
       const input = document.getElementById(`fb-${stat}-input`);
       
       if (liveElement) liveElement.textContent = randomNum;
+      if (mobileElement) mobileElement.textContent = randomNum;
       if (input) {
         input.value = randomNum;
         input.dispatchEvent(new Event('input'));
@@ -320,24 +366,18 @@
   // Update Facebook theme
   function updateFacebookTheme(theme) {
     console.log(`Updating Facebook theme to: ${theme}`);
-    const container = document.getElementById('facebook-preview');
+    const containers = document.querySelectorAll('.facebook-container');
     const appContainer = document.querySelector('.app-container');
     
-    // Update Facebook container theme
-    if (container) {
+    // Update all Facebook containers
+    containers.forEach(container => {
       container.setAttribute('data-theme', theme);
-      console.log(`Facebook container theme set to: ${theme}`);
-    } else {
-      console.log('Facebook container not found');
-    }
+    });
     
     // Update app container theme
     if (appContainer) {
       appContainer.setAttribute('data-theme', theme);
       appContainer.setAttribute('data-platform', 'facebook');
-      console.log(`App container theme set to: ${theme}`);
-    } else {
-      console.log('App container not found');
     }
     
     // Update the main theme radio buttons to match
@@ -345,9 +385,12 @@
     if (mainThemeRadio) {
       mainThemeRadio.checked = true;
       mainThemeRadio.dispatchEvent(new Event('change', { bubbles: true }));
-      console.log(`Main theme radio updated to: ${theme}`);
-    } else {
-      console.log(`Main theme radio for ${theme} not found`);
+    }
+    
+    // Update mobile theme radio buttons if they exist
+    const mobileFbThemeRadio = document.querySelector(`input[name="mobile-fb-theme"][value="${theme}"]`);
+    if (mobileFbThemeRadio) {
+      mobileFbThemeRadio.checked = true;
     }
   }
 
@@ -380,17 +423,23 @@
         const target = e.target;
         if (target && target instanceof HTMLInputElement) {
           const theme = target.value;
-          const container = document.getElementById('facebook-preview');
+          const containers = document.querySelectorAll('.facebook-container');
           
-          // Update Facebook container theme
-          if (container) {
+          // Update all Facebook containers
+          containers.forEach(container => {
             container.setAttribute('data-theme', theme);
-          }
+          });
           
           // Update Facebook theme radio buttons to match
           const fbThemeRadio = document.querySelector(`input[name="fb-theme"][value="${theme}"]`);
           if (fbThemeRadio && fbThemeRadio instanceof HTMLInputElement) {
             fbThemeRadio.checked = true;
+          }
+          
+          // Update mobile Facebook theme radio buttons to match
+          const mobileFbThemeRadio = document.querySelector(`input[name="mobile-fb-theme"][value="${theme}"]`);
+          if (mobileFbThemeRadio && mobileFbThemeRadio instanceof HTMLInputElement) {
+            mobileFbThemeRadio.checked = true;
           }
         }
       });
@@ -421,7 +470,7 @@
                 return;
               }
 
-              const postImage = document.querySelector('#facebook-preview .post-image');
+              const postImage = document.querySelector('#desktop-facebook-preview #fb-media-container');
               if (!postImage) {
                 console.error('Post image container not found');
                 return;
@@ -445,6 +494,30 @@
               // Append the new image
               postImage.appendChild(imgElement);
               
+              // Show the container if it was hidden
+              postImage.style.display = 'block';
+              
+              // Update button text
+              const mediaToggleBtn = document.getElementById('mediaToggleBtn');
+              if (mediaToggleBtn) {
+                mediaToggleBtn.querySelector('.btn-label').textContent = 'Hide Media';
+                mediaToggleBtn.classList.add('active');
+              }
+              
+              // Update mobile container if it exists
+              const mobileMediaContainer = document.getElementById('mobile-fb-media-container');
+              if (mobileMediaContainer) {
+                mobileMediaContainer.style.display = 'block';
+                mobileMediaContainer.innerHTML = postImage.innerHTML;
+                
+                // Also update mobile toggle button if it exists
+                const mobileMediaToggleBtn = document.getElementById('mobile-media-toggle');
+                if (mobileMediaToggleBtn) {
+                  mobileMediaToggleBtn.classList.add('active');
+                  mobileMediaToggleBtn.querySelector('span').textContent = 'Hide Media';
+                }
+              }
+              
               console.log('✅ Successfully updated Facebook post image');
             });
           } catch (error) {
@@ -464,20 +537,39 @@
 
   // Add media toggle function
   function toggleMediaPost() {
-    const mediaContainer = document.getElementById('fb-media-container');
+    const mediaContainer = document.querySelector('#desktop-facebook-preview #fb-media-container');
     const toggleBtn = document.querySelector('.media-toggle .modern-btn');
     const isVisible = mediaContainer.style.display !== 'none';
     
     mediaContainer.style.display = isVisible ? 'none' : 'block';
-    toggleBtn.textContent = isVisible ? 'Show Media' : 'Hide Media';
-    toggleBtn.classList.toggle('active', !isVisible);
     
-    // Update tooltip
-    toggleBtn.setAttribute('title', isVisible ? 'Add media to your post' : 'Remove media from your post');
+    if (toggleBtn) {
+      toggleBtn.querySelector('.btn-label').textContent = isVisible ? 'Show Media' : 'Hide Media';
+      toggleBtn.classList.toggle('active', !isVisible);
+      toggleBtn.setAttribute('title', isVisible ? 'Add media to your post' : 'Remove media from your post');
+    }
+    
+    // Also toggle mobile media container if it exists
+    const mobileMediaContainer = document.getElementById('mobile-fb-media-container');
+    if (mobileMediaContainer) {
+      mobileMediaContainer.style.display = isVisible ? 'none' : 'block';
+      
+      // Update mobile toggle button if it exists
+      const mobileToggleBtn = document.getElementById('mobile-media-toggle');
+      if (mobileToggleBtn) {
+        mobileToggleBtn.classList.toggle('active', !isVisible);
+        mobileToggleBtn.querySelector('span').textContent = isVisible ? 'Show Media' : 'Hide Media';
+      }
+    }
   }
 </script>
 
 <style>
+  /* Desktop layout styles */
+  .desktop-layout {
+    margin-bottom: 2rem;
+  }
+
   .facebook-container {
     background: white;
     border: 1px solid #dddfe2;
@@ -783,5 +875,63 @@
   }
   .d-flex.align-items-center:hover .faded-badge {
     opacity: 1;
+  }
+
+  /* Root variables for Facebook colors */
+  :root {
+    --fb-blue: #4267B2;
+    --fb-light-blue: #5b7bd3;
+    --fb-lighter-blue: #e7eaf6;
+  }
+
+  /* Facebook Preview Button */
+  .fb-preview-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1877F2; /* Facebook primary blue */
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .fb-preview-btn:hover {
+    background: #0d6efd; /* Slightly darker blue on hover */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .fb-preview-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Facebook Toggle Button */
+  .fb-toggle-btn {
+    background: #E7F3FF;
+    color: #1877F2;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .fb-toggle-btn:hover {
+    background: #DBE7F2;
+    transform: translateY(-1px);
+  }
+
+  .fb-toggle-btn.active {
+    background: #1877F2;
+    color: white;
+  }
+
+  .fb-toggle-btn.active:hover {
+    background: #0d6efd;
+    color: white;
   }
 </style> 

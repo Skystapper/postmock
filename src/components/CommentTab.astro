@@ -2,19 +2,42 @@
   <div class="mockup-header">
     <h2>Comment Chain</h2>
     <p>Create a realistic comment chain mockup by editing the content below.</p>
-    <div class="comment-controls">
-      <button type="button" class="preview-btn" onclick="showPreviewModal('comment')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
-        </svg>
-        Preview
-      </button>
-      <button type="button" class="randomize-btn" onclick="randomizeCommentStats()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M4 4v5h.582M20 20v-5h-.581M19.418 9A7.974 7.974 0 0 0 12 4c-2.042 0-3.899.767-5.318 2.018M4.582 15A7.974 7.974 0 0 0 12 20c2.042 0 3.899-.767 5.318-2.018"/>
-        </svg>
-        Randomize Stats
-      </button>
+    <!-- Theme Controls -->
+    <div class="theme-section mb-3">
+      <div class="theme-controls">
+        <div class="theme-selector">
+          <span class="control-label">Theme:</span>
+          <div class="theme-toggle-group">
+            <input type="radio" class="theme-toggle" name="comment-theme" id="comment-theme-light" value="light">
+            <label class="theme-toggle-btn" for="comment-theme-light" title="Light theme">
+              <i class="bi bi-sun"></i>
+            </label>
+            
+            <input type="radio" class="theme-toggle" name="comment-theme" id="comment-theme-dim" value="dim">
+            <label class="theme-toggle-btn" for="comment-theme-dim" title="Dim theme">
+              <i class="bi bi-moon-stars"></i>
+            </label>
+            
+            <input type="radio" class="theme-toggle" name="comment-theme" id="comment-theme-dark" value="dark" checked>
+            <label class="theme-toggle-btn" for="comment-theme-dark" title="Dark theme">
+              <i class="bi bi-moon"></i>
+            </label>
+          </div>
+        </div>
+
+        <div class="preview-controls">
+          <button class="comment-preview-btn" id="comment-preview-btn" onclick="showCommentPreviewModal('comment')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+            </svg>
+            Preview
+          </button>
+          <button class="randomize-btn" onclick="randomizeCommentStats()">
+            <i class="bi bi-shuffle"></i>
+            Randomize Stats
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -466,16 +489,7 @@
   color: #ffa31a;
 }
 
-/* Icons */
-.ph-icon-chevron-down {
-  width: 14px;
-  height: 14px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23969696' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3C/svg%3E");
-  display: inline-block;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
+/* Icons with direct SVG content for better preview */
 .ph-icon-thumb-up {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23969696' d='M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z'/%3E%3C/svg%3E");
   width: 18px;
@@ -501,6 +515,37 @@
   display: inline-block;
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+.ph-icon-chevron-down {
+  width: 14px;
+  height: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23969696' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3C/svg%3E");
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Use embedded SVG for verification badge */
+.verified-icon img {
+  content: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNGRkEzMUEiLz48cGF0aCBkPSJNOC4xNSAxMy4zNUw1LjQ1IDEwLjY1bC0xLjEgMS4xTDguMTUgMTUuNTUgMTUuOCA3LjlsLTEuMS0xLjFMOC4xNSAxMy4zNXoiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=");
+}
+
+/* Add hover states for preview */
+.thumbsUp:hover .ph-icon-thumb-up {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FFA31A' d='M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z'/%3E%3C/svg%3E");
+}
+
+.thumbsDown:hover .ph-icon-thumb-down {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FFA31A' d='M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z'/%3E%3C/svg%3E");
+}
+
+.reportBtn:hover .ph-icon-flag {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FFA31A' d='M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z'/%3E%3C/svg%3E");
+}
+
+.viewRepliesBtn:hover .ph-icon-chevron-down {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FFA31A' d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z'/%3E%3C/svg%3E");
 }
 
 /* Helper classes */
@@ -532,42 +577,143 @@
   align-items: center;
 }
 
-.preview-btn {
+.preview-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.comment-preview-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #ffa31a;
-  color: #111;
-  border: none;
-  border-radius: 8px;
   padding: 0.5rem 1rem;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.2s ease;
+  border: none;
+  background: #ffa31a;
+  color: #111;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.preview-btn:hover {
+.comment-preview-btn:hover {
   background: #ffb74d;
-  color: #111;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.comment-preview-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .randomize-btn {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #292929;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
   padding: 0.5rem 1rem;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.2s ease;
+  border: none;
+  background: #E7F3FF;
+  color: #ffa31a;
 }
 
 .randomize-btn:hover {
-  background: #444;
-  color: #ffa31a;
+  background: #ffa31a;
+  color: #111;
+}
+
+/* Theme controls */
+.theme-section {
+  margin-bottom: 1rem;
+}
+
+.theme-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-toggle-group {
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  padding: 0.25rem;
+}
+
+.theme-toggle {
+  display: none;
+}
+
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin: 0 0.15rem;
+  color: var(--text-secondary);
+}
+
+.theme-toggle:checked + .theme-toggle-btn {
+  background: #ffa31a;
+  color: white;
+}
+
+.preview-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.preview-btn, .randomize-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.preview-btn {
+  background: #ffa31a;
+  color: #111;
+}
+
+.preview-btn:hover {
+  background: #ffb74d;
+}
+
+.randomize-btn {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.randomize-btn:hover {
+  background: #ffa31a;
+  color: #111;
+}
+
+/* Root variables */
+:root {
+  --accent-color: #ffa31a;
 }
 </style>
 
@@ -668,4 +814,291 @@
       el.textContent = Math.floor(Math.random() * 1000);
     });
   }
+
+  // Add theme change handler
+  document.addEventListener('DOMContentLoaded', () => {
+    // Add theme change handlers
+    document.querySelectorAll('input[name="comment-theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const target = e.target;
+        if (target && target instanceof HTMLInputElement) {
+          updateCommentTheme(target.value);
+        }
+      });
+    });
+
+    // Listen for main app theme changes
+    document.querySelectorAll('input[name="theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const target = e.target;
+        if (target && target instanceof HTMLInputElement) {
+          const theme = target.value;
+          const commentContainer = document.querySelector('.comment-container');
+          if (commentContainer) {
+            commentContainer.setAttribute('data-theme', theme);
+          }
+          
+          // Update comment theme radio buttons to match
+          const commentThemeRadio = document.querySelector(`input[name="comment-theme"][value="${theme}"]`);
+          if (commentThemeRadio && commentThemeRadio instanceof HTMLInputElement) {
+            commentThemeRadio.checked = true;
+          }
+        }
+      });
+    });
+
+    // Apply initial theme
+    const checkedCommentTheme = document.querySelector('input[name="comment-theme"]:checked');
+    if (checkedCommentTheme && checkedCommentTheme instanceof HTMLInputElement) {
+      updateCommentTheme(checkedCommentTheme.value);
+    }
+  });
+
+  function updateCommentTheme(theme) {
+    console.log(`Updating comment theme to: ${theme}`);
+    const container = document.querySelector('.comment-container');
+    const appContainer = document.querySelector('.app-container');
+    
+    // Update comment container
+    if (container) {
+      container.setAttribute('data-theme', theme);
+    }
+    
+    // Update app container theme
+    if (appContainer) {
+      appContainer.setAttribute('data-theme', theme);
+      appContainer.setAttribute('data-platform', 'comment');
+    }
+    
+    // Update the main theme radio buttons to match
+    const mainThemeRadio = document.querySelector(`input[name="theme"][value="${theme}"]`);
+    if (mainThemeRadio) {
+      mainThemeRadio.checked = true;
+      mainThemeRadio.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  // Function to ensure SVG icons render properly in the preview
+  function showCommentPreviewModal(platform) {
+    if (platform !== 'comment') return; // Only process for comments
+    
+    const modal = document.getElementById('previewModal');
+    const previewContainer = document.getElementById('previewContainer');
+    
+    // Clear previous content
+    if (previewContainer) {
+      previewContainer.innerHTML = '';
+    }
+    
+    // Get the original content
+    const originalContainer = document.getElementById('cmtContent');
+    if (!originalContainer) {
+      console.error('Could not find the comment container for preview');
+      return;
+    }
+    
+    try {
+      // Create a direct clone of the container
+      const clonedContent = originalContainer.cloneNode(true);
+      
+      // Remove any interactive elements
+      const interactiveElements = clonedContent.querySelectorAll('[onclick], [contenteditable], .dropdown-menu');
+      interactiveElements.forEach(el => {
+        if (el.hasAttribute('onclick')) el.removeAttribute('onclick');
+        if (el.hasAttribute('contenteditable')) el.removeAttribute('contenteditable');
+        if (el.classList.contains('dropdown-menu')) el.remove();
+      });
+      
+      // Ensure proper styling for preview
+      clonedContent.style.margin = '0 auto';
+      clonedContent.style.maxWidth = '600px';
+      
+      // Make all icons visible by replacing with direct embedded SVG elements
+      function replaceIconsWithSvg(iconClass, svgHTML) {
+        const icons = clonedContent.querySelectorAll(`.${iconClass}`);
+        icons.forEach(icon => {
+          icon.innerHTML = svgHTML;
+        });
+      }
+      
+      // Replace thumb up icons
+      replaceIconsWithSvg('ph-icon-thumb-up', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>');
+      
+      // Replace thumb down icons
+      replaceIconsWithSvg('ph-icon-thumb-down', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>');
+      
+      // Replace flag icons
+      replaceIconsWithSvg('ph-icon-flag', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>');
+      
+      // Replace chevron down icons
+      replaceIconsWithSvg('ph-icon-chevron-down', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path fill="#969696" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
+      
+      // Fix verification badges
+      const verifiedBadges = clonedContent.querySelectorAll('.verified-icon img');
+      verifiedBadges.forEach(badge => {
+        badge.src = 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNGRkEzMUEiLz48cGF0aCBkPSJNOC4xNSAxMy4zNUw1LjQ1IDEwLjY1bC0xLjEgMS4xTDguMTUgMTUuNTUgMTUuOCA3LjlsLTEuMS0xLjFMOC4xNSAxMy4zNXoiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=';
+        badge.style.width = '100%';
+        badge.style.height = '100%';
+        badge.style.display = 'block';
+      });
+      
+      // Append to preview container
+      previewContainer.appendChild(clonedContent);
+      
+      // Show the modal
+      if (modal) {
+        modal.style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error setting up comment preview:', error);
+    }
+  }
+
+  // Expose our specialized function for comment previews
+  window.showCommentPreviewModal = showCommentPreviewModal;
+
+  // Modify downloadPreview function to better handle comments
+  const originalDownloadPreview = window.downloadPreview;
+  window.downloadPreview = async function() {
+    const previewContainer = document.getElementById('previewContainer');
+    const firstChild = previewContainer?.firstChild;
+    
+    // Check if we're downloading a comment preview
+    if (firstChild && firstChild.id === 'cmtContent') {
+      const button = document.querySelector('.modal-footer .btn-primary');
+      const spinner = button.querySelector('.spinner-border');
+      
+      try {
+        button.disabled = true;
+        spinner.classList.remove('d-none');
+        
+        // Create a clean copy for high-quality capture
+        const captureContainer = document.createElement('div');
+        captureContainer.style.position = 'fixed';
+        captureContainer.style.top = '0';
+        captureContainer.style.left = '-9999px';
+        captureContainer.style.background = document.body.getAttribute('data-theme') === 'dark' ? '#000000' : '#ffffff';
+        captureContainer.style.zIndex = '-1000';
+        document.body.appendChild(captureContainer);
+        
+        // Clone for high-quality capture
+        const perfectClone = firstChild.cloneNode(true);
+        perfectClone.style.transform = 'none';
+        perfectClone.style.margin = '0';
+        perfectClone.style.maxWidth = '600px';
+        perfectClone.style.width = '600px';
+        perfectClone.style.boxShadow = 'none';
+        
+        // Make all icons visible by replacing with direct embedded SVG elements
+        function replaceIconsWithSvg(iconClass, svgHTML) {
+          const icons = perfectClone.querySelectorAll(`.${iconClass}`);
+          icons.forEach(icon => {
+            icon.innerHTML = svgHTML;
+          });
+        }
+        
+        // Replace thumb up icons
+        replaceIconsWithSvg('ph-icon-thumb-up', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>');
+        
+        // Replace thumb down icons
+        replaceIconsWithSvg('ph-icon-thumb-down', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>');
+        
+        // Replace flag icons
+        replaceIconsWithSvg('ph-icon-flag', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>');
+        
+        // Replace chevron down icons
+        replaceIconsWithSvg('ph-icon-chevron-down', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path fill="#969696" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
+        
+        // Fix verification badges
+        const verifiedBadges = perfectClone.querySelectorAll('.verified-icon img');
+        verifiedBadges.forEach(badge => {
+          badge.src = 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNGRkEzMUEiLz48cGF0aCBkPSJNOC4xNSAxMy4zNUw1LjQ1IDEwLjY1bC0xLjEgMS4xTDguMTUgMTUuNTUgMTUuOCA3LjlsLTEuMS0xLjFMOC4xNSAxMy4zNXoiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=';
+          badge.style.width = '100%';
+          badge.style.height = '100%';
+          badge.style.display = 'block';
+        });
+        
+        captureContainer.appendChild(perfectClone);
+        
+        // Wait for rendering
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // Use html2canvas with best quality settings
+        const canvas = await html2canvas(perfectClone, {
+          scale: 4, // Higher scale for better quality
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: document.body.getAttribute('data-theme') === 'dark' ? '#000000' : '#ffffff',
+          logging: false,
+          foreignObjectRendering: false, // Sometimes better for SVG rendering
+          imageTimeout: 0, // No timeout for image loading
+          onclone: (doc) => {
+            // Additional handling for any on-the-fly fixes
+            const clonedDoc = doc.querySelector('#cmtContent');
+            if (clonedDoc) {
+              // Make sure all SVG icons are visible
+              const thumbIcons = clonedDoc.querySelectorAll('.ph-icon-thumb-up, .ph-icon-thumb-down, .ph-icon-flag, .ph-icon-chevron-down');
+              thumbIcons.forEach(icon => {
+                // If no SVG is present, create one
+                if (!icon.querySelector('svg')) {
+                  if (icon.classList.contains('ph-icon-thumb-up')) {
+                    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>';
+                  } else if (icon.classList.contains('ph-icon-thumb-down')) {
+                    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>';
+                  } else if (icon.classList.contains('ph-icon-flag')) {
+                    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>';
+                  } else if (icon.classList.contains('ph-icon-chevron-down')) {
+                    icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path fill="#969696" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>';
+                  }
+                }
+              });
+              
+              // Fix badges again to ensure they're visible
+              const badges = clonedDoc.querySelectorAll('.verified-icon img');
+              badges.forEach(badge => {
+                badge.src = 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNGRkEzMUEiLz48cGF0aCBkPSJNOC4xNSAxMy4zNUw1LjQ1IDEwLjY1bC0xLjEgMS4xTDguMTUgMTUuNTUgMTUuOCA3LjlsLTEuMS0xLjFMOC4xNSAxMy4zNXoiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=';
+              });
+            }
+          }
+        });
+        
+        // Convert to PNG with maximum quality
+        const blob = await new Promise(resolve => {
+          canvas.toBlob(resolve, 'image/png', 1.0);
+        });
+        
+        if (!blob) {
+          throw new Error('Failed to create image blob');
+        }
+        
+        // Download the image
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `comment-preview.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Revoke the URL to free memory
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+        }, 100);
+        
+        // Clean up
+        document.body.removeChild(captureContainer);
+        
+        closePreviewModal();
+      } catch (error) {
+        console.error('Error downloading comment preview:', error);
+        alert('Failed to download preview. Please try again.');
+      } finally {
+        button.disabled = false;
+        spinner.classList.add('d-none');
+      }
+    } else {
+      // Use original function for other platforms
+      return originalDownloadPreview();
+    }
+  };
 </script>

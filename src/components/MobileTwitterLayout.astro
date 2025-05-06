@@ -1,0 +1,587 @@
+---
+// Mobile layout component for Twitter tab
+// This component relies on CSS media queries for responsive design
+---
+
+<div class="mobile-twitter-container">
+  <div class="mobile-header">
+    <div class="mobile-theme-controls">
+      <div class="mobile-theme-selector">
+        <span class="mobile-theme-label">Theme:</span>
+        <div class="mobile-theme-toggle-group theme-toggle-group">
+          <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-theme" id="mobile-theme-light" value="light" checked>
+          <label class="mobile-theme-btn theme-toggle-btn" for="mobile-theme-light">
+            <i class="bi bi-sun"></i>
+          </label>
+          
+          <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-theme" id="mobile-theme-dim" value="dim">
+          <label class="mobile-theme-btn theme-toggle-btn" for="mobile-theme-dim">
+            <i class="bi bi-moon-stars"></i>
+          </label>
+          
+          <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-theme" id="mobile-theme-dark" value="dark">
+          <label class="mobile-theme-btn theme-toggle-btn" for="mobile-theme-dark">
+            <i class="bi bi-moon"></i>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Mode Selection -->
+  <div class="mobile-mode-section">
+    <div class="mobile-mode-toggle">
+      <input type="radio" class="mode-toggle" name="mobile-preview-mode" id="mobile-mode-desktop" value="desktop" checked>
+      <label class="mode-toggle-btn" for="mobile-mode-desktop" title="Desktop preview">
+        <i class="bi bi-display"></i>
+        <span>Desktop</span>
+      </label>
+      
+      <input type="radio" class="mode-toggle" name="mobile-preview-mode" id="mobile-mode-phone" value="phone">
+      <label class="mode-toggle-btn" for="mobile-mode-phone" title="Phone preview">
+        <i class="bi bi-phone"></i>
+        <span>Phone</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="mobile-buttons">
+    <button class="mobile-randomize-btn" id="mobile-randomize-stats" onclick="randomizeStats()">
+      <i class="bi bi-shuffle"></i>
+      <span>Randomize Stats</span>
+    </button>
+    
+    <button class="mobile-preview-btn" id="mobile-preview-btn" onclick="showPreviewModal('twitter')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+      </svg>
+      Preview
+    </button>
+  </div>
+</div>
+
+<style>
+  /* Update theme application to target body */
+  body[data-theme="light"] {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F7F9FA;
+    --text-primary: #0F1419;
+    --text-secondary: #536471;
+    --border-color: #CFD9DE;
+    --accent-color: #1D9BF0;
+  }
+
+  body[data-theme="dark"] {
+    --bg-primary: #15202B;
+    --bg-secondary: #1E2732;
+    --text-primary: #F7F9F9;
+    --text-secondary: #8B98A5;
+    --border-color: #38444D;
+    --accent-color: #1D9BF0;
+  }
+
+  body[data-theme="dim"] {
+    --bg-primary: #15202B;
+    --bg-secondary: #1E2732;
+    --text-primary: #F7F9F9;
+    --text-secondary: #8B98A5;
+    --border-color: #38444D;
+    --accent-color: #1D9BF0;
+  }
+
+  .mobile-twitter-container {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    width: 100%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mobile-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .mobile-platform-section {
+    margin: 8px 0;
+    padding: 10px;
+    background-color: var(--bg-secondary, #f0f3f5);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mobile-platform-toggle {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .mobile-switch {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--bg-primary, #fff);
+    border-radius: 9999px;
+    width: 100%;
+    max-width: 280px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .m-switch-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    flex: 1;
+    color: var(--text-secondary, #536471);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .m-switch-option input {
+    display: none;
+  }
+
+  .m-switch-option input:checked ~ * {
+    color: var(--text-primary, #000);
+    font-weight: 600;
+  }
+
+  .m-switch-option:hover {
+    background: var(--hover-bg, rgba(15, 20, 25, 0.1));
+  }
+
+  .twitter-option input:checked ~ .m-option-icon {
+    color: #1DA1F2;
+  }
+
+  .x-option input:checked ~ .m-option-icon {
+    color: var(--text-primary, #000);
+  }
+
+  .m-option-icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+  }
+
+  .m-option-text {
+    font-size: 14px;
+  }
+
+  /* Theme controls */
+  .mobile-theme-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .mobile-theme-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobile-theme-label {
+    font-size: 14px;
+    color: var(--text-secondary, #536471);
+  }
+  
+  /* Mode Selection Styles */
+  .mobile-mode-section {
+    margin: 8px 0;
+    padding: 10px;
+    background-color: var(--bg-secondary, #f0f3f5);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mobile-mode-toggle {
+    display: flex;
+    gap: 8px;
+    background: var(--bg-primary);
+    padding: 4px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+  }
+
+  .mode-toggle {
+    display: none;
+  }
+
+  .mode-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .mode-toggle:checked + .mode-toggle-btn {
+    background: var(--accent-color);
+    color: #fff;
+  }
+
+  .mode-toggle-btn i {
+    font-size: 16px;
+  }
+  
+  /* Mobile content area with scaling */
+  .mobile-content-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: visible;
+    padding: 16px 0;
+  }
+
+  .content-scaler {
+    width: fit-content;
+    margin: 0 auto;
+    transform-origin: top center;
+  }
+
+  /* Ensure containers scale properly */
+  .content-scaler.is-scaled {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .content-scaler.is-scaled .tweet-container,
+  .content-scaler.is-scaled .x-container {
+    width: 100%;
+    max-width: none; /* Remove max-width when scaled */
+    margin: 0;
+  }
+
+  /* Container sizing based on mode */
+  body[data-preview-mode="desktop"] .content-scaler .tweet-container,
+  body[data-preview-mode="desktop"] .content-scaler .x-container {
+    width: 600px;
+  }
+
+  body[data-preview-mode="phone"] .content-scaler .tweet-container,
+  body[data-preview-mode="phone"] .content-scaler .x-container {
+    width: 380px;
+  }
+
+  /* Add a size indicator when content is scaled */
+  .content-scaler::before {
+    content: 'Preview scaled to fit screen. Download for actual size.';
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .content-scaler.is-scaled::before {
+    opacity: 1;
+  }
+
+  /* Button styles */
+  .mobile-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .mobile-randomize-btn,
+  .mobile-preview-btn {
+    width: 100%;
+    border: none;
+    border-radius: 9999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s;
+  }
+
+  .mobile-randomize-btn {
+    background: var(--bg-secondary, #f0f3f5);
+    color: var(--text-primary, #000);
+  }
+
+  .mobile-preview-btn {
+    background: var(--accent-color, #1DA1F2);
+    color: white;
+  }
+
+  .mobile-randomize-btn:hover {
+    background: var(--bg-hover, rgba(15, 20, 25, 0.1));
+  }
+
+  .mobile-preview-btn:hover {
+    background: var(--accent-hover, #1a91da);
+  }
+
+  /* Platform-specific visibility rules for mobile */
+  body[data-platform="twitter"] .mobile-content-area #x-wrapper {
+    display: none !important;
+  }
+  
+  body[data-platform="x"] .mobile-content-area #tweet-wrapper {
+    display: none !important;
+  }
+
+  /* Dark theme adjustments */
+  [data-theme="dark"] .mobile-switch,
+  [data-theme="dark"] .mobile-theme-toggle-group {
+    background: var(--bg-dark, #16181c);
+  }
+
+  [data-theme="dark"] .mobile-field-input {
+    color: var(--text-primary, #e7e9ea);
+    border-color: var(--border-input, rgba(51, 54, 57, 0.5));
+  }
+
+  [data-theme="dim"] .mobile-switch,
+  [data-theme="dim"] .mobile-theme-toggle-group {
+    background: var(--bg-dim, #1e2732);
+  }
+
+  /* Add specific styles for X platform theme toggles in mobile */
+  body[data-platform="x"] .mobile-theme-toggle:checked + .mobile-theme-btn,
+  body[data-platform="x"] .mode-toggle:checked + .mode-toggle-btn {
+    background: var(--accent-color);
+    color: #fff !important;
+    font-weight: 600;
+  }
+
+  body[data-platform="x"] .mobile-theme-toggle-group,
+  body[data-platform="x"] .mode-toggle-group {
+    border-color: var(--border-color);
+  }
+
+  body[data-platform="x"][data-theme="dark"] .mobile-theme-toggle:checked + .mobile-theme-btn,
+  body[data-platform="x"][data-theme="dark"] .mode-toggle:checked + .mode-toggle-btn,
+  body[data-platform="x"][data-theme="dim"] .mobile-theme-toggle:checked + .mobile-theme-btn,
+  body[data-platform="x"][data-theme="dim"] .mode-toggle:checked + .mode-toggle-btn {
+    background: #fff;
+    color: #000 !important;
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get references to elements
+    const mobilePreviewBtn = document.getElementById('mobile-preview-btn');
+    const mobilePlatformRadios = document.querySelectorAll('input[name="mobile-platform-toggle"]');
+    const mobilePreviewModeRadios = document.querySelectorAll('input[name="mobile-preview-mode"]');
+    
+    // Get stored platform from localStorage or default to 'twitter'
+    const savedPlatform = localStorage.getItem('platform') || 'twitter';
+    
+    // Update preview button with stored platform value on initial load
+    if (mobilePreviewBtn) {
+      mobilePreviewBtn.setAttribute('onclick', `showPreviewModal('${savedPlatform}')`);
+    }
+    
+    // Sync with desktop
+    syncWithDesktop();
+    
+    // Update the preview button onclick handler based on platform
+    function updatePreviewButtonPlatform() {
+      const currentPlatform = document.body.getAttribute('data-platform') || 'twitter';
+      if (mobilePreviewBtn) {
+        mobilePreviewBtn.setAttribute('onclick', `showPreviewModal('${currentPlatform}')`);
+      }
+    }
+    
+    // Set up platform toggle listeners
+    mobilePlatformRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const platform = e.target.value;
+        
+        // Set platform on body
+        document.body.setAttribute('data-platform', platform);
+        
+        // Also set platform on app-container
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+          appContainer.setAttribute('data-platform', platform);
+        }
+        
+        // Set default theme based on platform
+        const defaultTheme = platform === 'twitter' ? 'light' : 'dark';
+        
+        // Set theme on app-container and body
+        if (appContainer) {
+          appContainer.setAttribute('data-theme', defaultTheme);
+        }
+        document.body.setAttribute('data-theme', defaultTheme);
+        
+        // Update theme radio buttons
+        const themeRadio = document.querySelector(`input[name="mobile-theme"][value="${defaultTheme}"]`);
+        if (themeRadio && !themeRadio.checked) {
+          themeRadio.checked = true;
+        }
+        
+        // Sync with desktop platform
+        const desktopPlatformInput = document.querySelector(`input[name="platform-toggle"][value="${platform}"]`);
+        if (desktopPlatformInput && !desktopPlatformInput.checked) {
+          desktopPlatformInput.checked = true;
+          desktopPlatformInput.dispatchEvent(new Event('change'));
+        }
+        
+        // Store selected platform
+        localStorage.setItem('platform', platform);
+        
+        // Update preview button
+        updatePreviewButtonPlatform();
+      });
+    });
+
+    // Set up theme toggle listeners
+    const mobileThemeRadios = document.querySelectorAll('input[name="mobile-theme"]');
+    mobileThemeRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        
+        // Set theme on app-container
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+          appContainer.setAttribute('data-theme', theme);
+        }
+        
+        // Also set theme on body
+        document.body.setAttribute('data-theme', theme);
+        
+        // Sync with desktop theme selection
+        const desktopThemeInput = document.querySelector(`input[name="theme"][value="${theme}"]`);
+        if (desktopThemeInput && !desktopThemeInput.checked) {
+          desktopThemeInput.checked = true;
+          desktopThemeInput.dispatchEvent(new Event('change'));
+        }
+      });
+    });
+    
+    // Set up preview mode toggle listeners and handle scaling
+    mobilePreviewModeRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const mode = e.target.value;
+        document.body.setAttribute('data-preview-mode', mode);
+        
+        // Sync with desktop mode
+        const desktopModeInput = document.querySelector(`input[name="preview-mode"][value="${mode}"]`);
+        if (desktopModeInput && !desktopModeInput.checked) {
+          desktopModeInput.checked = true;
+          desktopModeInput.dispatchEvent(new Event('change'));
+        }
+        
+        // Store selected mode
+        localStorage.setItem('preview-mode', mode);
+        
+        // Update scaling
+        updateContentScaling();
+      });
+    });
+    
+    // Sync with desktop inputs function
+    function syncWithDesktop() {
+      // Sync platform selection
+      const appContainer = document.querySelector('.app-container');
+      const currentPlatform = appContainer ? appContainer.getAttribute('data-platform') : 
+                             (document.body.getAttribute('data-platform') || 'twitter');
+      
+      const mobilePlatformToCheck = document.querySelector(`input[name="mobile-platform-toggle"][value="${currentPlatform}"]`);
+      if (mobilePlatformToCheck && !mobilePlatformToCheck.checked) {
+        mobilePlatformToCheck.checked = true;
+      }
+      
+      // Sync theme selection
+      const currentTheme = appContainer ? appContainer.getAttribute('data-theme') : 
+                          (document.body.getAttribute('data-theme') || 
+                          (currentPlatform === 'twitter' ? 'light' : 'dark'));
+      
+      const mobileThemeToCheck = document.querySelector(`input[name="mobile-theme"][value="${currentTheme}"]`);
+      if (mobileThemeToCheck && !mobileThemeToCheck.checked) {
+        mobileThemeToCheck.checked = true;
+      }
+      
+      // Sync preview mode
+      const desktopModeInput = document.querySelector('input[name="preview-mode"]:checked');
+      const desktopMode = desktopModeInput ? desktopModeInput.value : 'desktop';
+      
+      const mobileModeToCheck = document.querySelector(`input[name="mobile-preview-mode"][value="${desktopMode}"]`);
+      if (mobileModeToCheck && !mobileModeToCheck.checked) {
+        mobileModeToCheck.checked = true;
+      }
+      
+      // Update preview button based on current platform
+      updatePreviewButtonPlatform();
+    }
+    
+    // Initial update for preview button
+    updatePreviewButtonPlatform();
+    
+    // Window resize listener
+    window.addEventListener('resize', debounce(() => {
+      syncWithDesktop();
+      updateContentScaling();
+    }, 250));
+    
+    // Simple debounce function
+    function debounce(func, wait) {
+      let timeout = null;
+      return function(...args) {
+        const context = this;
+        if (timeout) clearTimeout(timeout);
+        timeout = window.setTimeout(() => {
+          func.apply(context, args);
+        }, wait);
+      };
+    }
+
+    // Add scaling functionality
+    function updateContentScaling() {
+      const contentArea = document.getElementById('mobile-content-area');
+      if (!contentArea) return;
+      
+      const scaler = contentArea.querySelector('.content-scaler');
+      if (!scaler) return;
+      
+      const container = scaler.querySelector('.tweet-container, .x-container');
+      if (!container) return;
+
+      const mode = document.body.getAttribute('data-preview-mode') || 'desktop';
+      const targetWidth = mode === 'desktop' ? 600 : 380;
+      const availableWidth = contentArea.clientWidth;
+      
+      if (availableWidth < targetWidth) {
+        const scale = availableWidth / targetWidth;
+        scaler.style.transform = `scale(${scale})`;
+        scaler.classList.add('is-scaled');
+      } else {
+        scaler.style.transform = 'none';
+        scaler.classList.remove('is-scaled');
+      }
+    }
+
+    // Initial scaling update
+    updateContentScaling();
+  });
+</script> 

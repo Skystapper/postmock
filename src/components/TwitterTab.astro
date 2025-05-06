@@ -2,218 +2,346 @@
 import ImageCropper from "./ImageCropper.astro";
 import XPost from './XPost.astro';
 import PreviewModal from './PreviewModal.astro';
+import MobileTwitterLayout from './MobileTwitterLayout.astro';
 import '../styles/TwitterTab.css';
 ---
 
 <div class="tab-pane fade show active" id="twitter-tab">
-  <div class="mockup-header">
-    <h2>Twitter Post</h2>
-    <p class="mockup-description">Create a realistic Twitter post mockup by editing the content below.</p>
-  </div>
-
-  <!-- Dimension Controls -->
-  <div class="dimension-section">
-    <span class="size-label">Image Size:</span>
-    <div class="size-controls">
-      <div class="dimension-field">
-        <span class="field-label">W</span>
-        <div class="input-container">
-          <button class="field-btn" onclick="adjustDimension('width', -1)">−</button>
-          <input 
-            type="text" 
-            id="image-width" 
-            class="field-input" 
-            value="1200"
-            onchange="validateDimension(this, 300, 4096)"
-          >
-          <button class="field-btn" onclick="adjustDimension('width', 1)">+</button>
-        </div>
+  <div class="responsive-twitter-container">
+    <!-- Size notification banner -->
+    <div id="size-notification" class="size-notification" style="display: none;">
+      <div class="notification-content">
+        <i class="bi bi-info-circle"></i>
+        <span>Your screen is smaller than the selected preview mode. The content is scaled down while maintaining proportions.</span>
       </div>
-
-      <div class="dimension-field">
-        <span class="field-label">H</span>
-        <div class="input-container">
-          <button class="field-btn" onclick="adjustDimension('height', -1)">−</button>
-          <input 
-            type="text" 
-            id="image-height" 
-            class="field-input" 
-            value="675"
-            onchange="validateDimension(this, 300, 4096)"
-          >
-          <button class="field-btn" onclick="adjustDimension('height', 1)">+</button>
-        </div>
-      </div>
-      
-      <button class="reset-size-btn" onclick="resetSize()" title="Reset size">
-        <i class="bi bi-arrow-counterclockwise"></i>
-      </button>
     </div>
-  </div>
 
-  <!-- Theme Controls -->
-  <div class="theme-section mb-3">
-    <div class="theme-controls">
-      <div class="theme-selector">
-        <span class="control-label">Theme:</span>
-        <div class="theme-toggle-group">
-          <input type="radio" class="theme-toggle" name="theme" id="theme-light" value="light" checked>
-          <label class="theme-toggle-btn" for="theme-light" title="Light theme">
-            <i class="bi bi-sun"></i>
-          </label>
-          
-          <input type="radio" class="theme-toggle" name="theme" id="theme-dim" value="dim">
-          <label class="theme-toggle-btn" for="theme-dim" title="Dim theme">
-            <i class="bi bi-moon-stars"></i>
-          </label>
-          
-          <input type="radio" class="theme-toggle" name="theme" id="theme-dark" value="dark">
-          <label class="theme-toggle-btn" for="theme-dark" title="Dark theme">
-            <i class="bi bi-moon"></i>
-          </label>
+    <!-- Mobile layout (shown below 768px) -->
+    <div class="mobile-only-container">
+      <MobileTwitterLayout />
+      
+      <!-- Twitter and X containers - static for mobile (will be shown/hidden via CSS) -->
+      <div class="mobile-preview-containers">
+        <div class="tweet-wrapper" id="mobile-tweet-wrapper">
+          <div id="mobile-tweet-preview" class="tweet-container" data-theme="light">
+            <!-- Copy of tweet content -->
+            <div class="tweet-header d-flex align-items-center gap-3 mb-2">
+              <!-- Same as desktop tweet content -->
+              <div 
+                class="profile-pic rounded-circle bg-primary cursor-pointer" 
+                style="width: 48px; height: 48px;"
+                onclick="uploadTwitterProfilePic()"
+                role="button"
+                title="Click to change profile picture"
+              >
+                <img 
+                  id="mobile-profile-pic" 
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E"
+                  alt="Profile picture placeholder" 
+                  class="w-100 h-100 rounded-circle"
+                >
+              </div>
+              
+              <div class="user-info flex-grow-1">
+                <div class="d-flex align-items-center gap-1">
+                  <span 
+                    class="name fw-bold" 
+                    contenteditable="true" 
+                    id="mobile-live-name"
+                    data-input="username-input">John Doe</span>
+                  <span class="verified-badge" id="mobile-verified-badge" onclick="toggleVerified()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path></svg>
+                  </span>
+                </div>
+                <div 
+                  class="handle text-secondary" 
+                  contenteditable="true" 
+                  id="mobile-live-handle"
+                  data-input="handle-input">@johndoe</div>
+              </div>
+            </div>
+
+            <div 
+              class="tweet-content mb-3" 
+              contenteditable="true" 
+              id="mobile-live-text"
+              data-input="text-input">Your tweet here!</div>
+
+            <div class="tweet-meta text-secondary small">
+              <span 
+                class="tweet-time" 
+                contenteditable="true" 
+                id="mobile-live-date"
+                data-input="date-input">12:00 PM · Jan 1, 2023</span>
+              <span>· Twitter for iPhone</span>
+            </div>
+
+            <hr class="my-3">
+
+            <div class="tweet-stats d-flex gap-3 text-secondary">
+              <div class="stat">
+                <span 
+                  class="stat-number" 
+                  contenteditable="true" 
+                  id="mobile-live-retweets"
+                  data-input="retweets-input">0</span>
+                <span class="stat-label">Retweets</span>
+              </div>
+              <div class="stat">
+                <span 
+                  class="stat-number" 
+                  contenteditable="true" 
+                  id="mobile-live-quotes"
+                  data-input="quotes-input">0</span>
+                <span class="stat-label">Quote Tweets</span>
+              </div>
+              <div class="stat">
+                <span 
+                  class="stat-number" 
+                  contenteditable="true" 
+                  id="mobile-live-likes"
+                  data-input="likes-input">0</span>
+                <span class="stat-label">Likes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tweet-wrapper" id="mobile-x-wrapper">
+          <div id="mobile-x-preview" class="x-container-wrapper">
+            <XPost
+              username="John Doe"
+              handle="johndoe"
+              verified={true}
+              text="Your X content here!"
+              date="12:00 PM · Jan 1, 2023"
+              views="0"
+              replies="0"
+              reposts="0"
+              likes="0"
+              bookmarks="0"
+              theme="light"
+            />
+          </div>
         </div>
       </div>
 
-      <button class="modern-btn labeled-btn tooltip-btn" onclick="randomizeStats()" title="Generate random engagement stats">
-          <i class="bi bi-shuffle"></i>
-        <span class="btn-label">Randomize Stats</span>
-        <span class="tooltip-text">Generate random engagement numbers</span>
-      </button>
+      <!-- Moved platform toggle BELOW containers -->
+      <div class="mobile-platform-section">
+        <div class="mobile-platform-toggle">
+          <div class="mobile-switch platform-switch">
+            <label class="m-switch-option switch-option twitter-option">
+              <input type="radio" name="mobile-platform-toggle" id="mobile-platform-twitter" value="twitter" checked>
+              <span class="m-option-icon option-icon">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"/></svg>
+              </span>
+              <span class="m-option-text option-text">Twitter</span>
+            </label>
+            <label class="m-switch-option switch-option x-option">
+              <input type="radio" name="mobile-platform-toggle" id="mobile-platform-x" value="x">
+              <span class="m-option-icon option-icon">
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </span>
+              <span class="m-option-text option-text">X</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <button type="button" class="preview-btn" onclick="showPreviewModal('twitter')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
-        </svg>
-        Preview
+    <!-- Desktop layout (shown above 768px) -->
+    <div class="desktop-only-container">
+    <div class="mockup-header">
+      <h2>Twitter Post</h2>
+      <p class="mockup-description">Create a realistic Twitter post mockup by editing the content below.</p>
+    </div>
+
+      <!-- Mode Selection (replaces dimension controls) -->
+    <div class="mode-section mb-3">
+      <div class="mode-controls">
+        <span class="control-label">Preview Mode:</span>
+        <div class="mode-toggle-group">
+          <input type="radio" class="mode-toggle" name="preview-mode" id="mode-desktop" value="desktop" checked>
+          <label class="mode-toggle-btn" for="mode-desktop" title="Desktop preview">
+            <i class="bi bi-display"></i>
+            <span>Desktop</span>
+          </label>
+          
+          <input type="radio" class="mode-toggle" name="preview-mode" id="mode-phone" value="phone">
+          <label class="mode-toggle-btn" for="mode-phone" title="Phone preview">
+            <i class="bi bi-phone"></i>
+            <span>Phone</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+      <!-- Theme Controls (desktop only) -->
+    <div class="theme-section mb-3">
+      <div class="theme-controls">
+        <div class="theme-selector">
+          <span class="control-label">Theme:</span>
+          <div class="theme-toggle-group">
+            <input type="radio" class="theme-toggle" name="theme" id="theme-light" value="light" checked>
+            <label class="theme-toggle-btn" for="theme-light" title="Light theme">
+              <i class="bi bi-sun"></i>
+            </label>
+            
+            <input type="radio" class="theme-toggle" name="theme" id="theme-dim" value="dim">
+            <label class="theme-toggle-btn" for="theme-dim" title="Dim theme">
+              <i class="bi bi-moon-stars"></i>
+            </label>
+            
+            <input type="radio" class="theme-toggle" name="theme" id="theme-dark" value="dark">
+            <label class="theme-toggle-btn" for="theme-dark" title="Dark theme">
+              <i class="bi bi-moon"></i>
+            </label>
+          </div>
+        </div>
+
+        <button class="modern-btn labeled-btn tooltip-btn" onclick="randomizeStats()" title="Generate random engagement stats">
+            <i class="bi bi-shuffle"></i>
+          <span class="btn-label">Randomize Stats</span>
+          <span class="tooltip-text">Generate random engagement numbers</span>
         </button>
-    </div>
-  </div>
 
-  <!-- Tweet Container -->
-  <div class="tweet-wrapper" id="tweet-wrapper">
-  <div class="tweet-container" id="tweet-preview" data-theme="light">
-    <div class="tweet-header d-flex align-items-center gap-3 mb-2">
-      <div 
-        class="profile-pic rounded-circle bg-primary cursor-pointer" 
-        style="width: 48px; height: 48px;"
-        onclick="uploadTwitterProfilePic()"
-        role="button"
-        title="Click to change profile picture"
-      >
-        <img 
-          id="profile-pic" 
-          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E"
-          alt="Profile picture placeholder" 
-          class="w-100 h-100 rounded-circle"
-        >
+        <button type="button" class="preview-btn" onclick="showPreviewModal('twitter')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+          </svg>
+          Preview
+          </button>
       </div>
-      
-      <div class="user-info flex-grow-1">
-        <div class="d-flex align-items-center gap-1">
-          <span 
-            class="name fw-bold" 
-            contenteditable="true" 
-            id="live-name"
-            data-input="username-input">John Doe</span>
-          <span class="verified-badge" id="verified-badge" onclick="toggleVerified()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path></svg>
-          </span>
-          
-          <span class="verified-badge faded-badge" id="faded-badge" onclick="toggleVerified()" style="display: none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DA1F2" style="opacity: 0.5;">
-              <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path>
-            </svg>
-          </span>
-        </div>
+    </div>
+
+      <!-- Tweet Container (static in desktop, will be shown/hidden with CSS) -->
+    <div class="tweet-wrapper" id="desktop-tweet-wrapper">
+    <div class="tweet-container" id="tweet-preview" data-theme="light">
+      <div class="tweet-header d-flex align-items-center gap-3 mb-2">
         <div 
-          class="handle text-secondary" 
-          contenteditable="true" 
-          id="live-handle"
-          data-input="handle-input">@johndoe</div>
-      </div>
-
-      <div class="dropdown">
-        <button class="btn btn-link text-secondary" data-bs-toggle="dropdown">
-          <i class="bi bi-three-dots"></i>
-        </button>
-        <ul class="dropdown-menu">
-          <li><button class="dropdown-item" onclick="toggleVerified()">
-            <i class="bi bi-patch-check"></i> Toggle verified
-          </button></li>
-          <li><button class="dropdown-item" onclick="uploadTwitterProfilePic()">
-            <i class="bi bi-camera"></i> Change profile picture
-          </button></li>
-        </ul>
-      </div>
-    </div>
-
-    <div 
-      class="tweet-content mb-3" 
-      contenteditable="true" 
-      id="live-text"
-      data-input="text-input">Your tweet here!</div>
-
-    <div class="tweet-meta text-secondary small">
-      <span 
-        class="tweet-time" 
-        contenteditable="true" 
-        id="live-date"
-        data-input="date-input">12:00 PM · Jan 1, 2023</span>
-      <span>· Twitter for iPhone</span>
-    </div>
-
-    <hr class="my-3">
-
-    <div class="tweet-stats d-flex gap-3 text-secondary">
-      <div class="stat">
-        <span 
-          class="stat-number" 
-          contenteditable="true" 
-          id="live-retweets"
-          data-input="retweets-input">0</span>
-        <span class="stat-label">Retweets</span>
-      </div>
-      <div class="stat">
-        <span 
-          class="stat-number" 
-          contenteditable="true" 
-          id="live-quotes"
-          data-input="quotes-input">0</span>
-        <span class="stat-label">Quote Tweets</span>
-      </div>
-      <div class="stat">
-        <span 
-          class="stat-number" 
-          contenteditable="true" 
-          id="live-likes"
-          data-input="likes-input">0</span>
-        <span class="stat-label">Likes</span>
+          class="profile-pic rounded-circle bg-primary cursor-pointer" 
+          style="width: 48px; height: 48px;"
+          onclick="uploadTwitterProfilePic()"
+          role="button"
+          title="Click to change profile picture"
+        >
+          <img 
+            id="profile-pic" 
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E"
+            alt="Profile picture placeholder" 
+            class="w-100 h-100 rounded-circle"
+          >
         </div>
+        
+        <div class="user-info flex-grow-1">
+          <div class="d-flex align-items-center gap-1">
+            <span 
+              class="name fw-bold" 
+              contenteditable="true" 
+              id="live-name"
+              data-input="username-input">John Doe</span>
+            <span class="verified-badge" id="verified-badge" onclick="toggleVerified()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path></svg>
+            </span>
+            
+            <span class="verified-badge faded-badge" id="faded-badge" onclick="toggleVerified()" style="display: none;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DA1F2" style="opacity: 0.5;">
+                <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"></path>
+              </svg>
+            </span>
+          </div>
+          <div 
+            class="handle text-secondary" 
+            contenteditable="true" 
+            id="live-handle"
+            data-input="handle-input">@johndoe</div>
+        </div>
+
+        <div class="dropdown">
+          <button class="btn btn-link text-secondary" data-bs-toggle="dropdown">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li><button class="dropdown-item" onclick="toggleVerified()">
+              <i class="bi bi-patch-check"></i> Toggle verified
+            </button></li>
+            <li><button class="dropdown-item" onclick="uploadTwitterProfilePic()">
+              <i class="bi bi-camera"></i> Change profile picture
+            </button></li>
+          </ul>
+        </div>
+      </div>
+
+      <div 
+        class="tweet-content mb-3" 
+        contenteditable="true" 
+        id="live-text"
+        data-input="text-input">Your tweet here!</div>
+
+      <div class="tweet-meta text-secondary small">
+        <span 
+          class="tweet-time" 
+          contenteditable="true" 
+          id="live-date"
+          data-input="date-input">12:00 PM · Jan 1, 2023</span>
+        <span>· Twitter for iPhone</span>
+      </div>
+
+      <hr class="my-3">
+
+      <div class="tweet-stats d-flex gap-3 text-secondary">
+        <div class="stat">
+          <span 
+            class="stat-number" 
+            contenteditable="true" 
+            id="live-retweets"
+            data-input="retweets-input">0</span>
+          <span class="stat-label">Retweets</span>
+        </div>
+        <div class="stat">
+          <span 
+            class="stat-number" 
+            contenteditable="true" 
+            id="live-quotes"
+            data-input="quotes-input">0</span>
+          <span class="stat-label">Quote Tweets</span>
+        </div>
+        <div class="stat">
+          <span 
+            class="stat-number" 
+            contenteditable="true" 
+            id="live-likes"
+            data-input="likes-input">0</span>
+          <span class="stat-label">Likes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add back X container for desktop -->
+    <div class="tweet-wrapper" id="desktop-x-wrapper">
+      <div id="x-preview" class="x-container-wrapper">
+        <XPost
+          username="John Doe"
+          handle="johndoe"
+          verified={true}
+          text="Your X content here!"
+          date="12:00 PM · Jan 1, 2023"
+          views="0"
+          replies="0"
+          reposts="0"
+          likes="0"
+          bookmarks="0"
+          theme="light"
+        />
       </div>
     </div>
   </div>
 
-  <!-- New X Design (initially hidden) -->
-  <div class="tweet-wrapper" id="x-wrapper">
-    <div id="x-preview" style="display: none;">
-      <XPost
-        username="John Doe"
-        handle="johndoe"
-        verified={true}
-        text="Your tweet content here!"
-        date="8:21 PM · Mar 12, 2024"
-        views="2.7M"
-        replies="1K"
-        reposts="6K"
-        likes="34K"
-        bookmarks="143"
-        theme="dark"
-      />
-    </div>
   </div>
 
   <!-- Platform Toggle -->
-  <div class="platform-toggle-section">
+  <div class="platform-toggle-section desktop-platform-section">
     <div class="platform-switch">
       <label class="switch-option twitter-option">
         <input type="radio" name="platform-toggle" id="platform-twitter" value="twitter" checked>
@@ -239,51 +367,1025 @@ import '../styles/TwitterTab.css';
 <input type="hidden" id="views-input" value="0">
 
 <PreviewModal />
+</div>
+
+<style>
+  /* Scoped styles for Twitter tab */
+  .tab-pane#twitter-tab .responsive-twitter-container {
+    width: 100%;
+  }
+
+  /* Platform-specific visibility for desktop and mobile containers with unique IDs */
+  body[data-platform="twitter"] #desktop-tweet-wrapper,
+  body[data-platform="twitter"] #mobile-tweet-wrapper {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  body[data-platform="twitter"] #desktop-x-wrapper,
+  body[data-platform="twitter"] #mobile-x-wrapper {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  body[data-platform="x"] #desktop-tweet-wrapper,
+  body[data-platform="x"] #mobile-tweet-wrapper {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  body[data-platform="x"] #desktop-x-wrapper,
+  body[data-platform="x"] #mobile-x-wrapper {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Ensure platform toggle sections don't duplicate */
+  @media (max-width: 768px) {
+    .desktop-platform-section {
+      display: none !important;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .mobile-platform-section {
+      display: none !important;
+    }
+  }
+
+  /* Update these styles to target both containers */
+  .tweet-container, .x-container {
+    max-width: 100%;
+    aspect-ratio: var(--user-width) / var(--user-height);
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  /* Ensure the wrappers don't interfere with sizing */
+  .tweet-wrapper, #x-wrapper {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  /* Remove or modify the size notification */
+  .size-notification {
+    display: none !important; /* Remove the notification completely */
+  }
+
+  /* Container sizing styles */
+  .tweet-container, .x-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--user-width) / var(--user-height);
+    max-width: var(--user-width);
+    max-height: var(--user-height);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .tweet-wrapper, #x-wrapper {
+    width: 100%;
+    max-width: var(--user-width);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Theme-specific styles for containers */
+  [data-theme="light"] .size-notification {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+  }
+
+  [data-theme="dark"] .size-notification {
+    background-color: #212529;
+    border-color: #495057;
+    color: #adb5bd;
+  }
+
+  [data-theme="dim"] .size-notification {
+    background-color: #15202B;
+    border-color: #38444D;
+    color: #8899A6;
+  }
+
+  /* Mode selection styles */
+  .mode-section {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+  }
+
+  .mode-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .control-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .mode-toggle-group {
+    display: flex;
+    gap: 8px;
+    background: var(--bg-primary);
+    padding: 4px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+  }
+
+  .mode-toggle {
+    display: none;
+  }
+
+  .mode-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .mode-toggle:checked + .mode-toggle-btn {
+    background: var(--accent-color);
+    color: #fff;
+  }
+
+  /* Add specific styles for X platform theme toggles */
+  body[data-platform="x"] .mode-toggle:checked + .mode-toggle-btn {
+    background: var(--accent-color);
+    color: #fff !important;
+    font-weight: 600;
+  }
+
+  body[data-platform="x"] .theme-toggle-group {
+    border-color: var(--border-color);
+  }
+
+  body[data-platform="x"][data-theme="dark"] .mode-toggle:checked + .mode-toggle-btn,
+  body[data-platform="x"][data-theme="dim"] .mode-toggle:checked + .mode-toggle-btn {
+    background: #fff;
+    color: #000 !important;
+  }
+
+  .mode-toggle-btn i {
+    font-size: 16px;
+  }
+
+  /* Update container styles to use preset sizes */
+  .tweet-container, 
+  .x-container {
+    width: 100%;
+    max-width: 600px; /* Desktop default */
+    margin: 0 auto;
+    transition: max-width 0.3s ease;
+  }
+
+  /* Phone mode styles */
+  body[data-preview-mode="phone"] .tweet-container,
+  body[data-preview-mode="phone"] .x-container {
+    max-width: 380px;
+  }
+
+  /* Remove old dimension-related styles */
+  .dimension-section,
+  .dimension-controls,
+  .size-controls,
+  .field-input,
+  .field-btn,
+  .reset-size-btn {
+    display: none;
+  }
+
+  /* Desktop mode - exact 600px width */
+  [data-preview-mode="desktop"] .tweet-container,
+  [data-preview-mode="desktop"] .x-container {
+    width: 600px !important;
+    height: auto !important;
+    transform-origin: top center;
+  }
+
+  /* Phone mode - exact 380px width */
+  [data-preview-mode="phone"] .tweet-container,
+  [data-preview-mode="phone"] .x-container {
+    width: 380px !important;
+    height: auto !important;
+    transform-origin: top center;
+  }
+
+  /* Handle scaling only when needed */
+  @media (max-width: 768px) {
+    [data-preview-mode="desktop"] .tweet-container,
+    [data-preview-mode="desktop"] .x-container {
+      transform: scale(calc(100vw / 600));
+      margin-bottom: calc((100vw / 600 - 1) * -100%);
+    }
+
+    [data-preview-mode="phone"] .tweet-container,
+    [data-preview-mode="phone"] .x-container {
+      transform: scale(calc(100vw / 380));
+      margin-bottom: calc((100vw / 380 - 1) * -100%);
+    }
+  }
+  
+  /* Platform toggle alignment styles */
+  .platform-toggle-section {
+    width: 100%;
+    max-width: 600px;
+    margin: 1rem auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .mobile-platform-section {
+    width: 100%;
+    max-width: 380px;
+    margin: 1rem auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .platform-switch {
+    display: flex;
+    background: var(--bg-primary);
+    padding: 4px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .mobile-platform-toggle {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .mobile-switch {
+    display: flex;
+    background: var(--bg-primary);
+    padding: 4px;
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .switch-option, .m-switch-option {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .switch-option input[type="radio"], 
+  .m-switch-option input[type="radio"] {
+    display: none;
+  }
+  
+  .switch-option input[type="radio"]:checked + .option-icon,
+  .m-switch-option input[type="radio"]:checked + .m-option-icon {
+    color: var(--accent-color);
+  }
+  
+  .option-icon, .m-option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+  }
+  
+  .option-text, .m-option-text {
+    font-size: 14px;
+  }
+  
+  body[data-preview-mode="phone"] .platform-toggle-section {
+    max-width: 380px;
+  }
+</style>
 
 <script is:inline>
-  // Handle contenteditable sync with inputs
-  document.querySelectorAll('[contenteditable]').forEach(element => {
-    element.addEventListener('input', (e) => {
-      const inputId = e.target.dataset.input;
-      if (inputId) {
-        const input = document.getElementById(inputId);
-        if (input) {
-          input.value = e.target.textContent;
-          input.dispatchEvent(new Event('input'));
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize platform-specific default themes
+    function initializePlatformTheme() {
+      const currentPlatform = document.body.getAttribute('data-platform') || 'twitter';
+      const defaultTheme = currentPlatform === 'twitter' ? 'light' : 'dark';
+      
+      // Set theme on app-container
+      const appContainer = document.querySelector('.app-container');
+      if (appContainer) {
+        appContainer.setAttribute('data-theme', defaultTheme);
+        
+        // Also set platform on app-container to ensure consistency
+        appContainer.setAttribute('data-platform', currentPlatform);
+      }
+      
+      // Also set theme on body for additional components
+      document.body.setAttribute('data-theme', defaultTheme);
+      
+      // Update radio buttons
+      const themeRadios = document.querySelectorAll(`input[name="theme"][value="${defaultTheme}"], input[name="mobile-theme"][value="${defaultTheme}"]`);
+      themeRadios.forEach(radio => {
+        radio.checked = true;
+      });
+    }
+
+    // Handle platform toggle
+    function handlePlatformChange(e) {
+      const platform = e.target.value;
+      
+      // Set platform on body
+      document.body.setAttribute('data-platform', platform);
+      
+      // Set platform on app-container
+      const appContainer = document.querySelector('.app-container');
+      if (appContainer) {
+        appContainer.setAttribute('data-platform', platform);
+      }
+      
+      // Set default theme based on platform
+      const defaultTheme = platform === 'twitter' ? 'light' : 'dark';
+      
+      // Set theme on app-container
+      if (appContainer) {
+        appContainer.setAttribute('data-theme', defaultTheme);
+      }
+      
+      // Also set theme on body
+      document.body.setAttribute('data-theme', defaultTheme);
+      
+      // Update theme radio buttons
+      const themeRadios = document.querySelectorAll(`input[name="theme"][value="${defaultTheme}"], input[name="mobile-theme"][value="${defaultTheme}"]`);
+      themeRadios.forEach(radio => {
+        radio.checked = true;
+      });
+    }
+
+    // Sync content between Twitter and X containers
+    function syncContainers() {
+      // Sync text content
+      const twitterText = document.getElementById('live-text');
+      const xText = document.querySelector('.x-container .post-text');
+      const mobileTweetText = document.getElementById('mobile-live-text');
+      const mobileXText = document.querySelector('.mobile-x-container .post-text');
+
+      if (twitterText && xText) {
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'characterData' || mutation.type === 'childList') {
+              const content = twitterText.textContent;
+              xText.textContent = content;
+              if (mobileTweetText) mobileTweetText.textContent = content;
+              if (mobileXText) mobileXText.textContent = content;
+            }
+          });
+        });
+
+        observer.observe(twitterText, { characterData: true, childList: true, subtree: true });
+      }
+
+      // Sync profile info
+      const twitterName = document.getElementById('live-name');
+      const xName = document.querySelector('.x-container .user-name');
+      const twitterHandle = document.getElementById('live-handle');
+      const xHandle = document.querySelector('.x-container .user-handle');
+
+      if (twitterName && xName && twitterHandle && xHandle) {
+        // Sync names
+        const nameObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'characterData' || mutation.type === 'childList') {
+              const name = twitterName.textContent;
+              xName.textContent = name;
+            }
+          });
+        });
+
+        nameObserver.observe(twitterName, { characterData: true, childList: true, subtree: true });
+
+        // Sync handles
+        const handleObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'characterData' || mutation.type === 'childList') {
+              const handle = twitterHandle.textContent;
+              xHandle.textContent = handle;
+            }
+          });
+        });
+
+        handleObserver.observe(twitterHandle, { characterData: true, childList: true, subtree: true });
+      }
+
+      // Sync profile pictures
+      function syncProfilePictures(newSrc) {
+        const profilePics = document.querySelectorAll('#profile-pic, #mobile-profile-pic');
+        profilePics.forEach(pic => {
+          if (pic) pic.src = newSrc;
+        });
+      }
+
+      // Update existing profile picture change handler
+      window.uploadTwitterProfilePic = function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              initImageCropper(e.target.result, 'twitter-profile', (croppedImageUrl) => {
+                syncProfilePictures(croppedImageUrl);
+              });
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+        input.click();
+      };
+    }
+
+    // Initialize
+    initializePlatformTheme();
+    syncContainers();
+
+    // Add platform change listeners
+    const platformToggles = document.querySelectorAll('input[name="platform-toggle"], input[name="mobile-platform-toggle"]');
+    platformToggles.forEach(toggle => {
+      toggle.addEventListener('change', handlePlatformChange);
+    });
+
+    // Theme change handler
+    const themeToggles = document.querySelectorAll('input[name="theme"], input[name="mobile-theme"]');
+    themeToggles.forEach(toggle => {
+      toggle.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        
+        // Update app-container theme
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+          appContainer.setAttribute('data-theme', theme);
         }
+        
+        // Also update body theme
+        document.body.setAttribute('data-theme', theme);
+        
+        // Set theme on tweet container for backward compatibility
+        const tweetContainers = document.querySelectorAll('.tweet-container, #tweet-preview, #mobile-tweet-preview');
+        tweetContainers.forEach(container => {
+          if (container) {
+            container.setAttribute('data-theme', theme);
+          }
+        });
+        
+        // Sync theme across all theme toggles
+        const allThemeToggles = document.querySelectorAll(`input[name="theme"][value="${theme}"], input[name="mobile-theme"][value="${theme}"]`);
+        allThemeToggles.forEach(radio => {
+          radio.checked = true;
+        });
+      });
+    });
+    
+    // Ensure tweet containers inherit the theme as well
+    function syncTweetContainersWithAppTheme() {
+      const appContainer = document.querySelector('.app-container');
+      if (appContainer) {
+        const appTheme = appContainer.getAttribute('data-theme');
+        const tweetContainers = document.querySelectorAll('.tweet-container, #tweet-preview, #mobile-tweet-preview');
+        tweetContainers.forEach(container => {
+          if (container) {
+            container.setAttribute('data-theme', appTheme);
+          }
+        });
+      }
+    }
+    
+    // Run initial tweet container theme sync
+    syncTweetContainersWithAppTheme();
+    
+    // Optional: reattach original content sync code for backward compatibility
+    const editableElements = document.querySelectorAll('[contenteditable="true"]');
+    
+    function debounce(func, wait) {
+      let timeout;
+      return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+      };
+    }
+    
+    editableElements.forEach(element => {
+      // Listen for input events
+      element.addEventListener('input', debounce((e) => {
+        // Find matching elements by similar ID in both mobile and desktop views
+        const elementId = element.id;
+        const isMobile = elementId.startsWith('mobile-');
+        const isDesktop = !isMobile;
+        
+        // Get corresponding element IDs
+        const mobileId = isMobile ? elementId : `mobile-${elementId}`;
+        const desktopId = isDesktop ? elementId : elementId.replace('mobile-', '');
+        
+        // Sync between mobile and desktop
+        if (isMobile) {
+          const desktopElement = document.getElementById(desktopId);
+          if (desktopElement) {
+            desktopElement.textContent = element.textContent;
+          }
+        } else {
+          const mobileElement = document.getElementById(mobileId);
+          if (mobileElement) {
+            mobileElement.textContent = element.textContent;
+          }
+        }
+        
+        // If there's an associated input, update it too
+        const inputId = element.dataset.input;
+        if (inputId) {
+          const input = document.getElementById(inputId);
+          if (input) {
+            input.value = element.textContent;
+            input.dispatchEvent(new Event('input'));
+          }
+        }
+      }, 50));
+      
+      // Handle paste to strip formatting
+      element.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        document.execCommand('insertText', false, text);
+      });
+    });
+  });
+</script>
+
+<!-- Import simplified mobile layout manager -->
+<script>
+  // Import the simplified mobile layout script
+  import "../scripts/mobilelayout.js";
+</script>
+
+<!-- Import simplified Twitter Layout Fixer -->
+<script>
+  // Import the layout fixer script that doesn't manipulate the DOM
+  import "../scripts/fixTwitterLayout.js";
+</script>
+
+<!-- Import preview size simulation script -->
+<script>
+  // Import preview size simulation script
+  import "../scripts/previewSizeSimulation.js";
+</script>
+
+<!-- Add Twitter/X formatting script -->
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Apply hashtag, mention, and URL detection to both Twitter and X containers
+    
+    // Define CSS styles for links in Twitter/X
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
+      .tweet-content a.hashtag,
+      .tweet-content a.mention,
+      .tweet-content a.url-link,
+      .x-container .post-text a.hashtag,
+      .x-container .post-text a.mention, 
+      .x-container .post-text a.url-link,
+      .post-content a.hashtag,
+      .post-content a.mention, 
+      .post-content a.url-link {
+        color: #1DA1F2;
+        text-decoration: none;
+      }
+      .tweet-content a.hashtag:hover,
+      .tweet-content a.mention:hover,
+      .tweet-content a.url-link:hover,
+      .x-container .post-text a.hashtag:hover,
+      .x-container .post-text a.mention:hover,
+      .x-container .post-text a.url-link:hover,
+      .post-content a.hashtag:hover,
+      .post-content a.mention:hover, 
+      .post-content a.url-link:hover {
+        text-decoration: underline;
+      }
+    `;
+    document.head.appendChild(styleEl);
+    
+    // Formatting function for Twitter and X - improved to handle cursor position properly
+    function formatTwitterContent(element) {
+      if (!element) return;
+      
+      try {
+        // Don't continue if already processing to avoid recursion
+        if (element._isFormatting) return;
+        element._isFormatting = true;
+        
+        // Store selection information
+        const selection = window.getSelection();
+        if (!selection.rangeCount) {
+          element._isFormatting = false;
+          return;
+        }
+        
+        // Get cursor information before modifying content
+        const range = selection.getRangeAt(0);
+        let cursorNode = range.startContainer;
+        let cursorOffset = range.startOffset;
+        
+        // If we're not inside the element, don't continue
+        if (!element.contains(cursorNode)) {
+          element._isFormatting = false;
+          return;
+        }
+        
+        // If we're at the start of a link, remember this for later cursor placement
+        let atStartOfLink = false;
+        if (cursorNode.nodeType === Node.TEXT_NODE && 
+            cursorNode.parentNode.tagName === 'A' && 
+            cursorOffset === 0) {
+          atStartOfLink = true;
+        }
+        
+        // Get the HTML content and text content
+        const originalHTML = element.innerHTML;
+        const text = element.innerText;
+        
+        // Only do replacements on plain text, not existing links
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = originalHTML;
+        
+        // Process text nodes only (not inside links)
+        const textNodes = [];
+        const walker = document.createTreeWalker(
+          tempDiv,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: function(node) {
+              if (node.parentNode.tagName === 'A') {
+                return NodeFilter.FILTER_REJECT;
+              }
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          }
+        );
+        
+        // Collect all eligible text nodes
+        let node;
+        while (node = walker.nextNode()) {
+          textNodes.push(node);
+        }
+        
+        // Flag to track if we made any changes
+        let madeChanges = false;
+        
+        // Process each text node
+        textNodes.forEach(textNode => {
+          // Get original content and position
+          const originalContent = textNode.nodeValue;
+          
+          // Apply formatting to this specific text node content
+          const formattedContent = originalContent
+            .replace(/(\s|^)(@[\w]+)/g, '$1<a href="#" class="mention">$2</a>')
+            .replace(/(\s|^)(#[\w]+)/g, '$1<a href="#" class="hashtag">$2</a>')
+            .replace(/(\s|^)(https?:\/\/\S+|www\.\S+)/g, '$1<a href="#" class="url-link">$2</a>');
+          
+          // Only update if something changed
+          if (formattedContent !== originalContent) {
+            madeChanges = true;
+            
+            // Create wrapper to hold the HTML fragment
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = formattedContent;
+            
+            // Replace the text node with the formatted fragment
+            const fragment = document.createDocumentFragment();
+            while (wrapper.firstChild) {
+              fragment.appendChild(wrapper.firstChild);
+            }
+            
+            // Check if this is the node with the cursor
+            if (textNode === cursorNode) {
+              // We'll need to find the approximate position later
+              // Set flag for cursor node replacement
+              textNode._isCursorNode = true;
+            }
+            
+            textNode.parentNode.replaceChild(fragment, textNode);
+          }
+        });
+        
+        // Only update the main element if we made changes
+        if (madeChanges) {
+          // Update the main content
+          element.innerHTML = tempDiv.innerHTML;
+          
+          // Now place the cursor at the right position
+          // This is a simplified approach to place cursor at the end of the element
+          const range = document.createRange();
+          const sel = window.getSelection();
+          
+          // Try to place cursor near where it was before
+          // Find the last text node in the element
+          const lastTextNode = findLastTextNode(element);
+          if (lastTextNode) {
+            range.setStart(lastTextNode, lastTextNode.length);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+        }
+        
+        // Reset formatting flag
+        element._isFormatting = false;
+      } catch (e) {
+        console.error('Error in formatTwitterContent:', e);
+        element._isFormatting = false;
+      }
+    }
+    
+    // Helper function to find the last text node
+    function findLastTextNode(element) {
+      // Simple approach: place cursor at end, rather than trying to be too clever
+      // Create a range at the end of the element
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      range.collapse(false);
+      return element.lastChild;
+    }
+    
+    // Sync content between Twitter and X
+    function setupContentSync() {
+      // Twitter elements
+      const twitterElements = {
+        // Desktop Twitter elements
+        desktopText: document.getElementById('live-text'),
+        desktopName: document.getElementById('live-name'),
+        desktopHandle: document.getElementById('live-handle'),
+        desktopDate: document.getElementById('live-date'),
+        
+        // Mobile Twitter elements
+        mobileText: document.getElementById('mobile-live-text'),
+        mobileName: document.getElementById('mobile-live-name'),
+        mobileHandle: document.getElementById('mobile-live-handle'),
+        mobileDate: document.getElementById('mobile-live-date')
+      };
+      
+      // X elements - find all X containers to cover both desktop and mobile
+      const xElements = {
+        // Find text elements using class selectors to catch all instances
+        textElements: document.querySelectorAll('#x-live-text, .post-content[contenteditable="true"], .x-container .post-content'),
+        nameElements: document.querySelectorAll('#x-live-name, .x-container .name[contenteditable="true"]'),
+        handleElements: document.querySelectorAll('#x-live-handle, .x-container .handle[contenteditable="true"]'),
+        dateElements: document.querySelectorAll('#x-live-date, .x-container .time[contenteditable="true"]')
+      };
+      
+      // Create sync functions for Twitter to X
+      function syncToX(sourceElement, targetSelector) {
+        if (!sourceElement) return;
+        
+        sourceElement.addEventListener('input', function() {
+          const newContent = this.innerText;
+          document.querySelectorAll(targetSelector).forEach(target => {
+            if (target && target !== this) {
+              target.innerText = newContent;
+              // Format if it's a text content field
+              if (target.classList.contains('post-content') || target.id === 'x-live-text') {
+                formatTwitterContent(target);
+              }
+            }
+          });
+        });
+      }
+      
+      // Set up Twitter to X syncs
+      if (twitterElements.desktopText) {
+        syncToX(twitterElements.desktopText, '#x-live-text, .post-content[contenteditable="true"], .x-container .post-content');
+      }
+      if (twitterElements.desktopName) {
+        syncToX(twitterElements.desktopName, '#x-live-name, .x-container .name[contenteditable="true"]');
+      }
+      if (twitterElements.desktopHandle) {
+        syncToX(twitterElements.desktopHandle, '#x-live-handle, .x-container .handle[contenteditable="true"]');
+      }
+      if (twitterElements.desktopDate) {
+        syncToX(twitterElements.desktopDate, '#x-live-date, .x-container .time[contenteditable="true"]');
+      }
+      
+      // Also set up mobile syncs
+      if (twitterElements.mobileText) {
+        syncToX(twitterElements.mobileText, '#x-live-text, .post-content[contenteditable="true"], .x-container .post-content');
+      }
+      if (twitterElements.mobileName) {
+        syncToX(twitterElements.mobileName, '#x-live-name, .x-container .name[contenteditable="true"]');
+      }
+      if (twitterElements.mobileHandle) {
+        syncToX(twitterElements.mobileHandle, '#x-live-handle, .x-container .handle[contenteditable="true"]');
+      }
+      if (twitterElements.mobileDate) {
+        syncToX(twitterElements.mobileDate, '#x-live-date, .x-container .time[contenteditable="true"]');
+      }
+      
+      // Create X to Twitter syncs for bidirectional updates
+      xElements.textElements.forEach(element => {
+        if (element) {
+          element.addEventListener('input', function() {
+            const newContent = this.innerText;
+            if (twitterElements.desktopText) twitterElements.desktopText.innerText = newContent;
+            if (twitterElements.mobileText) twitterElements.mobileText.innerText = newContent;
+            xElements.textElements.forEach(el => {
+              if (el !== this) el.innerText = newContent;
+            });
+          });
+        }
+      });
+      
+      // Handle the actual formatting event listeners - use a simpler approach
+      const twitterContentElements = [
+        twitterElements.desktopText,
+        twitterElements.mobileText,
+        ...xElements.textElements
+      ];
+      
+      twitterContentElements.forEach(el => {
+        if (!el) return;
+        
+        // Instead of trying to format after every space/key, only format when focus is lost
+        // This matches how X-Post works smoothly
+        el.addEventListener('blur', function() {
+          formatTwitterContent(this);
+        });
+        
+        // Format when user is done typing (delay after keyup)
+        el.addEventListener('keyup', debounce(function() {
+          formatTwitterContent(this);
+        }, 1000)); // Longer delay to avoid disrupting typing
+        
+        // Handle paste
+        el.addEventListener('paste', function(e) {
+          e.preventDefault();
+          const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+          document.execCommand('insertText', false, text);
+        });
+      });
+    }
+    
+    // Helper debounce function
+    function debounce(func, wait) {
+      let timeout;
+      return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+      };
+    }
+    
+    // Run the setup after a short delay to ensure elements are loaded
+    setTimeout(setupContentSync, 100);
+    
+    // Also format content in preview mode
+    document.addEventListener('click', function(e) {
+      if (e.target && e.target.closest('#previewModal')) {
+        setTimeout(() => {
+          const previewContainer = document.getElementById('previewContainer');
+          if (previewContainer) {
+            // Format all tweet content in preview
+            const previewTweetContent = previewContainer.querySelectorAll('.tweet-content, .post-text, .post-content');
+            previewTweetContent.forEach(el => {
+              formatTwitterContent(el);
+            });
+          }
+        }, 300);
+      }
+    });
+    
+    // Run initial sync on page load
+    window.addEventListener('load', () => {
+      // Match initial content from Twitter to X if needed
+      const twitterText = document.getElementById('live-text');
+      const xText = document.querySelector('.x-container .post-content');
+      
+      if (twitterText && xText && twitterText.innerText && twitterText.innerText !== xText.innerText) {
+        xText.innerText = twitterText.innerText;
+        formatTwitterContent(xText);
       }
     });
   });
+</script>
 
-  // Toggle verified badge
-  function toggleVerified() {
-    const verifiedBadge = document.getElementById('verified-badge');
-    const fadedBadge = document.getElementById('faded-badge');
-    const isVisible = verifiedBadge.style.display !== 'none';
+<!-- Clean-up script to ensure only CSS handles visibility -->
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Remove any inline styles that might interfere with CSS visibility rules
+    const containers = [
+      document.getElementById('desktop-tweet-wrapper'),
+      document.getElementById('desktop-x-wrapper'),
+      document.getElementById('mobile-tweet-wrapper'),
+      document.getElementById('mobile-x-wrapper')
+    ];
     
-    // Toggle visibility
-    verifiedBadge.style.display = isVisible ? 'none' : 'inline';
-    fadedBadge.style.display = isVisible ? 'inline' : 'none';
-  }
-
-  // Show faded badge on hover
-  const userInfo = document.querySelector('.user-info');
-  userInfo.addEventListener('mouseenter', () => {
-    const fadedBadge = document.getElementById('faded-badge');
-    const verifiedBadge = document.getElementById('verified-badge');
-    if (verifiedBadge.style.display === 'none') {
-      fadedBadge.style.display = 'inline';
-    }
+    containers.forEach(container => {
+      if (container && container.style) {
+        // Clear only display/visibility/opacity properties
+        container.style.removeProperty('display');
+        container.style.removeProperty('visibility');
+        container.style.removeProperty('opacity');
+      }
+    });
+    
+    // Ensure platform toggle updates data-platform attribute on body only
+    const handlePlatformChange = (e) => {
+      if (e.target.name === 'platform-toggle' || e.target.name === 'mobile-platform-toggle') {
+        document.body.setAttribute('data-platform', e.target.value);
+        
+        // Sync the other toggle to match this one
+        if (e.target.name === 'platform-toggle') {
+          const mobileToggle = document.querySelector(`input[name="mobile-platform-toggle"][value="${e.target.value}"]`);
+          if (mobileToggle) mobileToggle.checked = true;
+        } else {
+          const desktopToggle = document.querySelector(`input[name="platform-toggle"][value="${e.target.value}"]`);
+          if (desktopToggle) desktopToggle.checked = true;
+        }
+      }
+    };
+    
+    // Add clean event listeners
+    document.addEventListener('change', handlePlatformChange);
   });
+</script>
 
-  userInfo.addEventListener('mouseleave', () => {
-    const fadedBadge = document.getElementById('faded-badge');
-    if (document.getElementById('verified-badge').style.display === 'none') {
-      fadedBadge.style.display = 'none';
-    }
+<script is:inline>
+  // Replace dimension-related JavaScript with mode toggle handler
+  document.addEventListener('DOMContentLoaded', () => {
+    const modeToggles = document.querySelectorAll('input[name="preview-mode"]');
+    
+    modeToggles.forEach(toggle => {
+      toggle.addEventListener('change', (e) => {
+        const mode = e.target.value;
+        document.body.setAttribute('data-preview-mode', mode);
+        
+        // Force update the X container sizes 
+        const xContainers = document.querySelectorAll('.x-container');
+        xContainers.forEach(container => {
+          container.style.width = mode === 'desktop' ? '600px' : '380px';
+        });
+        
+        // Update notification visibility
+        const notification = document.getElementById('size-notification');
+        if (notification) {
+          const screenWidth = window.innerWidth;
+          const containerWidth = mode === 'desktop' ? 600 : 380;
+          
+          if (screenWidth < containerWidth) {
+            notification.style.display = 'block';
+          } else {
+            notification.style.display = 'none';
+          }
+        }
+      });
+    });
+    
+    // Set initial mode
+    const initialMode = document.querySelector('input[name="preview-mode"]:checked')?.value || 'desktop';
+    document.body.setAttribute('data-preview-mode', initialMode);
+    
+    // Initial sizing for X containers
+    const xContainers = document.querySelectorAll('.x-container');
+    xContainers.forEach(container => {
+      container.style.width = initialMode === 'desktop' ? '600px' : '380px';
+    });
   });
+</script>
 
-  // Updated Profile picture upload function for direct upload
+<script>
+  // Remove any code that shows the size notification
+  document.addEventListener('DOMContentLoaded', () => {
+    // Remove any existing size notifications
+    const notifications = document.querySelectorAll('.size-notification');
+    notifications.forEach(notification => notification.remove());
+  });
+</script>
+
+<script is:inline>
+  // Function to handle Twitter profile picture upload - previously missing
   function uploadTwitterProfilePic() {
     const input = document.createElement('input');
     input.type = 'file';
@@ -295,12 +1397,14 @@ import '../styles/TwitterTab.css';
         reader.onload = (e) => {
           // Initialize cropper with the image and handle the cropped result
           initImageCropper(e.target.result, 'twitter-profile', (croppedImageUrl) => {
-            const profilePic = document.getElementById('profile-pic');
-            const xProfilePic = document.getElementById('x-profile-pic');
-            
-            if (profilePic) profilePic.src = croppedImageUrl;
-            if (xProfilePic) xProfilePic.src = croppedImageUrl;
-            console.log('✅ Successfully updated Twitter profile picture');
+            // Update both desktop and mobile profile pictures
+            const profilePics = document.querySelectorAll('#profile-pic, #mobile-profile-pic');
+            profilePics.forEach(pic => {
+              if (pic) {
+                pic.src = croppedImageUrl;
+                console.log('✅ Successfully updated Twitter profile picture');
+              }
+            });
           });
         };
         reader.readAsDataURL(file);
@@ -309,764 +1413,72 @@ import '../styles/TwitterTab.css';
     input.click();
   }
 
-  // Randomize stats
-  function randomizeStats() {
-    const formatNumber = (num) => {
-      if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
-      if (num >= 1000) return (num/1000).toFixed(1) + 'K';
-      return num;
-    };
-
-    // Add views to the stats being randomized
-    ['retweets', 'quotes', 'likes', 'views'].forEach(stat => {
-      const randomNum = formatNumber(Math.floor(Math.random() * 1000000));
-      const liveElement = document.getElementById(`live-${stat}`);
-      const xLiveElement = document.getElementById(`x-live-${stat}`);
-      const input = document.getElementById(`${stat}-input`);
-      
-      if (liveElement) liveElement.textContent = randomNum;
-      if (xLiveElement) xLiveElement.textContent = randomNum;
-      if (input) {
-        input.value = randomNum;
-        input.dispatchEvent(new Event('input'));
-      }
-    });
-  }
-
-  // Update the updateTheme function
-  function updateTheme(theme) {
-    const container = document.getElementById('tweet-preview');
-    const xContainer = document.getElementById('x-preview');
-    const themeInput = document.getElementById('theme-input');
+  // Toggle Twitter verified badge function
+  function toggleVerified() {
+    const desktopVerifiedBadge = document.getElementById('verified-badge');
+    const desktopFadedBadge = document.getElementById('faded-badge');
+    const mobileVerifiedBadge = document.getElementById('mobile-verified-badge');
+    const mobileFadedBadge = document.getElementById('mobile-faded-badge');
     
-    // Update Twitter container theme
-    if (container) {
-      container.setAttribute('data-theme', theme);
+    // Get current state from desktop badge
+    const isVisible = desktopVerifiedBadge.style.display !== 'none';
+    
+    // Update desktop badges
+    desktopVerifiedBadge.style.display = isVisible ? 'none' : 'inline';
+    if (desktopFadedBadge) {
+      desktopFadedBadge.style.display = isVisible ? 'inline' : 'none';
     }
     
-    // Update X container theme
-    if (xContainer) {
-      // Find the .x-container inside #x-preview
-      const xPostContainer = xContainer.querySelector('.x-container');
-      if (xPostContainer) {
-        xPostContainer.setAttribute('data-theme', theme);
-      }
+    // Update mobile badges if they exist
+    if (mobileVerifiedBadge) {
+      mobileVerifiedBadge.style.display = isVisible ? 'none' : 'inline';
     }
-    
-    // Update the hidden input for the API
-    if (themeInput) {
-      themeInput.value = theme;
-      themeInput.dispatchEvent(new Event('input'));
-    }
-  }
-
-  // Initialize
-  document.addEventListener('DOMContentLoaded', () => {
-    // Sync initial values
-    document.querySelectorAll('[contenteditable]').forEach(element => {
-      const inputId = element.dataset.input;
-      if (inputId) {
-        const input = document.getElementById(inputId);
-        if (input) {
-          element.textContent = input.value;
-        }
-      }
-      
-      // Add listener for content changes to auto-adjust height
-      element.addEventListener('input', debounce(updateHeightOnContentChange, 300));
-    });
-
-    // Add theme change handlers
-    document.querySelectorAll('input[name="theme"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        updateTheme(e.target.value);
-      });
-    });
-
-    // Set initial theme
-    updateTheme('light');
-
-    const widthInput = document.getElementById('image-width');
-    const heightInput = document.getElementById('image-height');
-
-    [widthInput, heightInput].forEach(input => {
-      input.addEventListener('change', (e) => {
-        const value = parseInt(e.target.value);
-        if (value < 300) e.target.value = 300;
-        if (value > 4096) e.target.value = 4096;
-        updateEditBoxSize();
-        updatePreviewDimensions();
-      });
-    });
-
-    // Set optimal size based on user's display width
-    setOptimalSize();
-
-    // Listen for window resize to adjust size as needed
-    window.addEventListener('resize', debounce(setOptimalSize, 250));
-
-    // Initialize platform style
-    const platformSwitch = document.getElementById('platform-switch');
-    platformSwitch.addEventListener('change', function() {
-      togglePlatformStyle(this.checked);
-      // Adjust height for the newly displayed platform
-      setTimeout(updateHeightOnContentChange, 50);
-    });
-    
-    togglePlatformStyle(platformSwitch.checked);
-    
-    // Set initial platform attribute
-    document.getElementById('tweet-preview').setAttribute('data-platform', 'twitter');
-  });
-
-  // Add debounce function to prevent excessive resize calculations
-  function debounce(func, wait) {
-    let timeout;
-    return function() {
-      const context = this;
-      const args = arguments;
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(context, args), wait);
-    };
-  }
-
-  // Function to calculate and set optimal size based on user's display
-  function setOptimalSize() {
-    // Get viewport width
-    const viewportWidth = window.innerWidth;
-    
-    // Calculate optimal width based on viewport
-    let optimalWidth = 600; // Default width
-    
-    if (viewportWidth < 768) {
-      // For mobile, use 90% of viewport width, but not less than 300px
-      optimalWidth = Math.max(Math.round(viewportWidth * 0.9), 300);
-    } else if (viewportWidth < 1200) {
-      // For tablets, use 70% of viewport width
-      optimalWidth = Math.round(viewportWidth * 0.7);
-    } else {
-      // For larger screens, cap at 800px
-      optimalWidth = Math.min(Math.round(viewportWidth * 0.5), 800);
-    }
-    
-    // Set width to input
-    document.getElementById('image-width').value = optimalWidth;
-    
-    // Apply the new width and calculate height based on content
-    updateEditBoxSize(true);
-    
-    console.log(`Optimal size set with width: ${optimalWidth}px and auto-height based on content`);
-  }
-
-  // Update the function to handle size updates for both Twitter and X
-  function updateEditBoxSize(autoHeight = false) {
-    const width = parseInt(document.getElementById('image-width').value);
-    let height = parseInt(document.getElementById('image-height').value);
-    
-    // Update Twitter wrapper
-    const twitterWrapper = document.getElementById('tweet-wrapper');
-    const twitterContainer = document.getElementById('tweet-preview');
-    
-    if (twitterWrapper && twitterContainer) {
-      // Set the width
-      twitterWrapper.style.width = `${width}px`;
-      
-      if (autoHeight) {
-        // Auto-calculate height based on content
-        // First, remove any max-height constraints
-        twitterContainer.style.minHeight = 'auto';
-        twitterContainer.style.maxHeight = 'none';
-        twitterContainer.style.height = 'auto';
-        twitterContainer.style.overflowY = 'visible';
-        
-        // Let the layout settle
-        setTimeout(() => {
-          // Get the actual content height
-          const actualHeight = twitterContainer.scrollHeight;
-          
-          // Add a small buffer (15px) for padding
-          const optimalHeight = actualHeight + 15;
-          
-          // Update the height input
-          document.getElementById('image-height').value = optimalHeight;
-          
-          // Update the container height now that we know the actual content height
-          if (!document.getElementById('platform-switch').checked) {
-            twitterContainer.style.minHeight = `${optimalHeight}px`;
-          }
-          
-          console.log(`Content-based height set to: ${optimalHeight}px`);
-        }, 10);
-      } else {
-        // Use the manually set height
-        twitterContainer.style.minHeight = `${height}px`;
-        twitterContainer.style.maxHeight = 'none';
-        twitterContainer.style.overflowY = 'visible';
-      }
-    }
-    
-    // Update X wrapper
-    const xWrapper = document.getElementById('x-wrapper');
-    const xContainer = document.getElementById('x-preview');
-    
-    if (xWrapper && xContainer) {
-      // Set the width
-      xWrapper.style.width = `${width}px`;
-      
-      if (autoHeight) {
-        // Auto-calculate height based on content
-        // First, remove any max-height constraints
-        xContainer.style.minHeight = 'auto';
-        xContainer.style.maxHeight = 'none';
-        xContainer.style.height = 'auto';
-        xContainer.style.overflowY = 'visible';
-        
-        // Let the layout settle
-        setTimeout(() => {
-          // Get the actual content height
-          const actualHeight = xContainer.scrollHeight;
-          
-          // Add a small buffer (15px) for padding
-          const optimalHeight = actualHeight + 15;
-          
-          // Update the height input if X is active
-          if (document.getElementById('platform-switch').checked) {
-            document.getElementById('image-height').value = optimalHeight;
-            xContainer.style.minHeight = `${optimalHeight}px`;
-          }
-        }, 10);
-      } else {
-        // Use the manually set height
-        xContainer.style.minHeight = `${height}px`;
-        xContainer.style.maxHeight = 'none';
-        xContainer.style.overflowY = 'visible';
-      }
+    if (mobileFadedBadge) {
+      mobileFadedBadge.style.display = isVisible ? 'inline' : 'none';
     }
   }
   
-  // Add a function to update height based on content changes
-  function updateHeightOnContentChange() {
-    // Check if the container is visible before trying to measure it
-    const isPlatformX = document.getElementById('platform-switch').checked;
-    const activeContainer = isPlatformX ? 
-      document.getElementById('x-preview') : 
-      document.getElementById('tweet-preview');
+  // Function to randomize stats
+  function randomizeStats() {
+    // Get random numbers for stats
+    const getRandomStat = (min, max) => {
+      const num = Math.floor(Math.random() * (max - min + 1)) + min;
+      return num >= 1000 ? (num >= 1000000 ? (num / 1000000).toFixed(1) + 'M' : (num / 1000).toFixed(1) + 'K') : num;
+    };
     
-    if (!activeContainer || activeContainer.offsetParent === null) {
-      return; // Skip if container is not visible
+    const stats = {
+      retweets: getRandomStat(0, 50000),
+      quotes: getRandomStat(0, 20000),
+      likes: getRandomStat(0, 200000),
+      views: getRandomStat(1000, 2000000),
+      replies: getRandomStat(0, 5000),
+      reposts: getRandomStat(0, 50000),
+      bookmarks: getRandomStat(0, 10000)
+    };
+    
+    // Update Twitter stats (desktop and mobile)
+    const elements = {
+      retweets: ['live-retweets', 'mobile-live-retweets'],
+      quotes: ['live-quotes', 'mobile-live-quotes'],
+      likes: ['live-likes', 'mobile-live-likes'],
+      views: ['x-live-views'],
+      replies: ['x-live-replies'],
+      reposts: ['x-live-reposts'],
+      bookmarks: ['x-live-bookmarks']
+    };
+    
+    // Update all stats
+    for (const [stat, ids] of Object.entries(elements)) {
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = stats[stat];
+      });
     }
     
-    // Get current width
-    const width = parseInt(document.getElementById('image-width').value);
+    // Update hidden inputs
+    const viewsInput = document.getElementById('views-input');
+    if (viewsInput) viewsInput.value = stats.views;
     
-    // Remove height constraints to measure natural height
-    activeContainer.style.minHeight = 'auto';
-    activeContainer.style.maxHeight = 'none';
-    activeContainer.style.height = 'auto';
-    
-    // Wait for any content changes to apply
-    setTimeout(() => {
-      const contentHeight = activeContainer.scrollHeight;
-      const optimalHeight = contentHeight + 15; // Small buffer
-      
-      // Update height input and container
-      document.getElementById('image-height').value = optimalHeight;
-      activeContainer.style.minHeight = `${optimalHeight}px`;
-      
-      console.log(`Height adjusted to fit content: ${optimalHeight}px`);
-    }, 10);
+    console.log('✅ Stats randomized');
   }
-
-  // Update the togglePlatformStyle function
-  function togglePlatformStyle(isX) {
-    const twitterContainer = document.getElementById('tweet-preview');
-    const xContainer = document.getElementById('x-preview');
-    const mockupHeader = document.querySelector('.mockup-header');
-    const headerTitle = mockupHeader.querySelector('h2');
-    const headerDesc = mockupHeader.querySelector('p');
-    
-    // Toggle visibility
-    twitterContainer.style.display = isX ? 'none' : 'block';
-    xContainer.style.display = isX ? 'block' : 'none';
-    
-    // Update header text
-    headerTitle.textContent = isX ? 'X Post' : 'Twitter Post';
-    headerDesc.textContent = `Create a realistic ${isX ? 'X' : 'Twitter'} post mockup by editing the content below.`;
-    
-    // Update container attributes
-    twitterContainer.setAttribute('data-platform', isX ? 'x' : 'twitter');
-    
-    // Sync content between designs
-    syncContent(isX);
-
-    // Dispatch event for button positioning
-    document.dispatchEvent(new CustomEvent('platformToggled', { detail: { isX } }));
-  }
-
-  // Add the syncContent function
-  function syncContent(isX) {
-    const twitterContainer = document.getElementById('tweet-preview');
-    const xContainer = document.getElementById('x-preview');
-    
-    if (isX) {
-      // Update X design with Twitter content
-      const name = twitterContainer.querySelector('#live-name').textContent;
-      const handle = twitterContainer.querySelector('#live-handle').textContent;
-      const text = twitterContainer.querySelector('#live-text').textContent;
-      const date = twitterContainer.querySelector('#live-date').textContent;
-      const verified = twitterContainer.querySelector('#verified-badge').style.display !== 'none';
-      const profilePic = twitterContainer.querySelector('#profile-pic').src;
-      const views = document.getElementById('views-input')?.value || '0';
-      
-      // Update X elements
-      xContainer.querySelector('#x-live-name').textContent = name;
-      xContainer.querySelector('#x-live-handle').textContent = handle;
-      xContainer.querySelector('#x-live-text').textContent = text;
-      xContainer.querySelector('#x-live-date').textContent = date;
-      xContainer.querySelector('#x-verified-badge').style.display = verified ? 'inline' : 'none';
-      xContainer.querySelector('#x-profile-pic').src = profilePic;
-      xContainer.querySelector('#x-live-views').textContent = views;
-    } else {
-      // Update Twitter design with X content
-      const name = xContainer.querySelector('#x-live-name').textContent;
-      const handle = xContainer.querySelector('#x-live-handle').textContent;
-      const text = xContainer.querySelector('#x-live-text').textContent;
-      const date = xContainer.querySelector('#x-live-date').textContent;
-      const verified = xContainer.querySelector('#x-verified-badge').style.display !== 'none';
-      const profilePic = xContainer.querySelector('#x-profile-pic').src;
-      const views = xContainer.querySelector('#x-live-views').textContent;
-      
-      // Update Twitter elements
-      twitterContainer.querySelector('#live-name').textContent = name;
-      twitterContainer.querySelector('#live-handle').textContent = handle;
-      twitterContainer.querySelector('#live-text').textContent = text;
-      twitterContainer.querySelector('#live-date').textContent = date;
-      twitterContainer.querySelector('#verified-badge').style.display = verified ? 'inline' : 'none';
-      twitterContainer.querySelector('#profile-pic').src = profilePic;
-      if (document.getElementById('views-input')) {
-        document.getElementById('views-input').value = views;
-      }
-    }
-  }
-
-  // Add these new functions for dimension controls
-  function adjustDimension(type, delta) {
-    const input = document.getElementById(`image-${type}`);
-    const currentValue = parseInt(input.value) || 0;
-    const step = event.shiftKey ? 10 : 1; // Larger step when Shift is held
-    const newValue = currentValue + (delta * step);
-    
-    validateDimension(input, 300, 4096, newValue);
-    updateEditBoxSize();
-    updatePreviewDimensions();
-  }
-
-  function validateDimension(input, min, max, value = null) {
-    let newValue = value !== null ? value : parseInt(input.value) || 0;
-    
-    if (newValue < min) newValue = min;
-    if (newValue > max) newValue = max;
-    
-    input.value = newValue;
-    
-    // Trigger change event for other listeners
-    input.dispatchEvent(new Event('change'));
-  }
-
-  // Add keyboard support for increment/decrement
-  document.querySelectorAll('.modern-input').forEach(input => {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        const type = input.id.replace('image-', '');
-        adjustDimension(type, 1);
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        const type = input.id.replace('image-', '');
-        adjustDimension(type, -1);
-      }
-    });
-  });
-
-  // Add html2canvas script
-  document.addEventListener('DOMContentLoaded', function() {
-    const script = document.createElement('script');
-    script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-    script.async = true;
-    document.head.appendChild(script);
-  });
-
-  // Update resetSize to use the optimal size calculation
-  function resetSize() {
-    setOptimalSize();
-    
-    const dimensionsDisplay = document.getElementById('preview-dimensions');
-    if (dimensionsDisplay) {
-      setTimeout(() => {
-        const width = document.getElementById('image-width').value;
-        const height = document.getElementById('image-height').value;
-        dimensionsDisplay.textContent = `${width}×${height}`;
-      }, 50);
-    }
-  }
-
-  // Update the preview modal to show current dimensions
-  function updatePreviewDimensions() {
-    const width = document.getElementById('image-width').value;
-    const height = document.getElementById('image-height').value;
-    const previewImage = document.getElementById('preview-image');
-    
-    // Update preview container style to maintain aspect ratio
-    const container = document.querySelector('.preview-container');
-    if (container) {
-      container.style.aspectRatio = `${width} / ${height}`;
-    }
-  }
-
-  // Platform toggle state management
-  const platformToggle = document.querySelectorAll('input[name="platform-toggle"]');
-  const appContainer = document.querySelector('.app-container');
-  const twitterPreview = document.querySelector('.twitter-preview');
-  const xPreview = document.querySelector('.x-preview');
-
-  // Initialize platform state from localStorage or default to "twitter"
-  const savedPlatform = localStorage.getItem('platform') || 'twitter';
-  appContainer.setAttribute('data-platform', savedPlatform);
-  document.querySelector(`input[value="${savedPlatform}"]`).checked = true;
-
-  // Show/hide previews based on initial platform
-  if (savedPlatform === 'twitter') {
-    twitterPreview.style.display = 'block';
-    xPreview.style.display = 'none';
-  } else {
-    twitterPreview.style.display = 'none';
-    xPreview.style.display = 'block';
-  }
-
-  // Handle platform toggle changes
-  platformToggle.forEach(toggle => {
-    toggle.addEventListener('change', (e) => {
-      const platform = e.target.value;
-      
-      // Update platform state
-      appContainer.setAttribute('data-platform', platform);
-      localStorage.setItem('platform', platform);
-
-      // Toggle preview visibility with smooth transition
-      if (platform === 'twitter') {
-        twitterPreview.style.display = 'block';
-        twitterPreview.style.opacity = '1';
-        xPreview.style.opacity = '0';
-        setTimeout(() => {
-          xPreview.style.display = 'none';
-        }, 300);
-      } else {
-        xPreview.style.display = 'block';
-        xPreview.style.opacity = '1';
-        twitterPreview.style.opacity = '0';
-        setTimeout(() => {
-          twitterPreview.style.display = 'none';
-        }, 300);
-      }
-    });
-  });
 </script>
-
-<style>
-  .faded-badge {
-    display: none; /* Start hidden */
-    opacity: 0.5; /* Faded appearance */
-    transition: opacity 0.3s ease;
-  }
-
-  .user-info:hover .faded-badge {
-    opacity: 1; /* Show on hover */
-  }
-
-  .tweet-container[data-theme="dark"] {
-    background: #000;
-    color: #e7e9ea;
-    border: 1px solid #2f3336;
-    box-shadow: 0 0 12px 2px rgba(29,155,240,0.10), 0 0 24px 2px rgba(29,155,240,0.15);
-  }
-  .tweet-container[data-theme="dim"] {
-    background: #15202B;
-    color: #e7e9ea;
-    border: 1px solid #38444D;
-    box-shadow: 0 2px 12px rgba(136,153,166,0.2), 0 0 20px rgba(29,155,240,0.1);
-  }
-
-  /* Updated styles */
-  .mockup-header {
-    padding: 1rem 0 0.75rem;
-    text-align: center;
-  }
-
-  .mockup-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-
-  .mockup-description {
-    margin: 0.5rem 0 0;
-    color: #666;
-    font-size: 0.95rem;
-  }
-
-  .dimension-section {
-    margin: 0 0 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .size-label, .toggle-label {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-bottom: 0.25rem;
-  }
-
-  .size-controls {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .dimension-field {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  .field-label {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-  }
-
-  .input-container {
-    display: flex;
-    align-items: center;
-    background: var(--bg-input);
-    border-radius: 6px;
-    padding: 0.25rem;
-  }
-
-  .field-input {
-    width: 50px;
-    text-align: center;
-    background: transparent;
-    border: 1px solid var(--border-input);
-    border-radius: 4px;
-    padding: 2px 4px;
-    font-size: 0.9rem;
-    color: inherit;
-  }
-
-  .field-btn {
-    border: none;
-    background: none;
-    color: var(--text-secondary);
-    padding: 2px 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 1rem;
-  }
-
-  .field-btn:hover {
-    color: var(--text-primary);
-    background: var(--bg-hover);
-  }
-
-  .reset-size-btn {
-    border: none;
-    background: none;
-    color: var(--text-secondary);
-    padding: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.9rem;
-  }
-
-  .reset-size-btn:hover {
-    color: var(--text-primary);
-    background: var(--bg-hover);
-  }
-
-  /* Platform toggle styling */
-  .platform-toggle-section {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin: 1rem 0;
-    padding: 1rem;
-    background: var(--bg-secondary);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-  }
-
-  .platform-switch {
-    display: flex;
-    gap: 0.5rem;
-    padding: 4px;
-    background: var(--bg-primary);
-    border-radius: 9999px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .switch-option {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: var(--text-secondary);
-    min-width: 120px;
-    justify-content: center;
-  }
-
-  .switch-option:hover {
-    background: var(--hover-bg);
-    color: var(--text-primary);
-  }
-
-  .switch-option input {
-    display: none;
-  }
-
-  .switch-option input:checked + .option-icon {
-    color: var(--accent-color);
-  }
-
-  .switch-option input:checked + .option-icon + .option-text {
-    color: var(--text-primary);
-    font-weight: 600;
-  }
-
-  .twitter-option input:checked ~ .option-icon {
-    color: #1DA1F2;
-  }
-
-  .x-option input:checked ~ .option-icon {
-    color: var(--text-primary);
-  }
-
-  .option-icon {
-    display: flex;
-    width: 20px;
-    height: 20px;
-    color: var(--text-secondary);
-    transition: color 0.2s ease;
-  }
-
-  .option-text {
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-  }
-
-  /* Dark theme adjustments */
-  [data-theme="dark"] .platform-switch {
-    background: var(--bg-dark);
-    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
-  }
-
-  /* Mobile responsiveness */
-  @media (max-width: 480px) {
-    .platform-toggle-section {
-      padding: 0.75rem;
-      margin: 0.75rem 0;
-    }
-    
-    .switch-option {
-      padding: 0.4rem 0.8rem;
-      min-width: 100px;
-    }
-    
-    .option-text {
-      font-size: 0.85rem;
-    }
-  }
-
-  /* CSS Variables for theming */
-  :root {
-    --text-primary: #000;
-    --text-secondary: #536471;
-    --bg-hover: rgba(15, 20, 25, 0.1);
-    --bg-input: rgba(15, 20, 25, 0.05);
-    --border-input: rgba(15, 20, 25, 0.1);
-  }
-
-  [data-theme="dark"] {
-    --text-primary: #fff;
-    --text-secondary: #71767b;
-    --bg-hover: rgba(239, 243, 244, 0.1);
-    --bg-input: rgba(239, 243, 244, 0.05);
-    --border-input: rgba(51, 54, 57, 0.5);
-  }
-
-  [data-theme="dim"] {
-    --text-primary: #fff;
-    --text-secondary: #8b98a5;
-    --bg-hover: rgba(239, 243, 244, 0.1);
-    --bg-input: rgba(239, 243, 244, 0.05);
-    --border-input: rgba(51, 54, 57, 0.5);
-  }
-
-  /* Button layout adjustments */
-  .tweet-wrapper {
-    margin-bottom: 1rem;
-  }
-
-  /* Spacing for randomize button */
-  .modern-btn.labeled-btn.tooltip-btn {
-    margin: 0.75rem 0;
-  }
-
-  /* Platform toggle styles */
-  .platform-toggle {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 1rem 0;
-    padding: 0.5rem;
-    border-radius: 9999px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-  }
-
-  .platform-toggle label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .platform-toggle input[type="radio"] {
-    display: none;
-  }
-
-  .platform-toggle input[type="radio"]:checked + label {
-    background: var(--accent-color);
-    color: var(--bg-primary);
-  }
-
-  /* Preview transition styles */
-  .twitter-preview,
-  .x-preview {
-    transition: opacity 0.3s ease;
-  }
-</style>
-
-<!-- Import mobile layout script with client:load directive for client-side execution -->
-    <script>
-      // Import the mobile layout script
-      import "../scripts/mobilelayout.js";
-    </script>

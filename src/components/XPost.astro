@@ -170,50 +170,138 @@ const {
 
 <style>
   :root {
+    /* X theme variables */
     --x-bg-light: #fff;
     --x-bg-dark: #000;
+    --x-bg-dim: #15202B;
     --x-text-light: #0f1419;
     --x-text-dark: #e7e9ea;
+    --x-text-dim: #f7f9f9;
     --x-secondary-light: #536471;
     --x-secondary-dark: #71767b;
+    --x-secondary-dim: #8b98a5;
     --x-border-light: #eff3f4;
     --x-border-dark: #2f3336;
+    --x-border-dim: #38444d;
+    --x-shadow-dark: rgba(255, 255, 255, 0.1);
+    --x-shadow-dim: rgba(136, 153, 166, 0.2);
   }
+
   .x-container[data-theme="light"] {
     background: var(--x-bg-light);
     color: var(--x-text-light);
     border: 1px solid var(--x-border-light);
   }
+  
   .x-container[data-theme="dark"] {
     background: var(--x-bg-dark);
     color: var(--x-text-dark);
     border: 1px solid var(--x-border-dark);
-    box-shadow: 0 0 12px 2px rgba(29,155,240,0.10), 0 0 24px 2px rgba(29,155,240,0.15);
+    box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.05), 0 0 24px 2px rgba(255, 255, 255, 0.1);
   }
+  
   .x-container[data-theme="dim"] {
-    background: #15202B;
-    color: var(--x-text-dark);
-    border: 1px solid #38444D;
-    box-shadow: 0 2px 12px rgba(136,153,166,0.2), 0 0 20px rgba(29,155,240,0.1);
+    background: var(--x-bg-dim);
+    color: var(--x-text-dim);
+    border: 1px solid var(--x-border-dim);
+    box-shadow: 0 2px 12px var(--x-shadow-dim), 0 0 20px rgba(29, 155, 240, 0.1);
   }
+
+  /* Update secondary text colors for each theme */
+  .x-container[data-theme="light"] .handle,
+  .x-container[data-theme="light"] .post-meta,
+  .x-container[data-theme="light"] .stat-item {
+    color: var(--x-secondary-light);
+  }
+
+  .x-container[data-theme="dark"] .handle,
+  .x-container[data-theme="dark"] .post-meta,
+  .x-container[data-theme="dark"] .stat-item {
+    color: var(--x-secondary-dark);
+  }
+
+  .x-container[data-theme="dim"] .handle,
+  .x-container[data-theme="dim"] .post-meta,
+  .x-container[data-theme="dim"] .stat-item {
+    color: var(--x-secondary-dim);
+  }
+
+  /* Update hover states for each theme */
+  .x-container[data-theme="light"] .stat-item:hover {
+    color: #1da1f2;
+  }
+
+  .x-container[data-theme="dark"] .stat-item:hover,
+  .x-container[data-theme="dim"] .stat-item:hover {
+    color: #1d9bf0;
+  }
+
+  /* Update contenteditable hover and focus states */
+  .x-container[data-theme="light"] [contenteditable]:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .x-container[data-theme="dark"] [contenteditable]:hover,
+  .x-container[data-theme="dim"] [contenteditable]:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .x-container[data-theme="light"] [contenteditable]:focus {
+    background: rgba(29, 155, 240, 0.1);
+    box-shadow: 0 0 0 1px rgba(29, 155, 240, 0.3);
+  }
+
+  .x-container[data-theme="dark"] [contenteditable]:focus,
+  .x-container[data-theme="dim"] [contenteditable]:focus {
+    background: rgba(29, 155, 240, 0.1);
+    box-shadow: 0 0 0 1px rgba(29, 155, 240, 0.3);
+  }
+
   .x-container {
-    max-width: 600px;
+    width: 100%;
+    height: auto;
+    max-width: 600px; /* Default desktop size */
     margin: 0 auto;
+    padding: 16px;
     border-radius: 16px;
-    box-shadow: none;
-    position: relative;
-    font-family: TwitterChirp, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size-adjust: 0.5;
-    padding: 16px;
+    box-sizing: border-box;
+    overflow: visible; /* Change from hidden to visible */
   }
+
+  /* Ensure post container takes full width */
   .post-container {
-    padding: 0;
-    margin: 0;
-    background: none;
-    box-shadow: none;
-    border-radius: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Adjust container size based on preview mode */
+  body[data-preview-mode="phone"] .x-container {
+    max-width: 380px;
+  }
+
+  /* Ensure proper scaling in mobile view */
+  @media (max-width: 768px) {
+    .x-container {
+      width: 100%;
+      max-width: min(600px, 100%);
+      transform-origin: top center;
+    }
+
+    body[data-preview-mode="phone"] .x-container {
+      max-width: min(380px, 100%);
+    }
+  }
+
+  /* Post container styles */
+  .post-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
   .post-header {
     display: flex;
@@ -307,6 +395,8 @@ const {
     fill: currentColor;
   }
   .post-content {
+    flex: 1;
+    min-height: 0;
     margin-bottom: 12px;
     font-size: 17px;
     font-weight: 400;
@@ -390,15 +480,21 @@ const {
   }
   [contenteditable] {
     outline: none;
-    padding: 0;
+    padding: 2px 4px;
     border-radius: 4px;
-    background: none;
   }
-  [contenteditable]:hover, [contenteditable]:focus {
-    background: #f7f9fa;
+  [contenteditable]:hover {
+    background: rgba(255, 255, 255, 0.1);
   }
-  .x-container[data-theme="dark"] [contenteditable]:hover, .x-container[data-theme="dark"] [contenteditable]:focus {
-    background: #16181c;
+  [contenteditable]:focus {
+    background: rgba(29, 155, 240, 0.1);
+    box-shadow: 0 0 0 1px rgba(29, 155, 240, 0.3);
+  }
+  .x-container[data-theme="light"] [contenteditable]:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  .x-container[data-theme="light"] [contenteditable]:focus {
+    background: rgba(29, 155, 240, 0.1);
   }
   .cursor-pointer {
     cursor: pointer;
@@ -436,10 +532,28 @@ function uploadProfilePic() {
       reader.onload = (e) => {
         // Initialize cropper with the image and handle the cropped result
         initImageCropper(e.target.result, 'x-profile', (croppedImageUrl) => {
-          const xProfilePic = document.getElementById('x-profile-pic');
-          if (xProfilePic) {
-            xProfilePic.src = croppedImageUrl;
-            console.log('✅ Successfully updated X profile picture');
+          // Update all x-profile-pic elements across the page
+          const xProfilePics = document.querySelectorAll('#x-profile-pic');
+          xProfilePics.forEach(pic => {
+            if (pic) {
+              pic.src = croppedImageUrl;
+              console.log('✅ Updated an X profile picture element');
+            }
+          });
+          
+          // Also check for mobile version
+          const mobileXProfilePic = document.getElementById('mobile-x-profile-pic');
+          if (mobileXProfilePic) {
+            mobileXProfilePic.src = croppedImageUrl;
+            console.log('✅ Updated mobile X profile picture');
+          }
+          
+          // Store the image in localStorage to persist across refreshes
+          try {
+            localStorage.setItem('x-profile-pic', croppedImageUrl);
+            console.log('✅ Saved X profile picture to localStorage');
+          } catch (e) {
+            console.warn('Could not save profile picture to localStorage:', e);
           }
         });
       };
@@ -458,19 +572,147 @@ function toggleXVerified() {
   fadedBadge.style.display = isVisible ? 'inline' : 'none';
 }
 
-// Show faded badge on hover
-const xUserInfo = document.querySelector('.user-info .name-container');
-xUserInfo.addEventListener('mouseenter', () => {
-  const fadedBadge = document.getElementById('x-faded-badge');
-  const verifiedBadge = document.getElementById('x-verified-badge');
-  if (verifiedBadge.style.display === 'none') {
-    fadedBadge.style.display = 'inline';
+// Add mode detection and update to ensure container respects preview mode
+document.addEventListener('DOMContentLoaded', function() {
+  // Check if there's a saved profile picture and load it
+  try {
+    const savedXProfilePic = localStorage.getItem('x-profile-pic');
+    if (savedXProfilePic) {
+      const xProfilePics = document.querySelectorAll('#x-profile-pic');
+      xProfilePics.forEach(pic => {
+        if (pic) {
+          pic.src = savedXProfilePic;
+          console.log('✅ Loaded saved X profile picture');
+        }
+      });
+      
+      // Also update mobile version if it exists
+      const mobileXProfilePic = document.getElementById('mobile-x-profile-pic');
+      if (mobileXProfilePic) {
+        mobileXProfilePic.src = savedXProfilePic;
+      }
+    }
+  } catch (e) {
+    console.warn('Could not load profile picture from localStorage:', e);
   }
+  
+  // Initial sync with body attribute
+  const initialMode = document.body.getAttribute('data-preview-mode') || 'desktop';
+  
+  // Function to update X container sizing based on mode
+  function updateXContainerSize() {
+    const currentMode = document.body.getAttribute('data-preview-mode') || 'desktop';
+    const xContainers = document.querySelectorAll('.x-container');
+    
+    xContainers.forEach(container => {
+      if (currentMode === 'desktop') {
+        container.style.width = '600px';
+      } else {
+        container.style.width = '380px';
+      }
+    });
+  }
+  
+  // Run once on load
+  updateXContainerSize();
+  
+  // Listen for mode changes
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.attributeName === 'data-preview-mode') {
+        updateXContainerSize();
+      }
+    });
+  });
+  
+  // Start observing the document body for attribute changes
+  observer.observe(document.body, { attributes: true });
+  
+  // Handle badges hover (existing code)
+  document.querySelectorAll('.x-container .user-info .name-container').forEach(nameContainer => {
+    nameContainer.addEventListener('mouseenter', () => {
+      // Find the contained badges - scoped to this specific container
+      const fadedBadge = nameContainer.querySelector('.faded-badge');
+      const verifiedBadge = nameContainer.querySelector('.verified-badge:not(.faded-badge)');
+      
+      if (verifiedBadge && fadedBadge && verifiedBadge.style.display === 'none') {
+        fadedBadge.style.display = 'inline';
+      }
+    });
+    
+    nameContainer.addEventListener('mouseleave', () => {
+      // Find the contained badges - scoped to this specific container
+      const fadedBadge = nameContainer.querySelector('.faded-badge');
+      const verifiedBadge = nameContainer.querySelector('.verified-badge:not(.faded-badge)');
+      
+      if (verifiedBadge && fadedBadge && verifiedBadge.style.display === 'none') {
+        fadedBadge.style.display = 'none';
+      }
+    });
+  });
 });
-xUserInfo.addEventListener('mouseleave', () => {
-  const fadedBadge = document.getElementById('x-faded-badge');
-  if (document.getElementById('x-verified-badge').style.display === 'none') {
-    fadedBadge.style.display = 'none';
+
+// Fix for the avatar image not showing after preview
+function checkClonedProfileImages() {
+  // When a modal or preview is opened, fix profile images in cloned content
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes && mutation.addedNodes.length) {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            // Check if this new node is a preview container or has one
+            const previewContainer = node.id === 'previewContainer' ? node : node.querySelector('#previewContainer');
+            if (previewContainer) {
+              // Find the profile image in the preview and update it
+              const savedXProfilePic = localStorage.getItem('x-profile-pic');
+              if (savedXProfilePic) {
+                const clonedProfilePics = previewContainer.querySelectorAll('#x-profile-pic');
+                clonedProfilePics.forEach(pic => {
+                  pic.src = savedXProfilePic;
+                  console.log('✅ Updated cloned X profile picture in preview');
+                });
+              }
+            }
+          }
+        });
+      }
+    });
+  });
+  
+  // Observe the document for new nodes
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+// Run this when the page loads
+document.addEventListener('DOMContentLoaded', checkClonedProfileImages);
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Update theme handling to be more consistent
+  function updateXContainerTheme(container) {
+    const theme = document.body.getAttribute('data-theme') || 
+                 document.querySelector('.app-container')?.getAttribute('data-theme') || 
+                 'light';
+    container.setAttribute('data-theme', theme);
+  }
+
+  // Find all X containers and update their themes
+  const xContainers = document.querySelectorAll('.x-container');
+  xContainers.forEach(updateXContainerTheme);
+
+  // Watch for theme changes on body and app-container
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'data-theme') {
+        xContainers.forEach(updateXContainerTheme);
+      }
+    });
+  });
+
+  observer.observe(document.body, { attributes: true });
+  
+  const appContainer = document.querySelector('.app-container');
+  if (appContainer) {
+    observer.observe(appContainer, { attributes: true });
   }
 });
 </script> 

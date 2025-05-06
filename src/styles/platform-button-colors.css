@@ -1,0 +1,35 @@
+/**
+ * Platform-specific button colors for Twitter/X
+ * This ensures the preview button maintains proper platform colors
+ */
+
+/* Default Twitter blue for buttons (Twitter platform) */
+body[data-platform="twitter"] .preview-btn,
+body[data-platform="twitter"] .mobile-preview-btn {
+  background-color: var(--twitter-blue, #1DA1F2);
+}
+
+body[data-platform="twitter"] .preview-btn:hover,
+body[data-platform="twitter"] .mobile-preview-btn:hover {
+  background-color: var(--twitter-blue-hover, #1a91da);
+}
+
+/* X black for buttons (X platform) */
+body[data-platform="x"] .preview-btn,
+body[data-platform="x"] .mobile-preview-btn {
+  background-color: var(--x-accent, #000000);
+}
+
+body[data-platform="x"] .preview-btn:hover,
+body[data-platform="x"] .mobile-preview-btn:hover {
+  background-color: var(--x-accent-hover, #333333);
+}
+
+/* Platform-specific visibility for mobile Twitter/X containers */
+body[data-platform="twitter"] .mobile-preview-containers #mobile-x-wrapper {
+  display: none !important;
+}
+
+body[data-platform="x"] .mobile-preview-containers #mobile-tweet-wrapper {
+  display: none !important;
+} 

@@ -12,7 +12,7 @@
       </div>
       <div class="crop-controls mt-3">
         <div class="aspect-ratio-controls mb-2">
-          <label class="form-label d-block mb-2">Aspect Ratio</label>
+          <!-- <label class="form-label d-block mb-2">Aspect Ratio</label>
           <div class="btn-group" role="group">
             <input type="radio" class="btn-check" name="aspectRatio" id="ratioSquare" value="square" checked>
             <label class="btn btn-outline-secondary" for="ratioSquare">1:1</label>
@@ -21,7 +21,7 @@
             <label class="btn btn-outline-secondary" for="ratioPortrait">4:5</label>
             
             <input type="radio" class="btn-check" name="aspectRatio" id="ratioLandscape" value="landscape">
-            <label class="btn btn-outline-secondary" for="ratioLandscape">1.91:1</label>
+            <label class="btn btn-outline-secondary" for="ratioLandscape">1.91:1</label> -->
           </div>
         </div>
         
@@ -134,96 +134,156 @@ let cropper = null;
 let currentCropType = null;
 let cropCallback = null;
 
-// Initialize cropper with image source and options
-function initImageCropper(imgSrc, type, callback) {
-  console.log('Initializing cropper with type:', type);
-  const modal = document.getElementById('cropperModal');
-  const image = document.getElementById('cropperImage');
-  currentCropType = type;
+// Initialize cropper with specific settings based on type
+function initImageCropper(imageUrl, cropperType, callback) {
+  // Get references to DOM elements
+  const cropperModal = document.getElementById('cropperModal');
+  const cropperImage = document.getElementById('cropperImage');
+  const saveButton = document.getElementById('cropButton');
+  
+  // Store current crop type and callback
+  currentCropType = cropperType;
   cropCallback = callback;
   
-  modal.style.display = 'block';
-  image.src = imgSrc;
+  // Set source image and show modal
+  cropperImage.src = imageUrl;
+  cropperModal.style.display = 'flex';
   
-  // Destroy existing cropper if any
+  // Destroy any existing cropper instance
   if (cropper) {
-    console.log('Destroying existing cropper instance');
     cropper.destroy();
+    cropper = null;
   }
-
-  // Show/hide controls based on crop type
-  const aspectControls = document.querySelector('.aspect-ratio-controls');
-  const shapeControls = document.querySelector('.shape-controls');
   
-  // Check for profile picture type
-  if (type.includes('profile')) {
-    console.log('Setting up profile picture crop mode');
-    aspectControls.style.display = 'none';
-    shapeControls.style.display = 'block';
-    document.getElementById('circleCrop').checked = true;
+  // Configure cropper based on type
+  let aspectRatio, minWidth, minHeight;
+  
+  if (cropperType === 'instagram-profile' || cropperType === 'twitter-profile') {
+    // Profile pictures should always be square regardless of platform
+    aspectRatio = 1;
+    minWidth = 150;
+    minHeight = 150;
+  } else if (cropperType === 'facebook-profile') {
+    // Facebook profile pictures are square
+    aspectRatio = 1;
+    minWidth = 170;
+    minHeight = 170;
+  } else if (cropperType === 'facebook-post') {
+    // Facebook post images have 16:9 aspect ratio
+    aspectRatio = 16/9;
+    minWidth = 600;
+    minHeight = 340;
+  } else if (cropperType === 'instagram-square') {
+    aspectRatio = 1;
+    minWidth = 500;
+    minHeight = 500;
+  } else if (cropperType === 'instagram-portrait') {
+    aspectRatio = 4/5;
+    minWidth = 500;
+    minHeight = 600;
+  } else if (cropperType === 'instagram-landscape') {
+    aspectRatio = 1.91;
+    minWidth = 800;
+    minHeight = 420;
   } else {
-    console.log('Setting up post crop mode');
-    aspectControls.style.display = 'block';
-    shapeControls.style.display = 'none';
-    
-    // Set initial aspect ratio based on type
-    if (type.includes('instagram-post')) {
-      const aspectMatch = type.match(/instagram-post-(square|portrait|landscape)/);
-      if (aspectMatch) {
-        const aspectValue = aspectMatch[1];
-        document.getElementById(`ratio${aspectValue.charAt(0).toUpperCase() + aspectValue.slice(1)}`).checked = true;
-      } else {
-        document.getElementById('ratioSquare').checked = true;
-      }
-    } else {
-      document.getElementById('ratioSquare').checked = true;
-    }
+    // Default: square
+    aspectRatio = 1;
+    minWidth = 500;
+    minHeight = 500;
   }
-
-  // Get initial aspect ratio
-  const aspectRatio = getAspectRatio(document.querySelector('input[name="aspectRatio"]:checked').value);
-  console.log('Initial aspect ratio:', aspectRatio);
-
-  // Initialize cropper
-  console.log('Creating new Cropper instance');
-  cropper = new Cropper(image, {
-    aspectRatio: aspectRatio,
-    viewMode: 1,
-    dragMode: 'move',
-    autoCropArea: 0.9,
-    restore: false,
-    guides: true,
-    center: true,
-    highlight: false,
-    cropBoxMovable: true,
-    cropBoxResizable: true,
-    toggleDragModeOnDblclick: false,
-    ready: function() {
-      console.log('Cropper ready');
-      if (type.includes('profile')) {
-        document.querySelector('.cropper-view-box').style.borderRadius = '50%';
-        document.querySelector('.cropper-face').style.borderRadius = '50%';
+  
+  // Initialize cropper once image is loaded
+  cropperImage.onload = function() {
+    cropper = new Cropper(cropperImage, {
+      aspectRatio: aspectRatio,
+      viewMode: 1,
+      dragMode: 'move',
+      autoCropArea: 0.8,
+      restore: false,
+      guides: true,
+      center: true,
+      highlight: false,
+      cropBoxMovable: true,
+      cropBoxResizable: true,
+      toggleDragModeOnDblclick: false,
+      minContainerWidth: 300,
+      minContainerHeight: 300,
+      minCropBoxWidth: minWidth,
+      minCropBoxHeight: minHeight,
+      ready: function() {
+        // For profile pictures, enforce circular crop preview
+        if (cropperType === 'instagram-profile' || cropperType === 'twitter-profile' || cropperType === 'facebook-profile') {
+          // Add a circular mask to the crop box
+          const cropBoxContainer = document.querySelector('.cropper-view-box');
+          if (cropBoxContainer) {
+            cropBoxContainer.style.borderRadius = '50%';
+            cropBoxContainer.style.overflow = 'hidden';
+          }
+          
+          // Make the grid/line indicators also circular
+          const cropperFace = document.querySelector('.cropper-face');
+          if (cropperFace) {
+            cropperFace.style.borderRadius = '50%';
+          }
+        }
       }
+    });
+  };
+  
+  // Set up save button callback
+  saveButton.onclick = function() {
+    if (!cropper) return;
+    
+    try {
+      // Get cropped canvas with high quality settings
+      const croppedCanvas = cropper.getCroppedCanvas({
+        width: minWidth * 2, // Double the minimum dimensions for higher quality
+        height: minHeight * 2,
+        minWidth: minWidth,
+        minHeight: minHeight,
+        maxWidth: 4000, // Allow very high resolution
+        maxHeight: 4000,
+        fillColor: 'transparent',
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: 'high'
+      });
+      
+      // Convert to data URL with maximum quality
+      let mimeType = 'image/png'; // Use PNG for best quality and transparency support
+      
+      // For profile pictures, use higher compression PNG for best quality
+      if (cropperType === 'instagram-profile' || cropperType === 'twitter-profile' || cropperType === 'facebook-profile') {
+        const dataUrl = croppedCanvas.toDataURL(mimeType, 1.0);
+        if (typeof callback === 'function') {
+          callback(dataUrl);
+        }
+      } else {
+        // For post images, use PNG for best quality
+        const dataUrl = croppedCanvas.toDataURL(mimeType, 1.0);
+        if (typeof callback === 'function') {
+          callback(dataUrl);
+        }
+      }
+      
+      // Close modal and cleanup
+      cropperModal.style.display = 'none';
+      cropper.destroy();
+      cropper = null;
+    } catch (e) {
+      console.error('Error saving cropped image:', e);
+      alert('There was an error processing the image. Please try again.');
     }
-  });
-
-  // Handle aspect ratio change
-  document.querySelectorAll('input[name="aspectRatio"]').forEach(input => {
-    input.addEventListener('change', (e) => {
-      const newRatio = getAspectRatio(e.target.value);
-      console.log('Changing aspect ratio to:', newRatio);
-      cropper.setAspectRatio(newRatio);
-    });
-  });
-
-  // Handle shape change for profile pictures
-  document.querySelectorAll('input[name="cropShape"]').forEach(input => {
-    input.addEventListener('change', (e) => {
-      const isCircle = e.target.value === 'circle';
-      document.querySelector('.cropper-view-box').style.borderRadius = isCircle ? '50%' : '0';
-      document.querySelector('.cropper-face').style.borderRadius = isCircle ? '50%' : '0';
-    });
-  });
+  };
+  
+  // Cancel button closes modal without saving
+  const cancelButton = document.querySelector('.modal-footer .btn-secondary');
+  cancelButton.onclick = function() {
+    cropperModal.style.display = 'none';
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+  };
 }
 
 function getAspectRatio(type = 'square') {
@@ -250,7 +310,7 @@ function closeCropperModal() {
 }
 
 async function cropImage() {
-  if (!cropper || !currentCropType || !cropCallback) {
+  if (!cropper || !currentCropType) {
     console.warn('Missing required cropping parameters');
     return;
   }
@@ -263,11 +323,62 @@ async function cropImage() {
     cropButton.disabled = true;
     spinner.classList.remove('d-none');
 
+    // Determine optimal size and settings based on crop type
+    let canvasWidth, canvasHeight, isProfilePic;
+    
+    // Force square aspect ratio for profile pictures
+    if (currentCropType.includes('profile')) {
+      isProfilePic = true;
+      // Facebook recommends 170x170px minimum for profile pictures
+      if (currentCropType === 'facebook-profile') {
+        canvasWidth = 400;  // Higher resolution for better quality
+        canvasHeight = 400;
+      } else {
+        canvasWidth = 1000; // Higher resolution for profile images
+        canvasHeight = 1000; // Force 1:1 ratio
+      }
+    } 
+    // For Facebook posts, use recommended dimensions
+    else if (currentCropType === 'facebook-post') {
+      isProfilePic = false;
+      canvasWidth = 1200;    // Optimal width for Facebook posts
+      canvasHeight = 675;    // 16:9 aspect ratio
+    }
+    // For Instagram posts, use aspect-ratio appropriate resolution
+    else if (currentCropType.includes('instagram')) {
+      isProfilePic = false;
+      if (currentCropType.includes('square')) {
+        canvasWidth = 1080;
+        canvasHeight = 1080;
+      } else if (currentCropType.includes('portrait')) {
+        canvasWidth = 1080;
+        canvasHeight = 1350; // 4:5 ratio
+      } else if (currentCropType.includes('landscape')) {
+        canvasWidth = 1080;
+        canvasHeight = 565; // 1.91:1 ratio
+      } else {
+        // Default Instagram square
+        canvasWidth = 1080;
+        canvasHeight = 1080;
+      }
+    } else {
+      // Default settings
+      canvasWidth = 1080;
+      canvasHeight = 1080;
+      isProfilePic = false;
+    }
+
+    // Create cropped canvas with high quality settings
     const croppedCanvas = cropper.getCroppedCanvas({
-      width: 400,
-      height: 400,
+      width: canvasWidth,
+      height: canvasHeight,
+      minWidth: canvasWidth / 2,
+      minHeight: canvasHeight / 2,
+      maxWidth: canvasWidth * 2, // Allow for even higher resolution
+      maxHeight: canvasHeight * 2,
       imageSmoothingEnabled: true,
       imageSmoothingQuality: 'high',
+      fillColor: 'transparent'
     });
 
     if (!croppedCanvas) {
@@ -275,25 +386,20 @@ async function cropImage() {
     }
 
     console.log('Successfully created cropped canvas');
-
-    const blob = await new Promise((resolve, reject) => {
-      croppedCanvas.toBlob(
-        (blob) => {
-          if (blob) {
-            resolve(blob);
-          } else {
-            reject(new Error('Failed to create blob from canvas'));
-          }
-        },
-        'image/png'
-      );
-    });
-
-    const imageUrl = URL.createObjectURL(blob);
-    console.log(`Successfully created image blob with type: ${currentCropType}`);
     
-    // Call the callback with the cropped image data
-    cropCallback(imageUrl);
+    // For profile pictures, ensure proper rendering as circular
+    if (isProfilePic) {
+      // For profile photos, use PNG to preserve transparency
+      const dataUrl = croppedCanvas.toDataURL('image/png', 1.0);
+      console.log('Created high-quality profile picture');
+      cropCallback(dataUrl);
+    } else {
+      // For post images, use PNG for highest quality
+      const dataUrl = croppedCanvas.toDataURL('image/png', 1.0);
+      console.log(`Created high-quality post image for ${currentCropType}`);
+      cropCallback(dataUrl);
+    }
+    
     console.log(`✅ Successfully cropped image for type: ${currentCropType}`);
     closeCropperModal();
   } catch (error) {

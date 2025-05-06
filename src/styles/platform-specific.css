@@ -1,0 +1,51 @@
+/* Platform-specific styling to prevent overlap */
+
+/* Twitter container is only visible in the Twitter tab */
+#twitter-tab .responsive-twitter-container {
+  display: block;
+  width: 100%;
+}
+
+/* Instagram and Facebook tabs should not show Twitter containers */
+#instagram-tab .responsive-twitter-container,
+#facebook-tab .responsive-twitter-container,
+#comment-tab .responsive-twitter-container {
+  display: none !important;
+}
+
+/* Similarly, scope Instagram and Facebook containers */
+#instagram-tab .instagram-container {
+  display: block;
+}
+
+#twitter-tab .instagram-container,
+#facebook-tab .instagram-container,
+#comment-tab .instagram-container {
+  display: none !important;
+}
+
+#facebook-tab .facebook-container {
+  display: block;
+}
+
+#twitter-tab .facebook-container,
+#instagram-tab .facebook-container,
+#comment-tab .facebook-container {
+  display: none !important;
+}
+
+/* Ensure proper tab visibility */
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Platform-specific containers should inherit parent tab visibility */
+.tab-pane.active .responsive-twitter-container,
+.tab-pane.active .instagram-container,
+.tab-pane.active .facebook-container {
+  display: block;
+} 

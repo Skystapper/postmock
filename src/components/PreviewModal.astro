@@ -5,19 +5,45 @@
       <button type="button" class="btn-close" onclick="closePreviewModal()"></button>
     </div>
     <div class="modal-body">
-      <div class="preview-container" id="previewContainer">
-        <!-- Preview content will be injected here -->
+      <!-- Size warning message for smaller screens -->
+      <div id="preview-size-notice" class="preview-size-notice">
+        <i class="bi bi-info-circle"></i>
+        <p>Due to your screen size, this preview has been scaled down. Don't worry - your downloaded image will exactly match your selected dimensions.</p>
       </div>
-      <div class="preview-info mt-3">
-        <div class="dimensions-info">
-          <span id="previewDimensions">1200 × 675</span>
-          <span class="text-secondary">px</span>
+      
+      <!-- Platform specific controls -->
+      <div class="preview-controls">
+        <!-- Twitter/X Mode Toggle -->
+        <div class="preview-mode-toggle" id="social-mode-toggle">
+          <button class="mode-btn active" data-mode="desktop" onclick="switchPreviewMode('desktop')">
+            <i class="bi bi-display"></i>
+            Desktop
+          </button>
+          <button class="mode-btn" data-mode="phone" onclick="switchPreviewMode('phone')">
+            <i class="bi bi-phone"></i>
+            Phone
+          </button>
         </div>
-        <div class="theme-info">
-          <span class="text-secondary">Theme:</span>
-          <span id="previewTheme">Light</span>
+        
+        <!-- Instagram Aspect Ratio Toggle -->
+        <div class="preview-mode-toggle" id="instagram-aspect-toggle" style="display: none;">
+          <button class="mode-btn active" data-aspect="square" onclick="switchAspectRatio('square')">
+            <i class="bi bi-square"></i>
+            Square
+          </button>
+          <button class="mode-btn" data-aspect="portrait" onclick="switchAspectRatio('portrait')">
+            <i class="bi bi-image"></i>
+            Portrait
+          </button>
+          <button class="mode-btn" data-aspect="landscape" onclick="switchAspectRatio('landscape')">
+            <i class="bi bi-image-alt"></i>
+            Landscape
+          </button>
         </div>
       </div>
+      
+      <!-- Preview container -->
+      <div id="previewContainer"></div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" onclick="closePreviewModal()">Close</button>
@@ -28,6 +54,9 @@
     </div>
   </div>
 </div>
+
+<!-- Add html2canvas script -->
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <style>
   .preview-modal {
@@ -63,52 +92,149 @@
 
   .modal-body {
     padding: 1rem;
-    overflow: auto;
-  }
-
-  .modal-footer {
-    padding: 1rem;
-    border-top: 1px solid var(--border-color);
+    overflow-y: auto;
     display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .preview-container {
+  .preview-mode-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mode-btn.active {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+  }
+  
+  .mode-btn i {
+    font-size: 14px;
+  }
+
+  /* Size notice styles */
+  .preview-size-notice {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    width: 100%;
+    display: none;
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  .preview-size-notice i {
+    font-size: 18px;
+    margin-right: 10px;
+    color: var(--accent-color);
+    flex-shrink: 0;
+  }
+
+  .preview-size-notice p {
+    margin: 0;
+  }
+
+  /* Modified preview container styles to handle small screens better */
+  #previewContainer {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    min-height: 200px;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    padding: 1rem;
-    overflow: auto;
-    max-height: calc(90vh - 200px);
-  }
-
-  .preview-frame {
-    background: var(--bg-primary);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
     overflow: visible;
+    padding: 16px;
+  }
+
+  /* Ensure containers maintain proper dimensions */
+  #previewContainer[data-mode="desktop"] .tweet-container,
+  #previewContainer[data-mode="desktop"] .x-container {
+    width: 600px;
     height: auto;
+    transform-origin: top center;
+    margin: 0 auto;
   }
 
-  .preview-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
+  #previewContainer[data-mode="phone"] .tweet-container,
+  #previewContainer[data-mode="phone"] .x-container {
+    width: 380px;
+    height: auto;
+    transform-origin: top center;
+    margin: 0 auto;
   }
 
-  .dimensions-info {
-    font-weight: 500;
+  /* Instagram container specific styles */
+  #previewContainer #instagram-preview {
+    width: 600px;
+    height: auto;
+    transform-origin: top center;
+    margin: 0 auto;
   }
 
-  .theme-info {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
+  /* Instagram aspect ratio preservation */
+  #previewContainer #instagram-preview .post-image[data-aspect="square"] {
+    aspect-ratio: 1/1;
+  }
+
+  #previewContainer #instagram-preview .post-image[data-aspect="portrait"] {
+    aspect-ratio: 4/5;
+  }
+
+  #previewContainer #instagram-preview .post-image[data-aspect="landscape"] {
+    aspect-ratio: 1.91/1;
+  }
+
+  /* Handle scaling for small screens */
+  @media (max-width: 768px) {
+    .preview-size-notice {
+      display: flex;
+    }
+
+    #previewContainer {
+      padding: 16px 0;
+    }
+
+    #previewContainer[data-mode="desktop"] .tweet-container,
+    #previewContainer[data-mode="desktop"] .x-container {
+      transform: scale(calc(min(90vw, 460px) / 600));
+      margin-bottom: calc((min(90vw, 460px) / 600 - 1) * -100%);
+    }
+
+    #previewContainer[data-mode="phone"] .tweet-container,
+    #previewContainer[data-mode="phone"] .x-container {
+      transform: scale(calc(min(90vw, 380px) / 380));
+      margin-bottom: calc((min(90vw, 380px) / 380 - 1) * -100%);
+    }
+
+    /* Instagram scaling */
+    #previewContainer #instagram-preview {
+      transform: scale(calc(min(90vw, 460px) / 600));
+      margin-bottom: calc((min(90vw, 460px) / 600 - 1) * -100%);
+    }
+  }
+
+  /* Hide the notice for screens that are large enough */
+  @media (min-width: 769px) {
+    .preview-size-notice {
+      display: none;
+    }
   }
 
   /* Theme variables */
@@ -119,10 +245,6 @@
     --text-secondary: #536471;
     --border-color: #CFD9DE;
     --accent-color: #1D9BF0;
-    --instagram-accent: #0095F6;
-    --instagram-hover: #0081D6;
-    --fb-blue: #1877F2;
-    --fb-light-blue: #E7F3FF;
   }
 
   [data-theme="dark"] {
@@ -131,10 +253,6 @@
     --text-primary: #F7F9F9;
     --text-secondary: #8B98A5;
     --border-color: #38444D;
-    --instagram-accent: #0095F6;
-    --instagram-hover: #0081D6;
-    --fb-blue: #1877F2;
-    --fb-light-blue: #E7F3FF;
   }
 
   /* Button styles */
@@ -182,185 +300,816 @@
     background: var(--bg-secondary);
   }
 
-  /* Instagram aspect ratio styles */
-  .preview-frame.preview-aspect-square .instagram-container {
-    width: min(600px, 90vw);
+  .preview-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
 
-  .preview-frame.preview-aspect-portrait .instagram-container {
-    width: min(600px, 90vw);
+  /* Instagram aspect toggle specific styles */
+  #instagram-aspect-toggle {
+    margin-top: 8px;
+    background: var(--bg-secondary);
+    padding: 8px 12px;
+    border-radius: 16px;
+    border: 1px solid transparent;
+    background-image: linear-gradient(var(--bg-secondary), var(--bg-secondary)), 
+                    var(--accent-gradient);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    position: relative;
+  }
+  
+  #instagram-aspect-toggle::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    z-index: -1;
+    opacity: 0.1;
+    filter: blur(8px);
+    border-radius: 18px;
+  }
+  
+  #instagram-aspect-toggle .mode-btn {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    background: var(--bg-primary);
+    border: none;
+  }
+  
+  #instagram-aspect-toggle .mode-btn.active {
+    background: var(--accent-gradient);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 
-  .preview-frame.preview-aspect-landscape .instagram-container {
-    width: min(800px, 90vw);
+  /* Hide aspect ratio indicator in preview */
+  #previewContainer .post-image::after {
+    display: none !important;
   }
-
-  .preview-frame.preview-aspect-square .post-image {
-    aspect-ratio: 1/1;
-  }
-
-  .preview-frame.preview-aspect-portrait .post-image {
-    aspect-ratio: 4/5;
-  }
-
-  .preview-frame.preview-aspect-landscape .post-image {
-    aspect-ratio: 1.91/1;
-  }
-
-  /* Ensure Instagram container fits in preview */
-  .preview-frame .instagram-container {
-    margin: 0;
-    height: auto;
-  }
-
-  /* Fix Instagram post image sizing */
-  .preview-frame .post-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Platform-specific button colors */
-  .btn-primary[data-platform="instagram"] {
-    background: var(--instagram-accent);
-  }
-
-  .btn-primary[data-platform="instagram"]:hover {
-    background: var(--instagram-hover);
-  }
-
-  .btn-primary[data-platform="facebook"] {
-    background: var(--fb-blue);
-  }
-
-  .btn-primary[data-platform="facebook"]:hover {
-    background: var(--fb-light-blue);
-  }
-
-  /* Fix Facebook post sizing in preview */
-  .preview-frame .facebook-container {
-    margin: 0;
-    height: auto;
-    width: 100%;
-  }
-
-  .preview-frame .facebook-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  
+  /* Ensure background images are displayed at their highest quality */
+  #previewContainer .post-image {
+    background-size: cover !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
   }
 </style>
 
 <script is:inline>
-  var currentPlatform = null;
-
-  function getContentToPreview(platform) {
-    switch (platform) {
-      case 'twitter':
-        return document.getElementById('platform-switch')?.checked ? 
-          document.getElementById('x-preview') : 
-          document.getElementById('tweet-preview');
-      case 'instagram':
-        return document.getElementById('instagram-preview');
-      case 'facebook':
-        return document.getElementById('facebook-preview');
-      case 'comment':
-        return document.getElementById('cmtContent');
-      default:
-        console.error('Unknown platform:', platform);
-        return null;
+  function switchPreviewMode(mode) {
+    const previewContainer = document.getElementById('previewContainer');
+    const buttons = document.querySelectorAll('.mode-btn');
+    
+    // Update buttons
+    buttons.forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+    });
+    
+    // Update container mode
+    previewContainer.setAttribute('data-mode', mode);
+    
+    // Explicitly update X container sizes in preview
+    const xContainers = previewContainer.querySelectorAll('.x-container');
+    xContainers.forEach(container => {
+      container.style.width = mode === 'desktop' ? '600px' : '380px';
+    });
+    
+    // Update body attribute to sync with main view
+    document.body.setAttribute('data-preview-mode', mode);
+    
+    // Update size notice
+    updateSizeNotice(mode);
+    
+    // Sync with main view mode
+    const mainModeInput = document.querySelector(`input[name="preview-mode"][value="${mode}"]`);
+    if (mainModeInput && !mainModeInput.checked) {
+      mainModeInput.checked = true;
+      mainModeInput.dispatchEvent(new Event('change'));
     }
   }
-
+  
   function showPreviewModal(platform) {
     const modal = document.getElementById('previewModal');
     const previewContainer = document.getElementById('previewContainer');
-    const dimensionsInfo = document.getElementById('previewDimensions');
-    const themeInfo = document.getElementById('previewTheme');
-    const downloadBtn = document.querySelector('.modal-footer .btn-primary');
+    const socialModeToggle = document.getElementById('social-mode-toggle');
+    const instagramAspectToggle = document.getElementById('instagram-aspect-toggle');
     
-    // Store current platform
-    window.currentPlatform = platform;
+    debugLog('Opening preview modal for ' + platform, 'Initializing');
     
-    // Set platform attribute on download button
-    if (downloadBtn) {
-      downloadBtn.setAttribute('data-platform', platform);
+    try {
+      // Clear previous content
+      previewContainer.innerHTML = '';
+    
+      // Set visibility of mode toggle for Twitter/X only
+      if (platform === 'twitter' || platform === 'x') {
+        socialModeToggle.style.display = 'flex';
+        instagramAspectToggle.style.display = 'none';
+      } else if (platform === 'instagram') {
+        socialModeToggle.style.display = 'none';
+        instagramAspectToggle.style.display = 'flex';
+      } else if (platform === 'facebook') {
+        socialModeToggle.style.display = 'flex';
+        instagramAspectToggle.style.display = 'none';
+      } else if (platform === 'comment') {
+        // For comment platform, hide both toggles
+        socialModeToggle.style.display = 'none';
+        instagramAspectToggle.style.display = 'none';
+        
+        // Special handling for comment previews
+        const originalContainer = document.getElementById('cmtContent');
+        if (originalContainer) {
+          // Create a direct clone of the container
+          const clonedContent = originalContainer.cloneNode(true);
+          
+          // Remove any interactive elements
+          const interactiveElements = clonedContent.querySelectorAll('[onclick], [contenteditable], .dropdown-menu');
+          interactiveElements.forEach(el => {
+            if (el.hasAttribute('onclick')) el.removeAttribute('onclick');
+            if (el.hasAttribute('contenteditable')) el.removeAttribute('contenteditable');
+            if (el.classList.contains('dropdown-menu')) el.remove();
+          });
+          
+          // Ensure proper styling for preview
+          clonedContent.style.margin = '0 auto';
+          clonedContent.style.maxWidth = '600px';
+          
+          // Make all icons visible by replacing with direct embedded SVG elements
+          function replaceIconsWithSvg(iconClass, svgHTML) {
+            const icons = clonedContent.querySelectorAll(`.${iconClass}`);
+            icons.forEach(icon => {
+              icon.innerHTML = svgHTML;
+            });
+          }
+          
+          // Replace thumb up icons
+          replaceIconsWithSvg('ph-icon-thumb-up', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>');
+          
+          // Replace thumb down icons
+          replaceIconsWithSvg('ph-icon-thumb-down', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>');
+          
+          // Replace flag icons
+          replaceIconsWithSvg('ph-icon-flag', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>');
+          
+          // Replace chevron down icons
+          replaceIconsWithSvg('ph-icon-chevron-down', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path fill="#969696" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
+          
+          // Fix verification badges
+          const verifiedBadges = clonedContent.querySelectorAll('.verified-icon img');
+          verifiedBadges.forEach(badge => {
+            badge.src = 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNGRkEzMUEiLz48cGF0aCBkPSJNOC4xNSAxMy4zNUw1LjQ1IDEwLjY1bC0xLjEgMS4xTDguMTUgMTUuNTUgMTUuOCA3LjlsLTEuMS0xLjFMOC4xNSAxMy4zNXoiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=';
+            badge.style.width = '100%';
+            badge.style.height = '100%';
+            badge.style.display = 'block';
+          });
+          
+          // Append to preview container
+          previewContainer.appendChild(clonedContent);
+          
+          // Show the modal
+          modal.style.display = 'block';
+          return; // Exit early as we've handled the comment preview
+        }
+      } else {
+        socialModeToggle.style.display = 'none';
+        instagramAspectToggle.style.display = 'none';
+      }
+    
+    // For Facebook and Comment platforms, defer to platform-specific handlers
+    if (platform === 'facebook' || platform === 'comment') {
+      // For these platforms, we have custom showPreviewModal implementations
+      // in their respective component files, so we'll call those instead
+      if (platform === 'comment' && typeof window.showPreviewModal === 'function') {
+        window.showPreviewModal(platform);
+        return;
+      } else if (platform === 'facebook') {
+        // For Facebook, handle in this file
+        showFacebookPreview();
+      }
+    }
+
+    // Get the original content
+    let originalContainer;
+    if (platform === 'twitter') {
+      originalContainer = window.innerWidth >= 768 
+        ? document.getElementById('desktop-tweet-wrapper')?.querySelector('.tweet-container')
+        : document.getElementById('mobile-tweet-wrapper')?.querySelector('.tweet-container');
+          
+        if (originalContainer) {
+          // For Twitter/X, create a direct clone - this works fine with these platforms
+          const clonedContent = originalContainer.cloneNode(true);
+          previewContainer.appendChild(clonedContent);
+        }
+    } else if (platform === 'x') {
+      originalContainer = window.innerWidth >= 768
+        ? document.getElementById('desktop-x-wrapper')?.querySelector('.x-container')
+        : document.getElementById('mobile-x-wrapper')?.querySelector('.x-container');
+          
+        if (originalContainer) {
+          // For Twitter/X, create a direct clone - this works fine with these platforms
+          const clonedContent = originalContainer.cloneNode(true);
+          previewContainer.appendChild(clonedContent);
+        }
+      } else if (platform === 'instagram') {
+        originalContainer = document.getElementById('instagram-preview');
+        
+        if (originalContainer) {
+          // For Instagram, create a NEW container instead of cloning to avoid blob URL issues
+          const previewClone = createInstagramPreview(originalContainer, previewContainer);
+          
+          // Immediate profile pic update (extra assurance)
+          const originalProfilePic = originalContainer.querySelector('#ig-profile-pic');
+          const clonedProfilePic = previewClone.querySelector('#ig-profile-pic');
+          
+          if (originalProfilePic && clonedProfilePic) {
+            console.log('Directly copying profile pic in showPreviewModal');
+            
+            // Try to get the most recent source
+            if (originalProfilePic.getAttribute('data-profile-url')) {
+              const dataUrl = originalProfilePic.getAttribute('data-profile-url');
+              console.log('Using data-profile-url attribute, length:', dataUrl?.length);
+              clonedProfilePic.setAttribute('data-profile-url', dataUrl);
+              clonedProfilePic.src = dataUrl;
+            } else if (originalProfilePic.src) {
+              console.log('Using src attribute:', originalProfilePic.src.substring(0, 30) + '...');
+              clonedProfilePic.src = originalProfilePic.src;
+            } else {
+              console.warn('No profile pic source found to copy');
+            }
+          }
+        }
+    } else if (platform === 'facebook') {
+      // Get the Facebook container based on screen size
+      originalContainer = window.innerWidth >= 768
+        ? document.getElementById('desktop-facebook-preview')
+        : document.getElementById('mobile-facebook-preview');
+          
+      if (originalContainer) {
+        // Create a direct clone of the Facebook container
+        const clonedContent = originalContainer.cloneNode(true);
+        
+        // Remove any click handlers and interactive elements
+        const clickableElements = clonedContent.querySelectorAll('[onclick], [role="button"]');
+        clickableElements.forEach(el => {
+          el.removeAttribute('onclick');
+          el.removeAttribute('role');
+          el.style.cursor = 'default';
+        });
+        
+        // Remove dropdown menu
+        const dropdownMenu = clonedContent.querySelector('.dropdown-menu');
+        if (dropdownMenu) {
+          dropdownMenu.remove();
+        }
+        
+        // Ensure proper styling
+        clonedContent.style.margin = '0';
+        clonedContent.style.maxWidth = 'none';
+        
+        previewContainer.appendChild(clonedContent);
+            
+        // Handle profile picture 
+        const originalProfilePic = originalContainer.querySelector('#fb-profile-pic');
+        const clonedProfilePic = clonedContent.querySelector('#fb-profile-pic');
+            
+        if (originalProfilePic && clonedProfilePic) {
+          clonedProfilePic.src = originalProfilePic.src;
+        }
+            
+        // Handle post image if present
+        const originalMediaContainer = originalContainer.querySelector('#fb-media-container');
+        const clonedMediaContainer = clonedContent.querySelector('#fb-media-container');
+            
+        if (originalMediaContainer && clonedMediaContainer) {
+          clonedMediaContainer.innerHTML = originalMediaContainer.innerHTML;
+          clonedMediaContainer.style.display = originalMediaContainer.style.display;
+        }
+      }
     }
     
-    // Get the content to preview based on platform
-    const content = getContentToPreview(platform);
-    if (!content) return;
+    if (!originalContainer && platform !== 'comment') {
+      console.error('Could not find the original container for preview');
+      return;
+    }
+
+      // For Instagram platform, set up live sync from original to preview
+      if (platform === 'instagram') {
+        setupInstagramPreviewSync(originalContainer, previewContainer.firstChild);
     
-    // Clone the content
-    const clonedContent = content.cloneNode(true);
+        // Force sync profile pics using global function if available
+        if (typeof window.syncInstagramProfilePics === 'function') {
+          setTimeout(window.syncInstagramProfilePics, 200);
+        }
+      }
+
+    // Show the modal
+    modal.style.display = 'block';
+    } catch (error) {
+      console.error('Error setting up preview modal:', error);
+    }
+  }
+  
+  // Function to create a new Instagram preview container
+  function createInstagramPreview(originalContainer, parentContainer) {
+    // Create a new container with the same structure
+    const newContainer = document.createElement('div');
+    newContainer.id = 'instagram-preview-clone';
+    newContainer.className = originalContainer.className;
     
-    // If it's hidden, make it visible for the preview
-    clonedContent.style.display = 'block';
+    // Copy attributes
+    const theme = originalContainer.getAttribute('data-theme') || 'light';
+    newContainer.setAttribute('data-theme', theme);
     
-    // Set the preview size to match the original rendered size
-    clonedContent.style.width = content.offsetWidth + 'px';
-    clonedContent.style.height = content.offsetHeight + 'px';
+    const aspect = originalContainer.getAttribute('data-aspect');
+    if (aspect) {
+      newContainer.setAttribute('data-aspect', aspect);
+    }
     
-    // Special handling for Instagram aspect ratios
-    if (platform === 'instagram') {
-      const aspectRatio = content.querySelector('.post-image')?.getAttribute('data-aspect');
-      if (aspectRatio) {
-        const aspectClass = `preview-aspect-${aspectRatio}`;
-        previewContainer.className = `preview-container ${aspectClass}`;
-        // Ensure all interactive elements are visible
-        const elements = clonedContent.querySelectorAll('[contenteditable]');
-        elements.forEach(el => {
-          el.setAttribute('contenteditable', 'false');
+    // Copy inner HTML but we'll handle images separately
+    newContainer.innerHTML = originalContainer.innerHTML;
+    
+    // Handle images specifically to avoid blob URL issues
+    
+    // 1. Profile picture - use a more robust approach
+    syncProfilePicDirectly(
+      originalContainer.querySelector('#ig-profile-pic'), 
+      newContainer.querySelector('#ig-profile-pic')
+    );
+    
+    // 2. Post image background
+    const origPostImage = originalContainer.querySelector('.post-image');
+    const newPostImage = newContainer.querySelector('.post-image');
+    
+    if (origPostImage && newPostImage) {
+      // Copy aspect ratio - ensure this sets correctly
+      const currentAspect = origPostImage.getAttribute('data-aspect') || 'square';
+      newPostImage.setAttribute('data-aspect', currentAspect);
+      
+      // Make sure aspect ratio applies right away
+      if (currentAspect === 'square') {
+        newPostImage.style.aspectRatio = '1/1';
+      } else if (currentAspect === 'portrait') {
+        newPostImage.style.aspectRatio = '4/5';
+      } else if (currentAspect === 'landscape') {
+        newPostImage.style.aspectRatio = '1.91/1';
+      }
+      
+      // Also set the active aspect button in the modal
+      updateActiveAspectButton(currentAspect);
+      
+      // Try different approaches for the background image
+      
+      // First try data-image-url (most reliable since it's a data URL, not a blob URL)
+      const dataImageUrl = origPostImage.getAttribute('data-image-url');
+      if (dataImageUrl) {
+        newPostImage.setAttribute('data-image-url', dataImageUrl);
+        newPostImage.style.backgroundImage = `url('${dataImageUrl}')`;
+        
+        // Set other background properties
+        newPostImage.style.backgroundSize = 'cover';
+        newPostImage.style.backgroundPosition = 'center';
+        
+        // Hide upload prompt
+        const newUploadPrompt = newPostImage.querySelector('.upload-prompt');
+        if (newUploadPrompt) {
+          newUploadPrompt.style.display = 'none';
+        }
+      } 
+      // Fallback to background-image style
+      else if (origPostImage.style.backgroundImage) {
+        // Check if it's a blob URL
+        const bgImage = origPostImage.style.backgroundImage;
+        
+        if (bgImage.includes('blob:')) {
+          console.warn('Background image contains blob URL, this might cause issues');
+          // Instead of copying the blob URL, try to create an image element and
+          // redraw it to a canvas to get a data URL
+          try {
+            // Create temporary elements to extract and convert the image
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 800;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw a placeholder colored background as fallback
+            if (ctx) {
+              ctx.fillStyle = '#e1e1e1';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              
+              // Set a safe background color as a fallback
+              newPostImage.style.backgroundColor = '#e1e1e1';
+              // Use the canvas as an emergency fallback
+              const safeDataUrl = canvas.toDataURL('image/png');
+              newPostImage.style.backgroundImage = `url('${safeDataUrl}')`;
+            }
+          } catch (err) {
+            console.error("Error creating fallback for blob URL:", err);
+            // Last resort fallback
+            newPostImage.style.backgroundColor = '#e1e1e1';
+          }
+        } else {
+          // If it's not a blob URL, it should be safe to copy
+          newPostImage.style.backgroundImage = bgImage;
+        }
+        
+        newPostImage.style.backgroundSize = origPostImage.style.backgroundSize || 'cover';
+        newPostImage.style.backgroundPosition = origPostImage.style.backgroundPosition || 'center';
+        
+        // Hide upload prompt if original has an image
+        const origUploadPrompt = origPostImage.querySelector('.upload-prompt');
+        const newUploadPrompt = newPostImage.querySelector('.upload-prompt');
+        
+        if (newUploadPrompt && origUploadPrompt) {
+          newUploadPrompt.style.display = origUploadPrompt.style.display;
+        }
+      }
+    }
+    
+    // 3. Copy any editable content
+    const origEditables = originalContainer.querySelectorAll('[contenteditable="true"]');
+    origEditables.forEach(origElement => {
+      const id = origElement.id;
+      if (id) {
+        const newElement = newContainer.querySelector(`#${id}`);
+        if (newElement) {
+          newElement.textContent = origElement.textContent;
+        }
+      }
+    });
+    
+    // Append the new container to the parent
+    parentContainer.appendChild(newContainer);
+    
+    return newContainer;
+  }
+  
+  // Helper function to directly sync profile pictures between containers
+  function syncProfilePicDirectly(origProfilePic, newProfilePic) {
+    if (!origProfilePic || !newProfilePic) return;
+    
+    // Try different approaches to ensure the profile pic is copied
+    
+    // 1. Try data attribute first (most reliable)
+    const dataProfileUrl = origProfilePic.getAttribute('data-profile-url');
+    if (dataProfileUrl) {
+      newProfilePic.setAttribute('data-profile-url', dataProfileUrl);
+      newProfilePic.src = dataProfileUrl;
+      return;
+    }
+    
+    // 2. Try the src attribute
+    if (origProfilePic.src) {
+      // Check if it's a blob URL
+      if (origProfilePic.src.startsWith('blob:')) {
+        // For blob URLs, attempt to fetch the image and convert to data URL
+        try {
+          // Create a temporary image to load the blob URL
+          const tempImg = new Image();
+          tempImg.crossOrigin = 'anonymous';
+          tempImg.src = origProfilePic.src;
+          
+          // Set a placeholder immediately
+          newProfilePic.src = origProfilePic.src;
+          
+          // Try to convert blob to data URL asynchronously
+          tempImg.onload = function() {
+            try {
+              const canvas = document.createElement('canvas');
+              canvas.width = tempImg.width || 150;
+              canvas.height = tempImg.height || 150;
+              const ctx = canvas.getContext('2d');
+              if (ctx) {
+                ctx.drawImage(tempImg, 0, 0);
+                const dataUrl = canvas.toDataURL('image/png');
+                newProfilePic.src = dataUrl;
+                newProfilePic.setAttribute('data-profile-url', dataUrl);
+              }
+            } catch (err) {
+              console.warn('Error converting profile pic blob to data URL', err);
+              // Just use the original src as fallback
+              newProfilePic.src = origProfilePic.src;
+            }
+          };
+        } catch (err) {
+          console.warn('Error handling profile pic blob URL', err);
+          // Fallback - just copy the src and hope it works
+          newProfilePic.src = origProfilePic.src;
+        }
+      } else {
+        // Not a blob URL, should be safe to copy directly
+        newProfilePic.src = origProfilePic.src;
+      }
+    }
+  }
+  
+  // Setup sync for Instagram preview
+  function setupInstagramPreviewSync(originalContainer, clonedContainer) {
+    // Immediate sync of all content on setup
+    syncAllContent(originalContainer, clonedContainer);
+    
+    // Set up listeners for custom events
+    
+    // Listen for content changes
+    originalContainer.addEventListener('contentchange', (e) => {
+      const { id, content } = e.detail;
+      const clonedElement = clonedContainer.querySelector(`#${id}`);
+      if (clonedElement) {
+        clonedElement.innerHTML = content;
+      }
+    });
+    
+    // Listen for theme changes
+    originalContainer.addEventListener('themechange', (e) => {
+      const { theme } = e.detail;
+      clonedContainer.setAttribute('data-theme', theme);
+    });
+    
+    // Listen for profile picture changes
+    originalContainer.addEventListener('profilepicchange', (e) => {
+      const { src, dataUrl } = e.detail;
+      const clonedProfilePic = clonedContainer.querySelector('#ig-profile-pic');
+      if (clonedProfilePic) {
+        // Prefer the data URL if available
+        if (dataUrl) {
+          clonedProfilePic.setAttribute('data-profile-url', dataUrl);
+          clonedProfilePic.src = dataUrl;
+        } else if (src) {
+          clonedProfilePic.src = src;
+        }
+      }
+    });
+    
+    // Get post image elements
+    const originalPostImage = originalContainer.querySelector('.post-image');
+    const clonedPostImage = clonedContainer.querySelector('.post-image');
+    
+    // Listen for post image changes
+    if (originalPostImage && clonedPostImage) {
+      originalPostImage.addEventListener('backgroundimagechange', (e) => {
+        const { backgroundImage, backgroundImageUrl, aspectRatio } = e.detail;
+        
+        // Update background image - prefer the direct URL if available
+        if (backgroundImageUrl) {
+          clonedPostImage.setAttribute('data-image-url', backgroundImageUrl);
+          clonedPostImage.style.backgroundImage = `url('${backgroundImageUrl}')`;
+        } else {
+          clonedPostImage.style.backgroundImage = backgroundImage;
+        }
+        
+        clonedPostImage.style.backgroundSize = 'cover';
+        clonedPostImage.style.backgroundPosition = 'center';
+        
+        // Update aspect ratio
+        clonedPostImage.setAttribute('data-aspect', aspectRatio);
+        
+        // Hide upload prompt
+        const clonedUploadPrompt = clonedPostImage.querySelector('.upload-prompt');
+        if (clonedUploadPrompt) {
+          clonedUploadPrompt.style.display = 'none';
+        }
+      });
+      
+      originalPostImage.addEventListener('aspectchange', (e) => {
+        const { aspect } = e.detail;
+        clonedPostImage.setAttribute('data-aspect', aspect);
+      });
+      
+      // Also use MutationObserver as a fallback mechanism for aspect ratio changes
+      const aspectObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'data-aspect') {
+            const newAspect = originalPostImage.getAttribute('data-aspect');
+            clonedPostImage.setAttribute('data-aspect', newAspect);
+          }
         });
-        // Make sure dropdown menus are hidden
-        const dropdowns = clonedContent.querySelectorAll('.dropdown-menu');
-        dropdowns.forEach(dropdown => {
-          dropdown.style.display = 'none';
+      });
+      
+      aspectObserver.observe(originalPostImage, { attributes: true });
+      
+      // Also sync background image changes
+      const bgObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+            clonedPostImage.style.backgroundImage = originalPostImage.style.backgroundImage;
+            clonedPostImage.style.backgroundSize = originalPostImage.style.backgroundSize || 'cover';
+            clonedPostImage.style.backgroundPosition = originalPostImage.style.backgroundPosition || 'center';
+            
+            // Hide/show upload prompt accordingly
+            const origUploadPrompt = originalPostImage.querySelector('.upload-prompt');
+            const clonedUploadPrompt = clonedPostImage.querySelector('.upload-prompt');
+            
+            if (origUploadPrompt && clonedUploadPrompt) {
+              clonedUploadPrompt.style.display = origUploadPrompt.style.display;
+            }
+          }
+        });
+      });
+      
+      bgObserver.observe(originalPostImage, { attributes: true });
+    }
+    
+    // Also use MutationObserver as a fallback mechanism for other changes
+    
+    // Sync contenteditable elements 
+    const origEditables = originalContainer.querySelectorAll('[contenteditable="true"]');
+    
+    origEditables.forEach(origElement => {
+      // Get element ID or create an identifier
+      const elementId = origElement.id;
+      if (!elementId) return;
+      
+      // Find matching element in cloned container
+      const clonedElement = clonedContainer.querySelector(`#${elementId}`);
+      if (!clonedElement) return;
+      
+      // Create MutationObserver to watch original element
+      const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          if (mutation.type === 'characterData' || mutation.type === 'childList') {
+            // Update cloned element with new content
+            clonedElement.innerHTML = origElement.innerHTML;
+          }
+        });
+      });
+      
+      // Start observing the original element
+      observer.observe(origElement, {
+        characterData: true,
+        childList: true,
+        subtree: true
+      });
+    });
+    
+    // Sync theme changes
+    const origThemeObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+          const newTheme = originalContainer.getAttribute('data-theme');
+          clonedContainer.setAttribute('data-theme', newTheme);
+        }
+      });
+    });
+    
+    origThemeObserver.observe(originalContainer, { attributes: true });
+    
+    // Sync profile pic changes - more robust approach
+    const origProfilePic = originalContainer.querySelector('#ig-profile-pic');
+    const clonedProfilePic = clonedContainer.querySelector('#ig-profile-pic');
+    
+    if (origProfilePic && clonedProfilePic) {
+      // Do an immediate sync to make sure we have latest image
+      syncProfilePic(origProfilePic, clonedProfilePic);
+      
+      const picObserver = new MutationObserver(() => {
+        syncProfilePic(origProfilePic, clonedProfilePic);
+      });
+      
+      picObserver.observe(origProfilePic, { 
+        attributes: true,
+        attributeFilter: ['src', 'data-profile-url']
+      });
+    }
+    
+    // Set up regular re-sync interval to ensure profile pic stays updated
+    const syncInterval = setInterval(() => {
+      const origProfilePic = originalContainer.querySelector('#ig-profile-pic');
+      const clonedProfilePic = clonedContainer.querySelector('#ig-profile-pic');
+      
+      if (origProfilePic && clonedProfilePic) {
+        syncProfilePic(origProfilePic, clonedProfilePic);
+      } else {
+        // Clear interval if either element is gone
+        clearInterval(syncInterval);
+      }
+    }, 1000); // Check every second
+    
+    // Clean up interval when modal closes
+    const modal = document.getElementById('previewModal');
+    if (modal) {
+      const closeBtn = modal.querySelector('.btn-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          clearInterval(syncInterval);
         });
       }
-    } else {
-      previewContainer.className = 'preview-container';
+    }
+  }
+  
+  // Helper function to sync all content immediately
+  function syncAllContent(originalContainer, clonedContainer) {
+    // Sync profile pic
+    const origProfilePic = originalContainer.querySelector('#ig-profile-pic');
+    const clonedProfilePic = clonedContainer.querySelector('#ig-profile-pic');
+    if (origProfilePic && clonedProfilePic) {
+      syncProfilePic(origProfilePic, clonedProfilePic);
     }
     
-    // Update preview container
-    previewContainer.innerHTML = '';
-    previewContainer.appendChild(clonedContent);
+    // Sync post image
+    const origPostImage = originalContainer.querySelector('.post-image');
+    const clonedPostImage = clonedContainer.querySelector('.post-image');
+    if (origPostImage && clonedPostImage) {
+      // Copy attributes
+      if (origPostImage.hasAttribute('data-aspect')) {
+        clonedPostImage.setAttribute('data-aspect', origPostImage.getAttribute('data-aspect'));
+      }
+      
+      // Copy data-image-url
+      if (origPostImage.hasAttribute('data-image-url')) {
+        const imageUrl = origPostImage.getAttribute('data-image-url');
+        clonedPostImage.setAttribute('data-image-url', imageUrl);
+        clonedPostImage.style.backgroundImage = `url('${imageUrl}')`;
+      } else if (origPostImage.style.backgroundImage) {
+        clonedPostImage.style.backgroundImage = origPostImage.style.backgroundImage;
+      }
+      
+      // Copy other styles
+      clonedPostImage.style.backgroundSize = origPostImage.style.backgroundSize || 'cover';
+      clonedPostImage.style.backgroundPosition = origPostImage.style.backgroundPosition || 'center';
+      
+      // Handle upload prompt
+      const origUploadPrompt = origPostImage.querySelector('.upload-prompt');
+      const clonedUploadPrompt = clonedPostImage.querySelector('.upload-prompt');
+      if (origUploadPrompt && clonedUploadPrompt) {
+        clonedUploadPrompt.style.display = origUploadPrompt.style.display;
+      }
+    }
     
-    // Force layout recalculation to get correct dimensions
-    previewContainer.offsetHeight;
+    // Sync text content
+    const origEditables = originalContainer.querySelectorAll('[contenteditable="true"]');
+    origEditables.forEach(origElement => {
+      if (origElement.id) {
+        const clonedElement = clonedContainer.querySelector(`#${origElement.id}`);
+        if (clonedElement) {
+          clonedElement.innerHTML = origElement.innerHTML;
+        }
+      }
+    });
+  }
+  
+  // Helper function to sync profile pic
+  function syncProfilePic(origProfilePic, clonedProfilePic) {
+    // Try data attribute first
+    const dataUrl = origProfilePic.getAttribute('data-profile-url');
+    if (dataUrl) {
+      clonedProfilePic.setAttribute('data-profile-url', dataUrl);
+      clonedProfilePic.src = dataUrl;
+    } else if (origProfilePic.src) {
+      // Fall back to src
+      clonedProfilePic.src = origProfilePic.src;
+    }
+  }
+
+  function updateSizeNotice(mode) {
+    const sizeNotice = document.getElementById('preview-size-notice');
+    const windowWidth = window.innerWidth;
+    const modeWidth = mode === 'desktop' ? 600 : 380;
     
-    // Update dimensions based on the actual content size
-    const width = clonedContent.offsetWidth;
-    const height = clonedContent.scrollHeight;
-    dimensionsInfo.textContent = `${width} × ${height}`;
-    
-    // Update theme
-    const theme = content.getAttribute('data-theme') || 'light';
-    themeInfo.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
-    
-    // Show modal
-    modal.style.display = 'block';
-    
-    // Add escape key listener
-    document.addEventListener('keydown', handleEscapeKey);
+    // Always show notice on small screens
+    if (windowWidth < 768) {
+      sizeNotice.style.display = 'flex';
+    } else if (windowWidth < modeWidth) {
+      sizeNotice.style.display = 'flex';
+    } else {
+      sizeNotice.style.display = 'none';
+    }
   }
 
   function closePreviewModal() {
     const modal = document.getElementById('previewModal');
     modal.style.display = 'none';
-    currentPlatform = null;
-    document.removeEventListener('keydown', handleEscapeKey);
+  }
+  
+  // Add resize listener to update the notice
+  window.addEventListener('resize', debounce(() => {
+    const mode = document.querySelector('.mode-btn.active')?.getAttribute('data-mode') || 'desktop';
+    updateSizeNotice(mode);
+  }, 250));
+  
+  // Simple debounce function
+  function debounce(func, wait) {
+    let timeout;
+    return function() {
+      const context = this;
+      const args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
   }
 
-  function handleEscapeKey(e) {
-    if (e.key === 'Escape') {
-      closePreviewModal();
-    }
+  function debugLog(context, data) {
+    console.log(`[Preview Modal Debug] ${context}:`, data);
   }
 
   async function downloadPreview() {
-    if (!currentPlatform) return;
-    
     const button = document.querySelector('.modal-footer .btn-primary');
     const spinner = button.querySelector('.spinner-border');
     
@@ -368,89 +1117,510 @@
       button.disabled = true;
       spinner.classList.remove('d-none');
       
-      const content = getContentToPreview(currentPlatform);
-      if (!content) throw new Error('No content to download');
+      const previewContainer = document.getElementById('previewContainer');
+      if (!previewContainer.firstChild) {
+        throw new Error('No content found in preview container');
+      }
       
-      // Clone the content for capturing
-      const clonedContent = content.cloneNode(true);
+      // Get the container to capture
+      const containerToCapture = previewContainer.firstChild;
+      debugLog('Container to capture', containerToCapture);
       
-      // If it's hidden, make it visible for capturing
-      clonedContent.style.display = 'block';
-      
-      // Set the preview size to match the original rendered size
-      clonedContent.style.width = content.offsetWidth + 'px';
-      clonedContent.style.height = content.offsetHeight + 'px';
-      
-      // Special handling for Instagram aspect ratios
-      if (currentPlatform === 'instagram') {
-        const aspectRatio = content.querySelector('.post-image')?.getAttribute('data-aspect');
-        if (aspectRatio) {
-          const dimensions = {
-            square: { width: 1080, height: 1350 }, // Increased height to accommodate content
-            portrait: { width: 1080, height: 1620 }, // Increased height to accommodate content
-            landscape: { width: 1080, height: 836 }  // Increased height to accommodate content
-          };
+      // Check if it's a comment container
+      if (containerToCapture.id === 'cmtContent') {
+        // Create a clean copy for capture
+        const captureContainer = document.createElement('div');
+        captureContainer.style.position = 'fixed';
+        captureContainer.style.top = '0';
+        captureContainer.style.left = '-9999px';
+        captureContainer.style.background = document.body.getAttribute('data-theme') === 'dark' ? '#000000' : '#ffffff';
+        captureContainer.style.zIndex = '-1000';
+        document.body.appendChild(captureContainer);
+        
+        // Clone for high-quality capture
+        const perfectClone = containerToCapture.cloneNode(true);
+        perfectClone.style.transform = 'none';
+        perfectClone.style.margin = '0';
+        perfectClone.style.maxWidth = '600px';
+        perfectClone.style.width = '600px';
+        perfectClone.style.boxShadow = 'none';
+        
+        // Function to fix and optimize SVG icons for capture
+        function fixSvgIcons() {
+          // Replace all SVG icons with inline SVGs for best quality
+          function replaceSvgIcons(selector, svgContent) {
+            const icons = perfectClone.querySelectorAll(selector);
+            icons.forEach(icon => {
+              icon.innerHTML = svgContent;
+            });
+          }
           
-          const size = dimensions[aspectRatio] || dimensions.square;
+          // Replace the like/thumb icons
+          replaceSvgIcons('.ph-icon-thumb-up', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>');
+          replaceSvgIcons('.ph-icon-thumb-down', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>');
+          replaceSvgIcons('.ph-icon-flag', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>');
+          replaceSvgIcons('.ph-icon-chevron-down', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path fill="#969696" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>');
           
-          // Set container width only, let height adjust naturally
-          clonedContent.style.width = `${size.width}px`;
-          
-          // Ensure all interactive elements are visible
-          const elements = clonedContent.querySelectorAll('[contenteditable]');
-          elements.forEach(el => {
-            el.setAttribute('contenteditable', 'false');
+          // Fix verification badges
+          const verifiedBadges = perfectClone.querySelectorAll('.verified-icon img');
+          verifiedBadges.forEach(badge => {
+            badge.src = 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNGRkEzMUEiLz48cGF0aCBkPSJNOC4xNSAxMy4zNUw1LjQ1IDEwLjY1bC0xLjEgMS4xTDguMTUgMTUuNTUgMTUuOCA3LjlsLTEuMS0xLjFMOC4xNSAxMy4zNXoiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=';
+            badge.style.width = '100%'; 
+            badge.style.height = '100%';
+            badge.style.display = 'block';
           });
+        }
+        
+        // Fix SVG icons
+        fixSvgIcons();
+        
+        captureContainer.appendChild(perfectClone);
+        
+        // Wait for rendering
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // Use html2canvas with best quality settings
+        const canvas = await html2canvas(perfectClone, {
+          scale: 4,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: document.body.getAttribute('data-theme') === 'dark' ? '#000000' : '#ffffff',
+          logging: false,
+          onclone: (doc) => {
+            const clonedContent = doc.querySelector('#cmtContent');
+            if (clonedContent) {
+              // Apply the icon fixes again on the cloned doc
+              const icons = clonedContent.querySelectorAll('.ph-icon-thumb-up, .ph-icon-thumb-down, .ph-icon-flag, .ph-icon-chevron-down');
+              icons.forEach(icon => {
+                if (icon.classList.contains('ph-icon-thumb-up')) {
+                  icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z"/></svg>';
+                } else if (icon.classList.contains('ph-icon-thumb-down')) {
+                  icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v1.91l.01.01L1 14c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>';
+                } else if (icon.classList.contains('ph-icon-flag')) {
+                  icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="#969696" d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>';
+                } else if (icon.classList.contains('ph-icon-chevron-down')) {
+                  icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14"><path fill="#969696" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>';
+                }
+              });
+              
+              // Fix verification badges again
+              const badges = clonedContent.querySelectorAll('.verified-icon img');
+              badges.forEach(badge => {
+                badge.src = 'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iMTAiIGZpbGw9IiNGRkEzMUEiLz48cGF0aCBkPSJNOC4xNSAxMy4zNUw1LjQ1IDEwLjY1bC0xLjEgMS4xTDguMTUgMTUuNTUgMTUuOCA3LjlsLTEuMS0xLjFMOC4xNSAxMy4zNXoiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=';
+                badge.style.width = '100%';
+                badge.style.height = '100%';
+                badge.style.display = 'block';
+              });
+            }
+          }
+        });
+        
+        // Convert to PNG with maximum quality
+        const blob = await new Promise(resolve => {
+          canvas.toBlob(resolve, 'image/png', 1.0);
+        });
+        
+        if (!blob) {
+          throw new Error('Failed to create image blob');
+        }
+        
+        // Download the image
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `comment-preview.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Revoke the URL to free memory
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+        }, 100);
+        
+        // Clean up
+        document.body.removeChild(captureContainer);
+        
+        closePreviewModal();
+        return;
+      }
+      
+      // Create a clean copy for capture to avoid issues with blob URLs
+      const captureContainer = document.createElement('div');
+      captureContainer.style.position = 'fixed';
+      captureContainer.style.top = '0';
+      captureContainer.style.left = '-9999px';
+      captureContainer.style.background = document.body.getAttribute('data-theme') === 'dark' ? '#000000' : '#ffffff';
+      captureContainer.style.zIndex = '-1000';
+      document.body.appendChild(captureContainer);
+      
+      // Clone the content
+      const perfectClone = containerToCapture.cloneNode(true);
+      perfectClone.style.transform = 'none';
+      perfectClone.style.margin = '0';
+      perfectClone.style.boxShadow = 'none';
+      
+      // Handle platform-specific styling
+      let platformType = 'social-post';
+      let displayMode = '';
+      
+      if (containerToCapture.classList.contains('x-container') || 
+          containerToCapture.classList.contains('tweet-container')) {
+      // For Twitter/X
+        platformType = containerToCapture.classList.contains('x-container') ? 'x' : 'twitter';
+        displayMode = document.body.getAttribute('data-preview-mode') || 'desktop';
+        perfectClone.style.width = displayMode === 'desktop' ? '600px' : '380px';
+      } else if (containerToCapture.id === 'instagram-preview' || 
+                containerToCapture.id === 'instagram-preview-clone') {
+        // For Instagram
+        platformType = 'instagram';
+        
+        // Hide aspect ratio indicator
+        const postImageAfter = perfectClone.querySelector('.post-image::after');
+        if (postImageAfter) {
+          postImageAfter.style.display = 'none';
+        }
+        
+        // Fix for profile picture - ensure it's not stretched
+        const profilePics = perfectClone.querySelectorAll('.profile-pic img');
+        profilePics.forEach(img => {
+          // Fix profile picture aspect ratio and dimensions
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+          img.style.borderRadius = '50%';
           
-          // Make sure dropdown menus are hidden
-          const dropdowns = clonedContent.querySelectorAll('.dropdown-menu');
-          dropdowns.forEach(dropdown => {
-            dropdown.style.display = 'none';
-          });
+          // Make sure container maintains circle shape
+          const profilePicContainer = img.closest('.profile-pic');
+          if (profilePicContainer) {
+            profilePicContainer.style.width = '32px';
+            profilePicContainer.style.height = '32px';
+            profilePicContainer.style.borderRadius = '50%';
+            profilePicContainer.style.overflow = 'hidden';
+            profilePicContainer.style.display = 'flex';
+            profilePicContainer.style.alignItems = 'center';
+            profilePicContainer.style.justifyContent = 'center';
+          }
+          
+          // For extreme quality improvement, try to get original src if possible
+          if (img.getAttribute('data-profile-url')) {
+            img.src = img.getAttribute('data-profile-url');
+          }
+        });
+        
+        const postImage = perfectClone.querySelector('.post-image');
+        if (postImage) {
+          // Use aspect ratio instead of display mode for Instagram
+          displayMode = postImage.getAttribute('data-aspect') || 'square';
+          perfectClone.style.width = '600px'; // Instagram always uses standard width
+          
+          // Ensure the aspect ratio is maintained during capture
+          postImage.setAttribute('data-aspect', displayMode);
+          
+          // Hide aspect ratio label
+          postImage.style.setProperty('--after-content', 'none');
+          
+          // Apply aspect ratio styles directly
+          if (displayMode === 'square') {
+            postImage.style.aspectRatio = '1/1';
+          } else if (displayMode === 'portrait') {
+            postImage.style.aspectRatio = '4/5';
+          } else if (displayMode === 'landscape') {
+            postImage.style.aspectRatio = '1.91/1';
+          }
+          
+          // ULTRA HIGH QUALITY POST IMAGE HANDLING
+          
+          // If we have a direct image element inside the post-image, use that instead of background
+          const directImageElement = postImage.querySelector('img');
+          if (directImageElement && directImageElement.src) {
+            try {
+              // Use the direct image source for maximum quality
+              const tempImg = new Image();
+              tempImg.crossOrigin = 'anonymous';
+              
+              // Wait for the image to load
+              await new Promise((resolve) => {
+                tempImg.onload = resolve;
+                tempImg.onerror = resolve; // Continue even if there's an error
+                tempImg.src = directImageElement.src;
+                setTimeout(resolve, 1000); // Timeout fallback
+              });
+              
+              // Remove background image and use the direct image
+              postImage.style.backgroundImage = 'none';
+              postImage.innerHTML = ''; // Clear any content
+              
+              // Create a new img element at full quality
+              const newImg = document.createElement('img');
+              newImg.src = directImageElement.src;
+              newImg.style.width = '100%';
+              newImg.style.height = '100%';
+              newImg.style.objectFit = 'cover';
+              newImg.style.aspectRatio = postImage.style.aspectRatio;
+              
+              postImage.appendChild(newImg);
+              console.log('Using direct image element for highest quality');
+            } catch (err) {
+              console.warn('Error handling direct image, falling back:', err);
+            }
+          }
+          // Otherwise try to get the best possible background image
+          else {
+            // 1. First check if there's a data-image-url attribute (reliable high-res source)
+            const dataImageUrl = postImage.getAttribute('data-image-url');
+            if (dataImageUrl) {
+              // Create an actual image element for better quality than background-image
+              try {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                // Wait for the image to load
+                await new Promise((resolve) => {
+                  img.onload = resolve;
+                  img.onerror = resolve; // Continue even if there's an error
+                  img.src = dataImageUrl;
+                  setTimeout(resolve, 1000); // Timeout fallback
+                });
+                
+                // Replace background with an actual image element
+                postImage.style.backgroundImage = 'none';
+                postImage.innerHTML = ''; // Clear children
+                
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.aspectRatio = postImage.style.aspectRatio;
+                
+                postImage.appendChild(img);
+                console.log('Using data-image-url with image element for highest quality');
+              } catch (err) {
+                // Fallback to background image if creating element fails
+                postImage.style.backgroundImage = `url('${dataImageUrl}')`;
+                console.log('Falling back to background image with data-image-url');
+              }
+            }
+            // 2. If no data-url but has backgroundImage, improve that instead
+            else if (postImage.style.backgroundImage) {
+              const bgImageUrl = postImage.style.backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/i, '$1');
+              
+              // For blob URLs, try to convert to high-quality data URL
+              if (bgImageUrl.startsWith('blob:')) {
+                try {
+                  // Create a full image element to load the blob at maximum quality
+                  const imgElem = new Image();
+                  imgElem.crossOrigin = 'anonymous';
+                  
+                  // Wait for the image to load with a longer timeout
+                  await new Promise((resolve, reject) => {
+                    imgElem.onload = resolve;
+                    imgElem.onerror = reject;
+                    imgElem.src = bgImageUrl;
+                    setTimeout(resolve, 2000); // Longer timeout for loading
+                  }).catch(err => {
+                    console.warn('Image loading error, trying alternative approach:', err);
+                  });
+                  
+                  // Replace background with an actual image element
+                  postImage.style.backgroundImage = 'none';
+                  postImage.innerHTML = ''; // Clear children
+                  
+                  // Use a much larger canvas for maximum quality
+                  const canvas = document.createElement('canvas');
+                  // Use the largest of the original dimensions or 2000px minimum
+                  canvas.width = Math.max(imgElem.naturalWidth || 0, 2000);
+                  canvas.height = Math.max(imgElem.naturalHeight || 0, 2000);
+                  
+                  const ctx = canvas.getContext('2d', { alpha: true, willReadFrequently: true });
+                  if (ctx) {
+                    // Draw with best quality settings
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.drawImage(imgElem, 0, 0, canvas.width, canvas.height);
+                    
+                    // Create a full-quality PNG (lossless) data URL
+                    const highQualityDataUrl = canvas.toDataURL('image/png');
+                    
+                    // Create a new img element at full quality
+                    const newImg = document.createElement('img');
+                    newImg.src = highQualityDataUrl;
+                    newImg.style.width = '100%';
+                    newImg.style.height = '100%';
+                    newImg.style.objectFit = 'cover';
+                    newImg.style.aspectRatio = postImage.style.aspectRatio;
+                    
+                    postImage.appendChild(newImg);
+                    console.log('Successfully created highest-quality image element');
+                  }
+                } catch (err) {
+                  console.warn('Error in high-quality conversion:', err);
+                  // Set additional properties for best rendering as fallback
+                  postImage.style.backgroundSize = 'cover';
+                  postImage.style.backgroundPosition = 'center';
+                  postImage.style.imageRendering = 'high-quality';
+                }
+              }
+            }
+          }
+        }
+      } else if (containerToCapture.classList.contains('facebook-container')) {
+        // For Facebook
+        platformType = 'facebook';
+        perfectClone.style.width = '680px';  // Facebook uses a standard width
+            
+        // Handle profile picture
+        const profilePic = perfectClone.querySelector('#fb-profile-pic');
+        if (profilePic) {
+          profilePic.style.width = '100%';
+          profilePic.style.height = '100%';
+          profilePic.style.objectFit = 'cover';
+          profilePic.style.borderRadius = '50%';
+        }
+            
+        // Handle media container if present
+        const mediaContainer = perfectClone.querySelector('#fb-media-container');
+        if (mediaContainer && mediaContainer.style.display !== 'none') {
+          const mediaImg = mediaContainer.querySelector('img');
+          if (mediaImg) {
+            mediaImg.style.width = '100%';
+            mediaImg.style.height = '100%';
+            mediaImg.style.objectFit = 'cover';
+          }
+        }
+            
+        // Hide upload prompt if media is present
+        const uploadPrompt = perfectClone.querySelector('.upload-prompt');
+        if (uploadPrompt && mediaContainer && mediaContainer.querySelector('img')) {
+          uploadPrompt.style.display = 'none';
         }
       }
       
-      document.body.appendChild(clonedContent);
+      captureContainer.appendChild(perfectClone);
+      debugLog('Prepared clone for capture', perfectClone);
       
-      // Create a canvas with the content
-      const canvas = await html2canvas(clonedContent, {
-        scale: 2,
+      // Wait longer for high-res images to load properly
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Create an even higher-DPI canvas for superior quality
+      const scale = 8; // Increased for maximum resolution
+      
+      // Use html2canvas with best possible quality settings
+      const canvas = await html2canvas(perfectClone, {
+        scale: scale,
         useCORS: true,
-        backgroundColor: null,
+        allowTaint: true,
+        backgroundColor: document.body.getAttribute('data-theme') === 'dark' ? '#000000' : '#ffffff',
         logging: false,
-        width: clonedContent.offsetWidth,
-        height: clonedContent.scrollHeight, // Use scrollHeight to capture full content
-        windowWidth: clonedContent.offsetWidth,
-        windowHeight: clonedContent.scrollHeight
+        imageTimeout: 0, // No timeout for image loading
+        removeContainer: false, // Keep container to avoid glitches
+        ignoreElements: (element) => {
+          // Ignore any ::after pseudo-elements by checking for a specific class
+          return element.classList && element.classList.contains('post-image-after');
+        },
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.body.querySelector('[style*="left: -9999px"]').firstChild;
+          if (clonedElement) {
+            clonedElement.style.position = 'static';
+            clonedElement.style.transform = 'none';
+          }
+          
+          // Ensure images are loaded with highest quality
+          const images = clonedDoc.querySelectorAll('img');
+          images.forEach(img => {
+            img.crossOrigin = 'anonymous';
+            img.style.imageRendering = 'high-quality';
+            
+            // Ensure circular profile pictures stay circular
+            if (img.closest('.profile-pic')) {
+              img.style.width = '100%';
+              img.style.height = '100%';
+              img.style.objectFit = 'cover';
+              img.style.borderRadius = '50%';
+            } else {
+              // For other images, use higher quality rendering
+              img.style.imageRendering = '-webkit-optimize-contrast';
+              if ('loading' in HTMLImageElement.prototype) {
+                img.loading = 'eager'; // Force immediate loading
+              }
+              
+              // Temporarily increase size then scale down for super-sampling
+              const originalWidth = img.width || img.clientWidth;
+              const originalHeight = img.height || img.clientHeight;
+              if (originalWidth && originalHeight) {
+                // Create oversampled images for better quality
+                img.width = originalWidth * 2;
+                img.height = originalHeight * 2;
+                img.style.width = `${originalWidth}px`;
+                img.style.height = `${originalHeight}px`;
+              }
+            }
+          });
+          
+          // Hide any post-image::after elements
+          const postImages = clonedDoc.querySelectorAll('.post-image');
+          postImages.forEach(el => {
+            // Add a class to help with the ignoreElements function
+            el.classList.add('hide-after');
+            
+            // Directly alter the pseudo element style
+            const style = document.createElement('style');
+            style.textContent = `.hide-after::after { display: none !important; }`;
+            clonedDoc.head.appendChild(style);
+            
+            // Apply high-quality rendering styles
+            el.style.backgroundSize = 'cover';
+            el.style.backgroundPosition = 'center';
+            el.style.imageRendering = 'high-quality';
+            
+            // Try to use the highest quality URL available
+            const highQualityUrl = el.getAttribute('data-high-quality-url');
+            if (highQualityUrl) {
+              el.style.backgroundImage = `url('${highQualityUrl}')`;
+            }
+          });
+          
+          // Other background images
+          const bgImages = clonedDoc.querySelectorAll('[style*="background-image"]');
+          bgImages.forEach(el => {
+            el.style.backgroundSize = 'cover';
+            el.style.backgroundPosition = 'center';
+            el.style.imageRendering = 'high-quality';
+          });
+        }
       });
       
-      // Remove the temporary element
-      document.body.removeChild(clonedContent);
+      debugLog('Canvas created', { width: canvas.width, height: canvas.height });
       
-      // Convert to blob
+      // Convert to PNG with maximum quality (lossless)
       const blob = await new Promise(resolve => {
-        canvas.toBlob(resolve, 'image/png');
+        canvas.toBlob(resolve, 'image/png', 1.0);
       });
       
-      // Create download link
+      if (!blob) {
+        throw new Error('Failed to create image blob');
+      }
+      
+      // Generate filename based on platform and display mode/aspect ratio
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      const isX = document.getElementById('platform-switch')?.checked;
-      const platform = isX ? 'x' : currentPlatform;
-      const aspectRatio = content.querySelector('.post-image')?.getAttribute('data-aspect') || '';
-      const fileName = platform === 'instagram' ? 
-        `instagram-post-${aspectRatio}.png` : 
-        `${platform}-post.png`;
-      link.download = fileName;
+      link.download = `${platformType}-${displayMode}-post.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      
+      // Important: revoke the URL to free memory
+      setTimeout(() => {
       URL.revokeObjectURL(url);
+      }, 100);
+      
+      // Clean up
+      document.body.removeChild(captureContainer);
       
       closePreviewModal();
     } catch (error) {
       console.error('Error downloading preview:', error);
+      debugLog('Download error', error);
       alert('Failed to download preview. Please try again.');
     } finally {
       button.disabled = false;
@@ -458,6 +1628,66 @@
     }
   }
 
-  // Expose the showPreviewModal function globally
-  window.showPreviewModal = showPreviewModal;
+  // Function to switch Instagram aspect ratio in preview
+  function switchAspectRatio(aspect) {
+    // Update active button
+    updateActiveAspectButton(aspect);
+    
+    // Get preview container and post image
+    const previewContainer = document.getElementById('previewContainer');
+    const previewClone = previewContainer.querySelector('#instagram-preview-clone');
+    if (!previewClone) return;
+    
+    const postImage = previewClone.querySelector('.post-image');
+    if (!postImage) return;
+    
+    // Update aspect ratio
+    postImage.setAttribute('data-aspect', aspect);
+    
+    // Apply aspect ratio directly to style for immediate effect
+    if (aspect === 'square') {
+      postImage.style.aspectRatio = '1/1';
+    } else if (aspect === 'portrait') {
+      postImage.style.aspectRatio = '4/5';
+    } else if (aspect === 'landscape') {
+      postImage.style.aspectRatio = '1.91/1';
+    }
+    
+    // Also update the main Instagram container to keep them in sync
+    const originalContainer = document.getElementById('instagram-preview');
+    if (originalContainer) {
+      const origPostImage = originalContainer.querySelector('.post-image');
+      if (origPostImage) {
+        origPostImage.setAttribute('data-aspect', aspect);
+        
+        // Also sync with desktop and mobile aspect radio buttons
+        const desktopAspectInput = document.querySelector(`input[name="ig-aspect"][value="${aspect}"]`);
+        const mobileAspectInput = document.querySelector(`input[name="mobile-ig-aspect"][value="${aspect}"]`);
+        
+        if (desktopAspectInput) {
+          desktopAspectInput.checked = true;
+          desktopAspectInput.dispatchEvent(new Event('change'));
+        }
+        
+        if (mobileAspectInput) {
+          mobileAspectInput.checked = true;
+          mobileAspectInput.dispatchEvent(new Event('change'));
+        }
+        
+        // Dispatch aspect ratio change event
+        origPostImage.dispatchEvent(new CustomEvent('aspectchange', { 
+          bubbles: true, 
+          detail: { aspect: aspect } 
+        }));
+      }
+    }
+  }
+  
+  // Helper to update active aspect ratio button
+  function updateActiveAspectButton(aspect) {
+    const aspectButtons = document.querySelectorAll('#instagram-aspect-toggle .mode-btn');
+    aspectButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-aspect') === aspect);
+    });
+  }
 </script> 

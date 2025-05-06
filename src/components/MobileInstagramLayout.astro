@@ -1,0 +1,399 @@
+---
+// Mobile layout component for Instagram tab
+// This component provides optimized controls for smaller screens
+---
+
+<div class="mobile-instagram-container">
+  <div class="mobile-header">
+    <div class="mobile-theme-controls">
+      <div class="mobile-theme-toggle-group theme-toggle-group">
+        <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-ig-theme" id="mobile-ig-theme-light" value="light" checked>
+        <label class="mobile-theme-btn theme-toggle-btn" for="mobile-ig-theme-light">
+          <i class="bi bi-sun"></i>
+        </label>
+        
+        <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-ig-theme" id="mobile-ig-theme-dim" value="dim">
+        <label class="mobile-theme-btn theme-toggle-btn" for="mobile-ig-theme-dim">
+          <i class="bi bi-moon-stars"></i>
+        </label>
+        
+        <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-ig-theme" id="mobile-ig-theme-dark" value="dark">
+        <label class="mobile-theme-btn theme-toggle-btn" for="mobile-ig-theme-dark">
+          <i class="bi bi-moon"></i>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aspect Ratio Selection -->
+  <div class="mobile-aspect-section">
+    <div class="mobile-aspect-controls">
+      <span class="mobile-control-label">Aspect Ratio:</span>
+      <div class="mobile-aspect-toggle-group">
+        <input type="radio" class="aspect-toggle" name="mobile-ig-aspect" id="mobile-aspect-square" value="square" checked>
+        <label class="aspect-toggle-btn tooltip-btn" for="mobile-aspect-square" title="Square (1:1)">
+          <i class="bi bi-square"></i>
+          <span class="tooltip-text">Square (1:1)</span>
+        </label>
+        
+        <input type="radio" class="aspect-toggle" name="mobile-ig-aspect" id="mobile-aspect-portrait" value="portrait">
+        <label class="aspect-toggle-btn tooltip-btn" for="mobile-aspect-portrait" title="Portrait (4:5)">
+          <i class="bi bi-image"></i>
+          <span class="tooltip-text">Portrait (4:5)</span>
+        </label>
+        
+        <input type="radio" class="aspect-toggle" name="mobile-ig-aspect" id="mobile-aspect-landscape" value="landscape">
+        <label class="aspect-toggle-btn tooltip-btn" for="mobile-aspect-landscape" title="Landscape (1.91:1)">
+          <i class="bi bi-image-alt"></i>
+          <span class="tooltip-text">Landscape (1.91:1)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-buttons">
+    <button class="mobile-preview-btn" id="mobile-ig-preview-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+      </svg>
+      Preview
+    </button>
+  </div>
+</div>
+
+<style>
+  .mobile-instagram-container {
+    width: 100%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    margin-top: 20px; /* Add margin to move container down */
+  }
+
+  .mobile-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+
+  /* Theme controls */
+  .mobile-theme-controls {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .mobile-theme-toggle-group {
+    display: flex;
+    gap: 4px;
+  }
+
+  .mobile-theme-toggle {
+    display: none;
+  }
+
+  .mobile-theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mobile-theme-toggle:checked + .mobile-theme-btn {
+    background: var(--accent-gradient);
+    color: white;
+  }
+
+  .mobile-theme-toggle:checked + .mobile-theme-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    opacity: 0.2;
+    z-index: -1;
+  }
+
+  .mobile-theme-btn:hover {
+    background: var(--accent-gradient);
+    color: white;
+  }
+
+  /* Aspect ratio section - updated to match desktop */
+  .mobile-aspect-section {
+    display: flex;
+    justify-content: center;
+    padding: 8px 12px;
+    background-color: var(--bg-secondary);
+    border-radius: 16px;
+    border: 1px solid transparent;
+    background-image: linear-gradient(var(--bg-secondary), var(--bg-secondary)), 
+                      var(--accent-gradient);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    position: relative;
+    overflow: visible !important;
+  }
+
+  .mobile-aspect-section::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    z-index: -1;
+    opacity: 0.1;
+    filter: blur(8px);
+  }
+
+  .mobile-aspect-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .mobile-control-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .mobile-aspect-toggle-group {
+    display: flex;
+    gap: 8px;
+    padding: 4px;
+    background: var(--bg-primary);
+    border-radius: 9999px;
+    border: 1px solid var(--border-color);
+  }
+
+  .aspect-toggle {
+    display: none;
+  }
+
+  .aspect-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .aspect-toggle:checked + .aspect-toggle-btn {
+    background: var(--accent-gradient);
+    color: white;
+  }
+
+  .aspect-toggle-btn:hover {
+    background: var(--accent-gradient);
+    color: white;
+  }
+
+  .aspect-toggle-btn i {
+    font-size: 16px;
+  }
+
+  /* Tooltip styling */
+  .tooltip-btn {
+    position: relative;
+  }
+
+  .tooltip-text {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+  }
+
+  .tooltip-btn:hover .tooltip-text {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Button styles */
+  .mobile-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .mobile-preview-btn {
+    width: 100%;
+    border: none;
+    border-radius: 9999px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--accent-gradient);
+    color: white;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .mobile-preview-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: var(--accent-gradient);
+    z-index: -1;
+    opacity: 0;
+    filter: blur(8px);
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-preview-btn:hover::before {
+    opacity: 1;
+  }
+
+  .mobile-preview-btn svg {
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-preview-btn:hover svg {
+    transform: translateX(2px);
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize the mobile Instagram preview button
+    const mobilePreviewBtn = document.getElementById('mobile-ig-preview-btn');
+    if (mobilePreviewBtn) {
+      mobilePreviewBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (typeof showPreviewModal === 'function') {
+          showPreviewModal('instagram');
+        } else {
+          console.error('showPreviewModal function not found');
+        }
+      });
+    }
+
+    // Sync mobile theme with desktop
+    const mobileThemeRadios = document.querySelectorAll('input[name="mobile-ig-theme"]');
+    mobileThemeRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        
+        // Update Instagram container theme
+        const container = document.getElementById('instagram-preview');
+        if (container) {
+          container.setAttribute('data-theme', theme);
+        }
+        
+        // Update app-container theme
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+          appContainer.setAttribute('data-theme', theme);
+        }
+
+        // Update body theme
+        document.body.setAttribute('data-theme', theme);
+        
+        // Sync with desktop theme radio
+        const desktopThemeInput = document.querySelector(`input[name="ig-theme"][value="${theme}"]`);
+        if (desktopThemeInput && !desktopThemeInput.checked) {
+          desktopThemeInput.checked = true;
+        }
+      });
+    });
+
+    // Sync mobile aspect ratio with desktop
+    const mobileAspectRadios = document.querySelectorAll('input[name="mobile-ig-aspect"]');
+    mobileAspectRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const aspect = e.target.value;
+        
+        // Update post image aspect ratio
+        const postImage = document.querySelector('#instagram-preview .post-image');
+        if (postImage) {
+          postImage.setAttribute('data-aspect', aspect);
+          
+          // Update any existing image to maintain aspect ratio
+          const existingImage = postImage.querySelector('img');
+          if (existingImage && window.getAspectRatioValue) {
+            existingImage.style.aspectRatio = window.getAspectRatioValue(aspect);
+          }
+        }
+        
+        // Sync with desktop aspect ratio
+        const desktopAspectInput = document.querySelector(`input[name="ig-aspect"][value="${aspect}"]`);
+        if (desktopAspectInput && !desktopAspectInput.checked) {
+          desktopAspectInput.checked = true;
+        }
+      });
+    });
+
+    // Initial sync from desktop to mobile
+    function syncFromDesktop() {
+      // Sync theme
+      const desktopTheme = document.querySelector('input[name="ig-theme"]:checked')?.value || 'light';
+      const mobileThemeToCheck = document.querySelector(`input[name="mobile-ig-theme"][value="${desktopTheme}"]`);
+      if (mobileThemeToCheck && !mobileThemeToCheck.checked) {
+        mobileThemeToCheck.checked = true;
+      }
+      
+      // Sync aspect ratio
+      const desktopAspect = document.querySelector('input[name="ig-aspect"]:checked')?.value || 'square';
+      const mobileAspectToCheck = document.querySelector(`input[name="mobile-ig-aspect"][value="${desktopAspect}"]`);
+      if (mobileAspectToCheck && !mobileAspectToCheck.checked) {
+        mobileAspectToCheck.checked = true;
+      }
+    }
+    
+    // Initialize sync
+    syncFromDesktop();
+  });
+</script> 

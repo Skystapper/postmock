@@ -1,0 +1,588 @@
+---
+// Mobile layout component for Facebook tab
+---
+
+<div class="mobile-facebook-container">
+  <div class="mobile-header">
+    <div class="mobile-theme-controls">
+      <div class="mobile-theme-selector">
+        <span class="mobile-theme-label">Theme:</span>
+        <div class="mobile-theme-toggle-group theme-toggle-group">
+          <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-fb-theme" id="mobile-fb-theme-light" value="light" checked>
+          <label class="mobile-theme-btn theme-toggle-btn" for="mobile-fb-theme-light">
+            <i class="bi bi-sun"></i>
+          </label>
+          
+          <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-fb-theme" id="mobile-fb-theme-dim" value="dim">
+          <label class="mobile-theme-btn theme-toggle-btn" for="mobile-fb-theme-dim">
+            <i class="bi bi-moon-stars"></i>
+          </label>
+          
+          <input type="radio" class="mobile-theme-toggle theme-toggle" name="mobile-fb-theme" id="mobile-fb-theme-dark" value="dark">
+          <label class="mobile-theme-btn theme-toggle-btn" for="mobile-fb-theme-dark">
+            <i class="bi bi-moon"></i>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-buttons">
+    <button class="mobile-media-btn" id="mobile-media-toggle" onclick="toggleMediaPost()">
+      <i class="bi bi-image"></i>
+      <span>Show Media</span>
+    </button>
+    
+    <button class="mobile-randomize-btn" id="mobile-randomize-stats" onclick="randomizeFacebookStats()">
+      <i class="bi bi-shuffle"></i>
+      <span>Randomize Stats</span>
+    </button>
+    
+    <button class="mobile-preview-btn" id="mobile-preview-btn" onclick="showPreviewModal('facebook')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M13.8 12H3"/>
+      </svg>
+      Preview
+    </button>
+  </div>
+  
+  <!-- Mobile Facebook Preview Container - Shrunk and centered for mobile -->
+  <div class="mobile-facebook-preview-wrapper">
+    <div class="facebook-container" id="mobile-facebook-preview" data-theme="light">
+      <!-- Header -->
+      <div class="fb-header d-flex justify-content-between align-items-start">
+        <div class="d-flex gap-2">
+          <div 
+            class="profile-pic rounded-circle cursor-pointer" 
+            style="width: 40px; height: 40px;"
+            onclick="uploadFacebookImage()"
+            role="button"
+            title="Click to change profile picture"
+          >
+            <img id="mobile-fb-profile-pic" 
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E"
+              alt="Profile picture placeholder" 
+              class="w-100 h-100 rounded-circle">
+          </div>
+          
+          <div>
+            <div class="d-flex align-items-center gap-1">
+              <span 
+                class="username fw-bold" 
+                contenteditable="true" 
+                id="mobile-live-fb-username"
+                data-input="fb-username-input">John Doe</span>
+              <span class="verified-badge" id="mobile-fb-verified-badge" onclick="toggleFacebookVerified()" style="display: inline;">
+                <svg width="16" height="16" viewBox="0 0 512 512" fill="#2D88FF">
+                  <path d="M256 48C141.6 48 48 141.6 48 256s93.6 208 208 208 208-93.6 208-208S370.4 48 256 48zm-42.7 318.9L106.7 260.3l29.9-29.9 76.8 76.8 162.1-162.1 29.9 29.9-192.1 191.9z"/>
+                </svg>
+              </span>
+            </div>
+            <div class="meta-info d-flex gap-1 text-secondary small">
+              <span 
+                contenteditable="true" 
+                id="mobile-live-fb-date"
+                data-input="fb-date-input">3 hours ago</span>
+              <span>·</span>
+              <span 
+                contenteditable="true" 
+                id="mobile-live-fb-privacy"
+                data-input="fb-privacy-input">Public</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <button class="btn btn-link text-secondary mobile-menu-btn p-0" data-bs-toggle="dropdown">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><button class="dropdown-item" onclick="toggleFacebookVerified()">
+              <i class="bi bi-patch-check"></i> Toggle verified
+            </button></li>
+            <li><button class="dropdown-item" onclick="uploadFacebookImage()">
+              <i class="bi bi-camera"></i> Change profile picture
+            </button></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Post Content -->
+      <div 
+        class="fb-content my-2" 
+        contenteditable="true" 
+        id="mobile-live-fb-text"
+        data-input="fb-text-input">Write something...</div>
+
+      <!-- Image Container -->
+      <div 
+        class="post-image mobile-post-image"
+        onclick="uploadFacebookPost()"
+        role="button"
+        title="Click to add photo"
+        style="display: none;"
+        id="mobile-fb-media-container"
+      >
+        <div class="upload-prompt">
+          <i class="bi bi-camera"></i>
+          <span>Add Photo</span>
+        </div>
+      </div>
+
+      <!-- Engagement Stats -->
+      <div class="engagement-stats border-top border-bottom py-1 px-2">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-1">
+            <span class="reaction-icon">👍</span>
+            <span 
+              contenteditable="true" 
+              id="mobile-live-fb-reactions"
+              data-input="fb-reactions-input">1.2K</span>
+          </div>
+          <div class="d-flex gap-3 text-secondary">
+            <span class="engagement-stat">
+              <span 
+                contenteditable="true" 
+                id="mobile-live-fb-comments"
+                data-input="fb-comments-input">234</span> 
+              <span class="stat-label">Comments</span>
+            </span>
+            <span class="engagement-stat">
+              <span 
+                contenteditable="true" 
+                id="mobile-live-fb-shares"
+                data-input="fb-shares-input">56</span> 
+              <span class="stat-label">Shares</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons - Mobile-optimized layout -->
+      <div class="mobile-action-buttons">
+        <button class="mobile-action-btn">
+          <i class="bi bi-hand-thumbs-up"></i>
+          <span>Like</span>
+        </button>
+        <button class="mobile-action-btn">
+          <i class="bi bi-chat"></i>
+          <span>Comment</span>
+        </button>
+        <button class="mobile-action-btn">
+          <i class="bi bi-share"></i>
+          <span>Share</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Mobile theme styles */
+  .mobile-facebook-container {
+    width: 100%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: var(--bg-secondary);
+  }
+
+  .mobile-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .mobile-theme-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .mobile-theme-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobile-theme-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .mobile-theme-toggle-group {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    background: var(--bg-secondary);
+    border-radius: 9999px;
+  }
+
+  .mobile-theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-theme-toggle:checked + .mobile-theme-btn {
+    background: var(--fb-blue, #4267B2);
+    color: white;
+  }
+
+  /* Mobile buttons */
+  .mobile-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .mobile-buttons button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-media-btn {
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+  }
+
+  .mobile-media-btn.active {
+    background-color: var(--fb-blue, #4267B2);
+    color: white;
+  }
+
+  .mobile-randomize-btn {
+    background-color: var(--bg-primary);
+    color: var(--text-secondary);
+  }
+
+  .mobile-preview-btn {
+    background: var(--fb-blue, #4267B2);
+    color: white;
+  }
+
+  .mobile-preview-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Mobile facebook preview wrapper */
+  .mobile-facebook-preview-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  /* Mobile facebook preview styles */
+  #mobile-facebook-preview {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 12px 10px;
+  }
+
+  /* Mobile-specific action buttons */
+  .mobile-action-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 2px 0;
+    margin-top: 4px;
+    border-radius: 8px;
+  }
+
+  .mobile-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 0;
+    width: 33%;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+
+  .mobile-action-btn:active {
+    background-color: var(--bg-secondary);
+  }
+
+  .mobile-action-btn i {
+    font-size: 16px;
+  }
+
+  /* Mobile dropdown menu */
+  .mobile-menu-btn {
+    min-width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .mobile-menu-btn:active {
+    background-color: var(--bg-secondary);
+  }
+
+  /* Mobile post image */
+  .mobile-post-image {
+    margin-bottom: 8px;
+    border-radius: 12px;
+    aspect-ratio: 16/9; /* Facebook recommended aspect ratio */
+  }
+
+  /* Mobile engagement stats */
+  .engagement-stats {
+    font-size: 13px;
+  }
+
+  .engagement-stat {
+    display: flex;
+    gap: 4px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .reaction-icon {
+    font-size: 12px;
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Facebook content for mobile */
+  .fb-content {
+    font-size: 15px;
+    line-height: 1.4;
+    padding: 2px 2px;
+  }
+
+  /* Profile section */
+  .profile-pic {
+    background: var(--fb-lighter-blue, #e7eaf6);
+    border: 2px solid transparent;
+  }
+
+  .profile-pic:active {
+    opacity: 0.8;
+  }
+
+  .username {
+    font-size: 15px;
+  }
+
+  .meta-info {
+    font-size: 12px;
+  }
+
+  /* Ensure proper styling across themes */
+  :root {
+    --fb-blue: #4267B2;
+    --fb-light-blue: #5b7bd3;
+    --fb-lighter-blue: #e7eaf6;
+  }
+
+  [data-theme="light"] {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F7F9FA;
+    --text-primary: #0F1419;
+    --text-secondary: #536471;
+    --border-color: #CFD9DE;
+  }
+
+  [data-theme="dark"] {
+    --bg-primary: #18191a;
+    --bg-secondary: #242526;
+    --text-primary: #F7F9F9;
+    --text-secondary: #8B98A5;
+    --border-color: #3A3B3C;
+  }
+
+  [data-theme="dim"] {
+    --bg-primary: #242526;
+    --bg-secondary: #3A3B3C;
+    --text-primary: #F7F9F9;
+    --text-secondary: #8B98A5;
+    --border-color: #4E4F50;
+  }
+
+  /* Mobile touch styles */
+  [contenteditable] {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    padding: 4px 6px;
+    border-radius: 6px;
+  }
+
+  [contenteditable]:focus {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+</style>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Sync mobile and desktop Facebook displays
+    syncMobileDesktopFacebook();
+    
+    // Handle theme changes
+    document.querySelectorAll('input[name="mobile-fb-theme"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const theme = e.target.value;
+        
+        // Update app container theme
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+          appContainer.setAttribute('data-theme', theme);
+        }
+        
+        // Update body theme
+        document.body.setAttribute('data-theme', theme);
+        
+        // Update Facebook containers
+        const containers = document.querySelectorAll('.facebook-container');
+        containers.forEach(container => {
+          container.setAttribute('data-theme', theme);
+        });
+        
+        // Sync with desktop theme
+        const desktopTheme = document.querySelector(`input[name="fb-theme"][value="${theme}"]`);
+        if (desktopTheme) {
+          desktopTheme.checked = true;
+        }
+      });
+    });
+    
+    // Media button state tracking
+    const mediaToggleBtn = document.getElementById('mobile-media-toggle');
+    if (mediaToggleBtn) {
+      mediaToggleBtn.addEventListener('click', function() {
+        this.classList.toggle('active');
+        const isActive = this.classList.contains('active');
+        this.querySelector('span').textContent = isActive ? 'Hide Media' : 'Show Media';
+      });
+    }
+    
+    // Add active state for mobile action buttons
+    document.querySelectorAll('.mobile-action-btn').forEach(btn => {
+      btn.addEventListener('touchstart', function() {
+        this.style.backgroundColor = 'var(--bg-secondary)';
+      });
+      
+      btn.addEventListener('touchend', function() {
+        setTimeout(() => {
+          this.style.backgroundColor = '';
+        }, 150);
+      });
+    });
+  });
+  
+  function syncMobileDesktopFacebook() {
+    // Sync profile pictures
+    const syncProfilePic = () => {
+      const desktopPic = document.getElementById('fb-profile-pic');
+      const mobilePic = document.getElementById('mobile-fb-profile-pic');
+      
+      if (desktopPic && mobilePic && desktopPic.src !== mobilePic.src) {
+        mobilePic.src = desktopPic.src;
+      }
+    };
+    
+    // Sync text content
+    const syncTextContent = (desktopId, mobileId) => {
+      const desktopEl = document.getElementById(desktopId);
+      const mobileEl = document.getElementById(mobileId);
+      
+      if (desktopEl && mobileEl) {
+        const observer = new MutationObserver(() => {
+          if (desktopEl.textContent !== mobileEl.textContent) {
+            mobileEl.textContent = desktopEl.textContent;
+          }
+        });
+        
+        observer.observe(desktopEl, { characterData: true, childList: true, subtree: true });
+        
+        // Also observe mobile to desktop
+        const reverseObserver = new MutationObserver(() => {
+          if (mobileEl.textContent !== desktopEl.textContent) {
+            desktopEl.textContent = mobileEl.textContent;
+          }
+        });
+        
+        reverseObserver.observe(mobileEl, { characterData: true, childList: true, subtree: true });
+      }
+    };
+    
+    // Sync media display
+    const syncMediaDisplay = () => {
+      const desktopContainer = document.getElementById('fb-media-container');
+      const mobileContainer = document.getElementById('mobile-fb-media-container');
+      
+      if (desktopContainer && mobileContainer) {
+        // Sync visibility
+        const observer = new MutationObserver(() => {
+          mobileContainer.style.display = desktopContainer.style.display;
+        });
+        
+        observer.observe(desktopContainer, { attributes: true, attributeFilter: ['style'] });
+        
+        // Sync media content (images)
+        const contentObserver = new MutationObserver(() => {
+          // Copy all images from desktop to mobile
+          mobileContainer.innerHTML = desktopContainer.innerHTML;
+        });
+        
+        contentObserver.observe(desktopContainer, { childList: true, subtree: true });
+      }
+    };
+    
+    // Call all sync functions
+    syncProfilePic();
+    
+    // Sync all editable text fields
+    syncTextContent('live-fb-username', 'mobile-live-fb-username');
+    syncTextContent('live-fb-date', 'mobile-live-fb-date');
+    syncTextContent('live-fb-privacy', 'mobile-live-fb-privacy');
+    syncTextContent('live-fb-text', 'mobile-live-fb-text');
+    syncTextContent('live-fb-reactions', 'mobile-live-fb-reactions');
+    syncTextContent('live-fb-comments', 'mobile-live-fb-comments');
+    syncTextContent('live-fb-shares', 'mobile-live-fb-shares');
+    
+    syncMediaDisplay();
+    
+    // Handle verified badge syncing
+    const desktopVerified = document.getElementById('fb-verified-badge');
+    const mobileVerified = document.getElementById('mobile-fb-verified-badge');
+    
+    if (desktopVerified && mobileVerified) {
+      const observer = new MutationObserver(() => {
+        mobileVerified.style.display = desktopVerified.style.display;
+      });
+      
+      observer.observe(desktopVerified, { attributes: true, attributeFilter: ['style'] });
+    }
+  }
+</script> 
